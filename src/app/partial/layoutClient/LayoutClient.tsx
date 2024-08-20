@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import { useMediaQuery } from "@mui/system";
 import HeaderComponent from "./header";
 import SiderComponent from "./slider";
+import FooterComponent from "./footer";
 
 export default function LayOutClient({
   children,
@@ -32,31 +33,34 @@ export default function LayOutClient({
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
 
-      <HeaderComponent open={open} />
+        <HeaderComponent open={open} />
 
-      <SiderComponent
-        open={open}
-        handleDrawerOpen={handleDrawerOpen}
-        handleDrawerClose={handleDrawerClose}
-      />
+        <SiderComponent
+          open={open}
+          handleDrawerOpen={handleDrawerOpen}
+          handleDrawerClose={handleDrawerClose}
+        />
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Container>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: theme.spacing(0, 1),
-              ...theme.mixins.toolbar,
-            }}
-          />
-          {children}
-        </Container>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Container>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: theme.spacing(0, 1),
+                ...theme.mixins.toolbar,
+              }}
+            />
+            {children}
+          </Container>
+        </Box>
       </Box>
-    </Box>
+      <FooterComponent />
+    </>
   );
 }

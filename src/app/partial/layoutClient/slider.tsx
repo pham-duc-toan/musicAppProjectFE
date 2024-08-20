@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { styled, Theme, CSSObject } from "@mui/material/styles";
+import { styled, Theme, CSSObject, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -13,6 +13,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -74,6 +76,39 @@ export default function SiderComponent({
   handleDrawerOpen: () => void;
   handleDrawerClose: () => void;
 }) {
+  const theme: Theme = useTheme();
+  const listMenu = [
+    {
+      name: "Upload",
+      icon: <FileUploadIcon />,
+    },
+    {
+      name: "Starred",
+      icon: <MailIcon />,
+    },
+    {
+      name: "Send email",
+      icon: <InboxIcon />,
+    },
+    {
+      name: "Drafts",
+      icon: <MailIcon />,
+    },
+  ];
+  const listMenu2 = [
+    {
+      name: "All mail",
+      icon: <InboxIcon />,
+    },
+    {
+      name: "Drafts",
+      icon: <MailIcon />,
+    },
+    {
+      name: "Spam",
+      icon: <InboxIcon />,
+    },
+  ];
   return (
     <Sider variant="permanent" open={open}>
       <SideBarHeader>
@@ -83,8 +118,14 @@ export default function SiderComponent({
       </SideBarHeader>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
+        <Link
+          style={{
+            textDecoration: "none",
+            color: theme.palette.text.primary,
+          }}
+          href={"/createSong"}
+        >
+          <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -99,17 +140,17 @@ export default function SiderComponent({
                   justifyContent: "center",
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <FileUploadIcon />
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary="Upload" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
-        ))}
+        </Link>
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
+        {listMenu2.map((item, index) => (
+          <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -124,9 +165,12 @@ export default function SiderComponent({
                   justifyContent: "center",
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {item.icon}
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText
+                primary={item.name}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
         ))}
