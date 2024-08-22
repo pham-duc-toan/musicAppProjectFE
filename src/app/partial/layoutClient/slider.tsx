@@ -14,7 +14,8 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import Link from "next/link";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
+import ItemSider from "@/component/item-of-list-button-sider";
 
 const drawerWidth = 240;
 
@@ -77,24 +78,7 @@ export default function SiderComponent({
   handleDrawerClose: () => void;
 }) {
   const theme: Theme = useTheme();
-  const listMenu = [
-    {
-      name: "Upload",
-      icon: <FileUploadIcon />,
-    },
-    {
-      name: "Starred",
-      icon: <MailIcon />,
-    },
-    {
-      name: "Send email",
-      icon: <InboxIcon />,
-    },
-    {
-      name: "Drafts",
-      icon: <MailIcon />,
-    },
-  ];
+
   const listMenu2 = [
     {
       name: "All mail",
@@ -118,34 +102,26 @@ export default function SiderComponent({
       </SideBarHeader>
       <Divider />
       <List>
-        <Link
-          style={{
-            textDecoration: "none",
-            color: theme.palette.text.primary,
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Upload",
+            router: "/createSong",
           }}
-          href={"/createSong"}
         >
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <FileUploadIcon />
-              </ListItemIcon>
-              <ListItemText primary="Upload" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+          <FileUploadIcon />
+        </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "All Songs",
+            router: "/songs",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
       </List>
       <Divider />
       <List>
