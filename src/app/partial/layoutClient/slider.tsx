@@ -16,7 +16,7 @@ import MailIcon from "@mui/icons-material/Mail";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ItemSider from "@/component/item-of-list-button-sider";
-
+import HomeIcon from "@mui/icons-material/Home";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -106,21 +106,32 @@ export default function SiderComponent({
           theme={theme}
           open={open}
           data={{
-            name: "Upload",
-            router: "/createSong",
+            name: "Trang chủ",
+            router: "/",
           }}
         >
-          <FileUploadIcon />
+          <HomeIcon />
+        </ItemSider>
+
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Tất cả bài hát",
+            router: "/songs",
+          }}
+        >
+          <QueueMusicIcon />
         </ItemSider>
         <ItemSider
           theme={theme}
           open={open}
           data={{
-            name: "All Songs",
-            router: "/songs",
+            name: "Thêm bài hát",
+            router: "/createSong",
           }}
         >
-          <QueueMusicIcon />
+          <FileUploadIcon />
         </ItemSider>
       </List>
       <Divider />

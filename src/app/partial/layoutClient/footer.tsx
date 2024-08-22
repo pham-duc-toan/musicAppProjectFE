@@ -1,43 +1,67 @@
 "use client";
 
 import { useHasMounted } from "@/app/utils/customHook";
+import { pause, play } from "@/store/playingMusicSlice";
+import { AppDispatch, RootState } from "@/store/store";
 import { useTheme } from "@mui/material";
-import { Box, color, Container, flexbox, styled } from "@mui/system";
-import AudioPlayer from "react-h5-audio-player";
+import { Box, Container, styled } from "@mui/system";
+import { useEffect, useRef } from "react";
+import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-const StyledAudioPlayer = styled(AudioPlayer)(({ theme }) => {
-  return {
-    "& .rhap_time": {
-      color: theme.palette.text.primary,
-    },
-    "& .rhap_repeat-button": {
-      color: theme.palette.text.primary,
-    },
-    "& .rhap_progress-indicator": {
-      color: theme.palette.text.primary,
-      backgroundColor: theme.palette.text.primary,
-    },
-    "& .rhap_main-controls-button": {
-      color: theme.palette.text.primary,
-    },
-    "& .rhap_volume-button": {
-      color: theme.palette.text.primary,
-    },
-    "& .rhap_progress-filled": {
-      backgroundColor: theme.palette.text.primary,
-    },
-    "& .rhap_volume-indicator": {
-      backgroundColor: theme.palette.text.primary,
-    },
-  };
-});
+import { useDispatch, useSelector } from "react-redux";
+
+// Định nghĩa StyledAudioPlayer
+const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
+  "& .rhap_time": {
+    color: theme.palette.text.primary,
+  },
+  "& .rhap_repeat-button": {
+    color: theme.palette.text.primary,
+  },
+  "& .rhap_progress-indicator": {
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.text.primary,
+  },
+  "& .rhap_main-controls-button": {
+    color: theme.palette.text.primary,
+  },
+  "& .rhap_volume-button": {
+    color: theme.palette.text.primary,
+  },
+  "& .rhap_progress-filled": {
+    backgroundColor: theme.palette.text.primary,
+  },
+  "& .rhap_volume-indicator": {
+    backgroundColor: theme.palette.text.primary,
+  },
+}));
+
 const FooterComponent = () => {
   const theme = useTheme();
+  const dispatch: AppDispatch = useDispatch();
+  const songCurrent = useSelector((state: RootState) => state.playingMusic);
 
+  const playerRef = useRef<H5AudioPlayer | null>(null);
   const mounted = useHasMounted();
+
+  useEffect(() => {
+    if (mounted) {
+      if (playerRef.current && playerRef.current.audio.current?.play()) {
+        if (songCurrent.isPlaying) {
+          playerRef.current.audio.current.play().catch((error) => {
+            console.error("Error playing audio:", error);
+          });
+        } else {
+          playerRef.current.audio.current.pause();
+        }
+      }
+    }
+  }, [songCurrent.isPlaying, mounted]);
+
   if (!mounted) {
-    return <></>;
+    return null;
   }
+
   return (
     <footer
       className="footer"
@@ -61,19 +85,20 @@ const FooterComponent = () => {
         }}
       >
         <StyledAudioPlayer
+          ref={playerRef}
           volume={0.2}
           style={{
             backgroundColor: theme.palette.secondary.main,
             boxShadow: "unset",
           }}
-          src="https://backend.daca.vn/assets/audios/ngay-mai-nguoi-ta-lay-chong.mp3"
-          onPlay={(e) => console.log("onPlay")}
+          src={songCurrent.audio}
+          onPause={() => dispatch(pause())}
+          onPlay={() => dispatch(play())}
         />
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-
             flexDirection: "column",
           }}
         >
@@ -83,7 +108,7 @@ const FooterComponent = () => {
               fontSize: "15px",
             }}
           >
-            Toan dep trai
+            {songCurrent.singerFullName}
           </div>
           <div
             style={{
@@ -91,11 +116,12 @@ const FooterComponent = () => {
               fontWeight: "700",
             }}
           >
-            Ngay mai nguoi ta lay chong
+            {songCurrent.title}
           </div>
         </Box>
       </Container>
     </footer>
   );
 };
+
 export default FooterComponent;

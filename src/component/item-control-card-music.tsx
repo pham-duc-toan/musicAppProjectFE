@@ -10,34 +10,32 @@ import Typography from "@mui/material/Typography";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+import PauseIcon from "@mui/icons-material/Pause";
 import Link from "next/link";
-interface TSongDetail {
-  listen: number;
-  _id: string;
-  title: string;
-  avatar: string;
-  description: string;
-  singerId: string;
-  topicId: string;
-  like: number;
-  lyrics: string;
-  audio: string;
-  status: string;
-  slug: string;
-  singerInfo: {
-    fullName: string;
-    [key: string]: any;
-  };
-  deleted: boolean;
-}
+import { TSongDetail } from "@/dataType/song";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { pause, play, setNewSong } from "@/store/playingMusicSlice";
+import Image from "next/image";
 
 export default function ItemControlCard({ data }: { data: TSongDetail }) {
   const theme = useTheme();
-
+  const songCurrent = useSelector((state: RootState) => state.playingMusic);
+  const dispatch: AppDispatch = useDispatch();
+  const handleChangeNewSongPlaying = () => {
+    dispatch(setNewSong(data));
+  };
+  const handleChangeIsPlaying = () => {
+    if (songCurrent.isPlaying) {
+      dispatch(pause());
+    } else {
+      dispatch(play());
+    }
+  };
   return (
     <Card sx={{ display: "flex" }}>
       <Box sx={{ display: "flex", flexDirection: "column", width: "50%" }}>
-        <CardContent sx={{ flex: "1 0 auto" }}>
+        <CardContent sx={{ flex: "1 0 auto", padding: "32px 24px 0 24px" }}>
           <Typography
             component="div"
             variant="h5"
@@ -45,12 +43,12 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
             sx={{
               fontSize: "20px",
               lineHeight: "1.3",
-              height: "53px",
+              height: "78px",
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
               WebkitBoxOrient: "vertical",
-              WebkitLineClamp: 2,
+              WebkitLineClamp: 3,
               wordWrap: "break-word",
             }}
           >
@@ -74,9 +72,23 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
               <SkipPreviousIcon />
             )}
           </IconButton>
-          <IconButton aria-label="play/pause">
-            <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-          </IconButton>
+
+          {songCurrent._id != data._id ? (
+            <IconButton
+              aria-label="playing"
+              onClick={handleChangeNewSongPlaying}
+            >
+              <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+            </IconButton>
+          ) : (
+            <IconButton aria-label="play/pause" onClick={handleChangeIsPlaying}>
+              {!songCurrent.isPlaying && songCurrent._id == data._id ? (
+                <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+              ) : (
+                <PauseIcon sx={{ height: 38, width: 38 }} />
+              )}
+            </IconButton>
+          )}
           <IconButton aria-label="next">
             {theme.direction === "rtl" ? (
               <SkipPreviousIcon />
@@ -86,11 +98,14 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
           </IconButton>
         </Box>
       </Box>
-      <CardMedia
-        component="img"
-        sx={{ width: 151 }}
-        image={data.avatar}
+
+      <Image
+        src={data.avatar}
         alt={data.title}
+        width={207}
+        height={207}
+        layout="fixed"
+        objectFit="cover"
       />
     </Card>
   );

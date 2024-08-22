@@ -5,7 +5,8 @@ import {
   Experimental_CssVarsProvider as CssVarsProvider,
 } from "@mui/material/styles";
 import { Titillium_Web } from "next/font/google";
-
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 const font = Titillium_Web({
   subsets: ["latin"],
   weight: ["200", "300", "400", "600", "700", "900"],
@@ -169,8 +170,10 @@ export function ThemeProvider({
   children: React.ReactNode;
 }>) {
   return (
-    <CssVarsProvider defaultMode="system" theme={theme}>
-      {children}
-    </CssVarsProvider>
+    <Provider store={store}>
+      <CssVarsProvider defaultMode="system" theme={theme}>
+        {children}
+      </CssVarsProvider>
+    </Provider>
   );
 }

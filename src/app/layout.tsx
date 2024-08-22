@@ -1,7 +1,6 @@
 import "./globals.css";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { ThemeProvider } from "./theme-provider";
-import { CssBaseline } from "@mui/material";
 
 export const metadata = {
   title: "My Project Next",
