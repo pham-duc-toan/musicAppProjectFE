@@ -104,8 +104,8 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
         alt={data.title}
         width={207}
         height={207}
-        layout="fixed"
-        objectFit="cover"
+        style={{ objectFit: "cover" }}
+        priority
       />
     </Card>
   );

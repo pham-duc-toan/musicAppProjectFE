@@ -10,7 +10,6 @@ import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 
-// Định nghĩa StyledAudioPlayer
 const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   "& .rhap_time": {
     color: theme.palette.text.primary,
@@ -36,6 +35,8 @@ const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   },
 }));
 
+import { useState } from "react";
+
 const FooterComponent = () => {
   const theme = useTheme();
   const dispatch: AppDispatch = useDispatch();
@@ -45,18 +46,28 @@ const FooterComponent = () => {
   const mounted = useHasMounted();
 
   useEffect(() => {
-    if (mounted) {
-      if (playerRef.current && playerRef.current.audio.current?.play()) {
+    const audioElement = playerRef.current?.audio.current;
+
+    if (audioElement) {
+      const handleCanPlay = () => {
+        // nếu ko biết hàm được gọi do gì thì viết thêm hàm handleCanPlay2 để log ra xem được gọi bởi gì
+
         if (songCurrent.isPlaying) {
-          playerRef.current.audio.current.play().catch((error) => {
+          audioElement.play().catch((error) => {
             console.error("Error playing audio:", error);
           });
         } else {
-          playerRef.current.audio.current.pause();
+          audioElement.pause();
         }
-      }
+      };
+
+      if (audioElement.currentSrc) handleCanPlay();
+      audioElement.addEventListener("canplay", handleCanPlay);
+      return () => {
+        audioElement.removeEventListener("canplay", handleCanPlay);
+      };
     }
-  }, [songCurrent.isPlaying, mounted]);
+  }, [songCurrent.audio, songCurrent.isPlaying]);
 
   if (!mounted) {
     return null;
@@ -92,8 +103,12 @@ const FooterComponent = () => {
             boxShadow: "unset",
           }}
           src={songCurrent.audio}
-          onPause={() => dispatch(pause())}
-          onPlay={() => dispatch(play())}
+          onPause={() => {
+            dispatch(pause());
+          }}
+          onPlay={() => {
+            dispatch(play());
+          }}
         />
         <Box
           sx={{
