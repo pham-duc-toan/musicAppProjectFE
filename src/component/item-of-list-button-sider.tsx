@@ -20,13 +20,7 @@ const ItemSider = (props: I) => {
   const { theme, open, data, children } = props;
   return (
     <>
-      <Link
-        style={{
-          textDecoration: "none",
-          color: theme.palette.text.primary,
-        }}
-        href={`${data.router}`}
-      >
+      <Link href={`${data.router}`}>
         <ListItem disablePadding sx={{ display: "block" }}>
           <ListItemButton
             sx={{

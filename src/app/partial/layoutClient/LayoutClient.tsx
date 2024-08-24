@@ -34,9 +34,8 @@ export default function LayOutClient({
 
   return (
     <>
+      <CssBaseline />
       <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-
         <HeaderComponent open={open} />
 
         <SiderComponent

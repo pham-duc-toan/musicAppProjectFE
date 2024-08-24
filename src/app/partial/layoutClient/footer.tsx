@@ -54,7 +54,7 @@ const FooterComponent = () => {
 
         if (songCurrent.isPlaying) {
           audioElement.play().catch((error) => {
-            console.error("Error playing audio:", error);
+            console.log("Error playing audio:", error);
           });
         } else {
           audioElement.pause();

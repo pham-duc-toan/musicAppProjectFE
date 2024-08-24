@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Box, Container, Button } from "@mui/material";
 import { SwitchThemeButton } from "@/component/button-dark-mode";
 import Link from "next/link";
+import BtnLoginLogout from "@/component/btn-login-logout";
 
 const drawerWidth = 240;
 
@@ -62,16 +63,7 @@ export default function HeaderComponent({ open }: { open: boolean }) {
             alignItems: "center",
           }}
         >
-          <Link href={"/login"}>
-            <Button
-              variant="contained"
-              sx={{
-                marginRight: "5px",
-              }}
-            >
-              Login
-            </Button>
-          </Link>
+          <BtnLoginLogout />
           <SwitchThemeButton />
         </Box>
       </Container>

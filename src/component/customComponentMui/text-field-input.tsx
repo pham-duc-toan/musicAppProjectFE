@@ -1,7 +1,6 @@
 "use client";
 import { TextField, TextFieldProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { color, fontSize, fontWeight } from "@mui/system";
 import { useState } from "react";
 
 const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
@@ -11,7 +10,7 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
     },
     "[data-mui-color-scheme='dark'] & .MuiInputBase-input.MuiOutlinedInput-input":
       {
-        WebkitBoxShadow: "0 0 0 100px #655BD3 inset ",
+        WebkitBoxShadow: `0 0 0 100px #333 inset `,
       },
   };
 });
@@ -26,8 +25,6 @@ const CustomTextField = (props: TextFieldProps) => {
   } = props;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-
     if (event.target.value) {
       setLabelActive(true);
     } else {

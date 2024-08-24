@@ -1,3 +1,5 @@
+import { CssBaseline } from "@mui/material";
+
 export default function AuthLayout({
   children,
 }: {
@@ -5,7 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      <div>Auth Layout - Header</div>
+      <CssBaseline />
       {children}
     </>
   );
