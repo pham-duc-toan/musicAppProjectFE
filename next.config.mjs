@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["backend.daca.vn"], // Add your domain here
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "backend.daca.vn",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+    ],
   },
 };
 

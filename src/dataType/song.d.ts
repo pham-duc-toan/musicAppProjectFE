@@ -4,17 +4,18 @@ export interface TSongDetail {
   title: string;
   avatar: string;
   description: string;
-  singerId: string;
+  singerId: {
+    _id: string;
+    fullName: string;
+    [key: string]: any;
+  };
   topicId: string;
   like: number;
   lyrics: string;
   audio: string;
   status: string;
   slug: string;
-  singerInfo: {
-    fullName: string;
-    [key: string]: any;
-  };
+
   deleted: boolean;
 }
 export interface TSongFooter {

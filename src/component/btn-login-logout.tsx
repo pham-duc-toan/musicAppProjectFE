@@ -1,17 +1,18 @@
 "use client";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Session } from "next-auth";
+
 import Link from "next/link";
 import { Button } from "@mui/material";
+import { deleteCookie, getCookie } from "@/app/helper/cookieClient";
+import { postProtect } from "@/app/utils/request";
 
 export default function BtnLoginLogout() {
-  const { data: session } = useSession();
-  console.log(session);
-
-  if (session) {
+  if (true) {
     return (
       <Button
-        onClick={() => signOut()}
+        onClick={async () => {
+          //check ko vao duoc token
+          // signOut();
+        }}
         variant="contained"
         sx={{
           marginRight: "5px",

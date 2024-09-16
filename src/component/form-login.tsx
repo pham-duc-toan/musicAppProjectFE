@@ -8,15 +8,18 @@ import ListProvider from "@/component/list-btn-login-provider";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, IconButton, InputAdornment, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 export default function FormLoginComponent() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isErrorUsername, setIsErrorUsername] = useState<boolean>(false);
   const [isErrorPassword, setIsErrorPassword] = useState<boolean>(false);
   const [errorUserName, setErrorUserName] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsErrorPassword(false);
     setIsErrorUsername(false);
@@ -34,8 +37,6 @@ export default function FormLoginComponent() {
       setErrorPassword("Password is not empty.");
       return;
     }
-    console.log("user:", user);
-    console.log("password:", password);
   };
 
   return (

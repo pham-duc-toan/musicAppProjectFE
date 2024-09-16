@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button } from "@mui/material";
-import { signIn } from "next-auth/react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useEffect } from "react";
@@ -22,7 +21,7 @@ const ListProvider = () => {
       >
         <Button
           onClick={() => {
-            signIn("github");
+            // signIn("github");
           }}
         >
           <GitHubIcon />

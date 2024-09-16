@@ -61,7 +61,7 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
             height={"50%"}
             noWrap
           >
-            {data.singerInfo.fullName}
+            {data.singerId.fullName}
           </Typography>
         </CardContent>
         <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
