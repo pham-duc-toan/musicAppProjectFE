@@ -35,8 +35,6 @@ const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   },
 }));
 
-import { useState } from "react";
-
 const FooterComponent = () => {
   const theme = useTheme();
   const dispatch: AppDispatch = useDispatch();
@@ -97,7 +95,7 @@ const FooterComponent = () => {
       >
         <StyledAudioPlayer
           ref={playerRef}
-          volume={0.2}
+          volume={1}
           style={{
             backgroundColor: theme.palette.secondary.main,
             boxShadow: "unset",

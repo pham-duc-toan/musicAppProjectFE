@@ -15,16 +15,15 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  TextareaAutosize,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
+import { Box } from "@mui/system";
 
-function DragDropUploadFile() {
+function TopicCreateComponent() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [audioPreview, setAudioPreview] = useState<string | null>(null);
-
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string>("active");
   // Hàm để xử lý file upload và xem trước avatar/audio
@@ -34,16 +33,12 @@ function DragDropUploadFile() {
         setAvatarPreview(URL.createObjectURL(file));
         setAvatarFile(file);
       }
-      if (file.type.startsWith("audio/")) {
-        setAudioPreview(URL.createObjectURL(file));
-        setAudioFile(file);
-      }
     });
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: { "image/*": [], "audio/*": [] },
+    accept: { "image/*": [] },
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,29 +48,23 @@ function DragDropUploadFile() {
     //@ts-ignore
     const title = form.title.value || "";
     const description = form.description.value || "";
-    const singerId = form.singerId.value || "";
-    const topicId = form.topicId.value || "";
 
-    // Tạo một đối tượng FormData
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("singerId", singerId);
-    formData.append("topicId", topicId);
     formData.append("status", status);
 
     // Thêm file vào formData nếu có
     if (avatarFile) {
       formData.append("avatar", avatarFile);
-    }
-    if (audioFile) {
-      formData.append("audio", audioFile);
+    } else {
+      //thông báo lỗi
     }
 
     // Gửi formData lên server
     try {
       const response = await fetch(
-        process.env.NEXT_PUBLIC_BACK_END_URL + "/songs/create",
+        process.env.NEXT_PUBLIC_BACK_END_URL + "/topics/create",
         {
           method: "POST",
           body: formData,
@@ -100,10 +89,6 @@ function DragDropUploadFile() {
     setAvatarFile(null);
   };
 
-  const handleRemoveAudio = () => {
-    setAudioPreview(null);
-    setAudioFile(null);
-  };
   const handleStatusChange = (event: any) => {
     setStatus(event.target.value as string);
   };
@@ -111,27 +96,20 @@ function DragDropUploadFile() {
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <TextField size="small" label="Title" name="title" required />
-        </Grid>
-        <Grid item xs={12}>
           <TextField
-            fullWidth
+            sx={{
+              width: {
+                xs: "100%",
+                sm: "auto",
+              },
+            }}
             size="small"
-            label="Description"
-            name="description"
-            multiline
-            rows={4}
+            label="Title"
+            name="title"
             required
           />
         </Grid>
-        <Grid item xs={6}>
-          <TextField label="Singer ID" size="small" name="singerId" required />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField label="Topic ID" size="small" name="topicId" required />
-        </Grid>
-
-        <Grid item xs={3}>
+        <Grid item xs={12} md={4}>
           <FormControl fullWidth size="small">
             <InputLabel>Status</InputLabel>
             <Select
@@ -146,11 +124,23 @@ function DragDropUploadFile() {
           </FormControl>
         </Grid>
 
+        <Grid item xs={6}>
+          <TextField
+            size="small"
+            fullWidth
+            label="Description"
+            name="description"
+            multiline
+            minRows={4}
+            maxRows={10}
+          />
+        </Grid>
         {/* Avatar Upload */}
         {avatarPreview && (
-          <Grid item>
+          <Grid xs={12} item>
             <Card
               sx={{
+                maxWidth: "460px",
                 display: "flex",
                 alignItems: "center",
                 position: "relative",
@@ -180,47 +170,29 @@ function DragDropUploadFile() {
           </Grid>
         )}
 
-        {/* Audio Upload */}
-        {audioPreview && (
-          <Grid item>
-            <Card sx={{ minWidth: "460px", position: "relative" }}>
-              <CardContent
-                sx={{
-                  display: { xs: "block", sm: "flex" },
-                  alignItems: { sm: "center" },
-                }}
-              >
-                <audio controls style={{ marginRight: "16px" }}>
-                  <source src={audioPreview} type="audio/mpeg" />
-                  Your browser does not support the audio tag.
-                </audio>
-                <Typography>Audio Preview</Typography>
-                <IconButton
-                  onClick={handleRemoveAudio}
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    color: "red",
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </CardContent>
-            </Card>
-          </Grid>
-        )}
         <Grid
           item
           xs={12}
-          sx={{ display: !(audioPreview && avatarPreview) ? "block" : "none" }}
+          sx={{
+            display: !avatarPreview ? "flex" : "none",
+            justifyContent: !avatarPreview ? "center" : undefined,
+            alignItems: !avatarPreview ? "center" : undefined,
+          }}
         >
-          <div {...getRootProps({ className: "dropzone" })}>
+          <Box
+            sx={{
+              width: {
+                xs: "100%",
+                md: "60%",
+              },
+            }}
+            {...getRootProps({ className: "dropzone" })}
+          >
             <input {...getInputProps()} />
-            <Button variant="outlined" fullWidth sx={{ padding: "50px" }}>
-              Drag 'n' drop an avatar image or click to select one
+            <Button sx={{ padding: "50px" }} variant="outlined">
+              Chọn poster cho chủ đề. Kéo thả file hoặc chọn file cần tải lên
             </Button>
-          </div>
+          </Box>
         </Grid>
         <Grid
           item
@@ -246,4 +218,4 @@ function DragDropUploadFile() {
   );
 }
 
-export default DragDropUploadFile;
+export default TopicCreateComponent;

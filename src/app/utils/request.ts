@@ -1,7 +1,12 @@
 const SERVER = process.env.NEXT_PUBLIC_BACK_END_URL;
 
-export const get = async (path: string) => {
-  const response = await fetch(SERVER + path, {
+export const get = async (path: string, query?: any) => {
+  let queryParams = "" as any;
+  if (query) {
+    queryParams = new URLSearchParams(query);
+  }
+
+  const response = await fetch(SERVER + path + `?${queryParams.toString()}`, {
     method: "GET",
     credentials: "include",
     headers: {
@@ -11,13 +16,13 @@ export const get = async (path: string) => {
   const data = await response.json();
   return data;
 };
-export const getProtect = async (path: string) => {
+export const getPublic = async (path: string) => {
   const response = await fetch(SERVER + path);
   const data = await response.json();
   //check cookies
   return data;
 };
-export const post = async (path: string, options?: object) => {
+export const postPublic = async (path: string, options?: object) => {
   const response = await fetch(SERVER + path, {
     method: "POST",
     credentials: "include",
@@ -29,7 +34,7 @@ export const post = async (path: string, options?: object) => {
   const data = await response.json();
   return data;
 };
-export const postProtect = async (
+export const post = async (
   path: string,
   bearToken: string,
   options?: object

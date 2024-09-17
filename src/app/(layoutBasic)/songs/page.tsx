@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 
 const Songs = async () => {
-  const datall = await get("/songs");
+  const datall = await get("/songs/full");
   const datas = datall.data;
 
   return (
