@@ -11,7 +11,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { get } from "@/app/utils/request";
+import { apiBasic } from "@/app/utils/request";
 
 import { TPropSelector } from "@/dataType/propSelector";
 import { TSuggestAvaSlugId } from "@/dataType/suggest";
@@ -38,8 +38,10 @@ const SelectorSuggest = (props: TPropSelector) => {
       setShrink(false);
       objectParam = undefined;
     }
-    const listSuggest = await get(`${urlFetch}`, objectParam);
-
+    const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
+    if (listSuggest.error) {
+      return;
+    }
     setFilteredSuggests(listSuggest.data);
     setShowSuggestions(true);
   };
@@ -54,8 +56,10 @@ const SelectorSuggest = (props: TPropSelector) => {
     } else {
       objectParam = undefined;
     }
-    const listSuggest = await get(`${urlFetch}`, objectParam);
-
+    const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
+    if (listSuggest.error) {
+      return;
+    }
     setFilteredSuggests(listSuggest.data);
     setShowSuggestions(true);
   };

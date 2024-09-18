@@ -20,8 +20,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
 import { Box } from "@mui/system";
+import { useAppContext } from "@/context-app";
 
 function TopicCreateComponent() {
+  const { showMessage } = useAppContext();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -72,13 +74,17 @@ function TopicCreateComponent() {
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        // Lấy thông tin lỗi từ response body
+        const errorData = await response.json();
+        showMessage(errorData.message || "Something went wrong", "error");
       }
 
       const result = await response.json();
-      console.log(result); // Xử lý kết quả từ server
+      console.log(result);
+
+      showMessage("Tạo mới thành công !", "success");
     } catch (error) {
-      console.error("Error:", error);
+      showMessage("Lỗi", "error");
     } finally {
       setLoading(false); // Dừng trạng thái loading sau khi nhận được phản hồi
     }

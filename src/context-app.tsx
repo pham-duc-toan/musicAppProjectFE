@@ -1,24 +1,25 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Snackbar, Alert } from "@mui/material";
-
-// Định nghĩa interface cho context
-interface SnackbarContextProps {
-  showMessage: (message: string, severity: "success" | "error") => void;
-}
-
+import RefreshToken from "./component/refresh-token";
 // Tạo context
-const SnackbarContext = createContext<SnackbarContextProps | undefined>(
-  undefined
-);
+const AppContext = createContext({
+  showMessage: (message: string, severity: "success" | "error") => {},
+});
 
 // Tạo provider cho SnackbarContext
 const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  //alert
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [severity, setSeverity] = useState<"success" | "error">("success");
-
-  // Hàm hiển thị thông báo
   const showMessage = (message: string, severity: "success" | "error") => {
     setSnackbarMessage(message);
     setSeverity(severity);
@@ -28,9 +29,11 @@ const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
+  //end alert
 
   return (
-    <SnackbarContext.Provider value={{ showMessage }}>
+    <AppContext.Provider value={{ showMessage }}>
+      <RefreshToken />
       {children}
 
       {/* Snackbar cho hiển thị thông báo */}
@@ -48,15 +51,15 @@ const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-    </SnackbarContext.Provider>
+    </AppContext.Provider>
   );
 };
 export default ContextApp;
 // Hook để sử dụng context
-export const useSnackbar = () => {
-  const context = useContext(SnackbarContext);
+export const useAppContext = () => {
+  const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useSnackbar must be used within a SnackbarProvider");
+    throw new Error("useAppContext must be used within a AppContext");
   }
   return context;
 };

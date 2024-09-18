@@ -1,6 +1,7 @@
 import "./globals.css";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { ThemeProvider } from "./theme-provider";
+import ContextApp from "@/context-app";
 
 export const metadata = {
   title: "My Project Next",
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <InitColorSchemeScript defaultMode="system" />
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <ContextApp>{children}</ContextApp>
+        </ThemeProvider>
       </body>
     </html>
   );

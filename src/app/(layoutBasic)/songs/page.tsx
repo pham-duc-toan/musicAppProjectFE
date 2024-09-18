@@ -1,12 +1,14 @@
-import { get } from "@/app/utils/request";
+import { apiBasic } from "@/app/utils/request";
 import ItemControlCard from "@/component/item-control-card-music";
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 
 const Songs = async () => {
-  const datall = await get("/songs/full");
+  const datall = await apiBasic("GET", "/songs/full");
   const datas = datall.data;
-
+  if (datall.error) {
+    return <h1>{datall.message}</h1>;
+  }
   return (
     <>
       <h1>Tat ca cac bai hat</h1>

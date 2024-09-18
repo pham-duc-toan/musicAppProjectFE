@@ -20,8 +20,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
 import { Box } from "@mui/system";
+import { useAppContext } from "@/context-app";
+import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
+const accessToken = getAccessTokenFromLocalStorage();
 
 function SingerCreateComponent() {
+  const { showMessage } = useAppContext();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -56,26 +60,34 @@ function SingerCreateComponent() {
       formData.append("avatar", avatarFile);
     } else {
       //thông báo lỗi
+      showMessage("Thiếu upload ảnh !", "error");
+      return;
     }
-
-    // Gửi formData lên server
     try {
+      // Gửi formData lên server
       const response = await fetch(
         process.env.NEXT_PUBLIC_BACK_END_URL + "/singers/create",
         {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Thêm Bearer token vào header
+          },
+          credentials: "include",
         }
       );
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        // Lấy thông tin lỗi từ response body
+        const errorData = await response.json();
+        showMessage(errorData.message || "Something went wrong", "error");
       }
 
       const result = await response.json();
-      console.log(result); // Xử lý kết quả từ server
+      console.log(result);
+      showMessage("Tạo mới thành công !", "success");
     } catch (error) {
-      console.error("Error:", error);
+      showMessage(`Lỗi! Không kết nối được dữ liệu`, "error");
     } finally {
       setLoading(false); // Dừng trạng thái loading sau khi nhận được phản hồi
     }
