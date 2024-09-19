@@ -42,11 +42,8 @@ export async function POST(request: NextRequest) {
       );
     }
   } else {
-    return NextResponse.json(
-      {
-        message: "Token không đúng ! Vui lòng đăng nhập lại!",
-      },
-      { status: 400 }
-    );
+    return NextResponse.json({
+      message: "Token không đúng ! Vui lòng đăng nhập lại!",
+    });
   }
 }

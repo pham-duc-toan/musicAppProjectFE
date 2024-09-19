@@ -12,17 +12,44 @@ export const apiBasic = async (
     path,
     query,
     method: method,
-    bearToken: accessToken,
+
     ...(option ?? option),
   };
-  const response = await fetch(`${process.env.NEXT_PUBLIC_CALL_API}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASIC_API}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+    body: JSON.stringify(body),
+  }).then((res) => res.json());
+
+  return response;
+};
+//api call trực tiếp tới server backend
+export const apiBackEndCreateWithFile = async (
+  path: string,
+  formData: any,
+  accessToken: string | null
+) => {
+  const response = await fetch(process.env.NEXT_PUBLIC_BACK_END_URL + path, {
+    method: "POST",
+    body: formData,
+    headers: {
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+    credentials: "include",
+  });
+  const result = await response.json();
+  return result;
+};
+export const login = async (body: { username: string; password: string }) => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  });
-
-  const result = await response.json();
-  return result;
+  }).then((res) => res.json());
+  return response;
 };

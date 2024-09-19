@@ -15,8 +15,10 @@ import { apiBasic } from "@/app/utils/request";
 
 import { TPropSelector } from "@/dataType/propSelector";
 import { TSuggestAvaSlugId } from "@/dataType/suggest";
+import { useAppContext } from "@/context-app";
 
 const SelectorSuggest = (props: TPropSelector) => {
+  const { showMessage } = useAppContext();
   const { name, label, urlFetch, suggestKey } = props;
   const [filteredSuggests, setFilteredSuggests] = useState<TSuggestAvaSlugId[]>(
     []
@@ -39,7 +41,12 @@ const SelectorSuggest = (props: TPropSelector) => {
       objectParam = undefined;
     }
     const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
-    if (listSuggest.error) {
+
+    if (!listSuggest?.data) {
+      showMessage(
+        `${listSuggest?.message}` || "Không tìm được dữ liệu",
+        "error"
+      );
       return;
     }
     setFilteredSuggests(listSuggest.data);
@@ -57,7 +64,12 @@ const SelectorSuggest = (props: TPropSelector) => {
       objectParam = undefined;
     }
     const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
-    if (listSuggest.error) {
+
+    if (!listSuggest?.data) {
+      showMessage(
+        `${listSuggest?.message}` || "Không tìm được dữ liệu",
+        "error"
+      );
       return;
     }
     setFilteredSuggests(listSuggest.data);

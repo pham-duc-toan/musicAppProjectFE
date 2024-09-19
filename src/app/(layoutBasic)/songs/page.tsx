@@ -4,10 +4,10 @@ import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 
 const Songs = async () => {
-  const datall = await apiBasic("GET", "/songs/full");
-  const datas = datall.data;
-  if (datall.error) {
-    return <h1>{datall.message}</h1>;
+  const datall: any = await apiBasic("GET", "/songs/full");
+  const datas = datall?.data || undefined;
+  if (!datas) {
+    return <h1>{datall?.message || "Không lấy được dữ liệu"}</h1>;
   }
   return (
     <>

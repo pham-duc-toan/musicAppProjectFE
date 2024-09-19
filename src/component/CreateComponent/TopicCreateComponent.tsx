@@ -21,6 +21,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
 import { Box } from "@mui/system";
 import { useAppContext } from "@/context-app";
+import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
+import { apiBackEndCreateWithFile } from "@/app/utils/request";
+const accessToken = getAccessTokenFromLocalStorage();
 
 function TopicCreateComponent() {
   const { showMessage } = useAppContext();
@@ -45,7 +48,7 @@ function TopicCreateComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+
     const form = e.currentTarget;
     //@ts-ignore
     const title = form.title.value || "";
@@ -61,33 +64,24 @@ function TopicCreateComponent() {
       formData.append("avatar", avatarFile);
     } else {
       //thông báo lỗi
+      showMessage("Vui lòng tải thêm file ảnh", "error");
     }
 
     // Gửi formData lên server
-    try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_BACK_END_URL + "/topics/create",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
-        // Lấy thông tin lỗi từ response body
-        const errorData = await response.json();
-        showMessage(errorData.message || "Something went wrong", "error");
-      }
-
-      const result = await response.json();
-      console.log(result);
-
+    setLoading(true);
+    const result = await apiBackEndCreateWithFile(
+      "/topics/create",
+      formData,
+      accessToken
+    );
+    console.log(result);
+    if (result.statusCode != 201) {
+      showMessage(result.message || "Something went wrong", "error");
+    } else {
       showMessage("Tạo mới thành công !", "success");
-    } catch (error) {
-      showMessage("Lỗi", "error");
-    } finally {
-      setLoading(false); // Dừng trạng thái loading sau khi nhận được phản hồi
     }
+
+    setLoading(false);
   };
 
   const handleRemoveAvatar = () => {
