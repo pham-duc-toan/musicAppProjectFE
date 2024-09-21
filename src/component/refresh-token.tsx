@@ -1,11 +1,13 @@
 "use client";
 import { checkAndRefreshToken } from "@/app/utils/checkAndRefreshToken";
+import { useAppContext } from "@/context-app";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 // Những page sau sẽ không check refesh token
 const UNAUTHENTICATED_PATH = ["/login", "/logout", "/refresh-token"];
 export default function RefreshToken() {
+  const { showMessage } = useAppContext();
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
@@ -26,6 +28,10 @@ export default function RefreshToken() {
         checkAndRefreshToken({
           onError: () => {
             clearInterval(interval);
+            showMessage(
+              "Hết phiên đăng nhập! Vui lòng đăng nhập lại!",
+              "error"
+            );
             router.push("/login");
           },
         }),

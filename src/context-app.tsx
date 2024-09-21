@@ -33,7 +33,6 @@ const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <AppContext.Provider value={{ showMessage }}>
-      <RefreshToken />
       {children}
 
       {/* Snackbar cho hiển thị thông báo */}

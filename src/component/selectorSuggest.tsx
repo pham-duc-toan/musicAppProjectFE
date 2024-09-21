@@ -10,14 +10,16 @@ import {
   Avatar,
   ListItemText,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { Box } from "@mui/system";
-import { apiBasic } from "@/app/utils/request";
+import { apiBasicClient } from "@/app/utils/request";
 
 import { TPropSelector } from "@/dataType/propSelector";
 import { TSuggestAvaSlugId } from "@/dataType/suggest";
 import { useAppContext } from "@/context-app";
 
 const SelectorSuggest = (props: TPropSelector) => {
+  const router = useRouter();
   const { showMessage } = useAppContext();
   const { name, label, urlFetch, suggestKey } = props;
   const [filteredSuggests, setFilteredSuggests] = useState<TSuggestAvaSlugId[]>(
@@ -40,13 +42,16 @@ const SelectorSuggest = (props: TPropSelector) => {
       setShrink(false);
       objectParam = undefined;
     }
-    const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
+    const listSuggest = await apiBasicClient("GET", `${urlFetch}`, objectParam);
 
     if (!listSuggest?.data) {
       showMessage(
         `${listSuggest?.message}` || "Không tìm được dữ liệu",
         "error"
       );
+      if (listSuggest.redirect) {
+        router.push("/login");
+      }
       return;
     }
     setFilteredSuggests(listSuggest.data);
@@ -63,13 +68,16 @@ const SelectorSuggest = (props: TPropSelector) => {
     } else {
       objectParam = undefined;
     }
-    const listSuggest = await apiBasic("GET", `${urlFetch}`, objectParam);
+    const listSuggest = await apiBasicClient("GET", `${urlFetch}`, objectParam);
 
     if (!listSuggest?.data) {
       showMessage(
         `${listSuggest?.message}` || "Không tìm được dữ liệu",
         "error"
       );
+      if (listSuggest.redirect) {
+        router.push("/login");
+      }
       return;
     }
     setFilteredSuggests(listSuggest.data);

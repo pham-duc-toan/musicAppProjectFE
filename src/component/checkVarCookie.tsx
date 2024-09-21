@@ -8,13 +8,15 @@ const CheckvarCookie = () => {
   const abc = async () => {
     try {
       // Gọi API route set-cookie
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACK_END_URL}`, {
-        method: "GET",
-        credentials: "include", // Để đảm bảo cookie được gửi trong request
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_AUTH_API}/set-cookie`,
+        {
+          method: "GET",
+          credentials: "include", // Để đảm bảo cookie được gửi trong request
+        }
+      );
 
       const data = await response.json();
-      console.log(data);
     } catch (error) {
       console.error("Error:", error);
     }

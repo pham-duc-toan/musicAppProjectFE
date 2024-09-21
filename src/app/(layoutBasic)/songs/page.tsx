@@ -1,13 +1,14 @@
-import { apiBasic } from "@/app/utils/request";
+import { apiBasicClient, apiBasicServer } from "@/app/utils/request";
 import ItemControlCard from "@/component/item-control-card-music";
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
+import { redirect } from "next/navigation";
 
 const Songs = async () => {
-  const datall: any = await apiBasic("GET", "/songs/full");
+  const datall: any = await apiBasicServer("GET", "/songs/full");
   const datas = datall?.data || undefined;
-  if (!datas) {
-    return <h1>{datall?.message || "Không lấy được dữ liệu"}</h1>;
+  if (!datas && datall.redirect) {
+    redirect("/login");
   }
   return (
     <>

@@ -1,12 +1,12 @@
+import { decodeToken } from "@/app/helper/jwt";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 const SERVER = process.env.NEXT_PUBLIC_BACK_END_URL;
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { method, path, query, option } = body;
   const cookieStore = cookies();
   const access_token = cookieStore.get("access_token")?.value;
+  const refresh_token = cookieStore.get("refresh_token")?.value;
   const authHeader = request.headers.get("authorization");
   let accessLocal: string | undefined = undefined;
   if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -15,35 +15,54 @@ export async function POST(request: NextRequest) {
   }
 
   if (
-    (access_token && access_token == accessLocal) ||
-    (!accessLocal && !access_token)
+    !refresh_token &&
+    !(accessLocal && access_token && access_token == accessLocal)
   ) {
-    try {
-      let queryParams = "";
-      if (query) {
-        queryParams = new URLSearchParams(query).toString();
-      }
+    return NextResponse.json(
+      { message: "Vui lòng đăng nhập lại!" },
+      { status: 400 }
+    );
+  }
 
-      const data = await fetch(`${SERVER}${path}?${queryParams}`, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          ...(access_token && { Authorization: `Bearer ${access_token}` }),
-        },
+  try {
+    const data = await fetch(`${SERVER}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-        ...(option ?? { body: JSON.stringify(option) }),
-      }).then((res) => res.json());
+      body: JSON.stringify({ refreshToken: refresh_token }),
+    }).then((res) => res.json());
 
-      return NextResponse.json(data);
-    } catch (error) {
+    if (data.data) {
+      const expire_access_token = decodeToken(data.data.access_token);
+      const expire_refresh_token = decodeToken(data.data.refresh_token);
+
+      const response = NextResponse.json(data);
+
+      response.cookies.set("access_token", data.data.access_token, {
+        httpOnly: true,
+        path: "/",
+        //@ts-ignore
+        expires: new Date(expire_access_token.exp * 1000),
+      });
+      response.cookies.set("refresh_token", data.data.refresh_token, {
+        httpOnly: true,
+        path: "/",
+        //@ts-ignore
+        expires: new Date(expire_refresh_token.exp * 1000),
+      });
+      return response;
+    } else {
       return NextResponse.json(
-        { message: "Failed to fetch data from backend" },
-        { status: 500 }
+        { message: "Vui lòng đăng nhập lại" },
+        { status: 400 }
       );
     }
-  } else {
-    return NextResponse.json({
-      message: "Token không đúng ! Vui lòng đăng nhập lại!",
-    });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch data from backend" },
+      { status: 500 }
+    );
   }
 }

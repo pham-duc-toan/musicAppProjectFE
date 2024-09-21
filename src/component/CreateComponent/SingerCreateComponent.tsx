@@ -23,7 +23,6 @@ import { Box } from "@mui/system";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBackEndCreateWithFile } from "@/app/utils/request";
-const accessToken = getAccessTokenFromLocalStorage();
 
 function SingerCreateComponent() {
   const { showMessage } = useAppContext();
@@ -48,6 +47,7 @@ function SingerCreateComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const accessToken = getAccessTokenFromLocalStorage();
     setLoading(true);
     const form = e.currentTarget;
     //@ts-ignore
@@ -71,7 +71,7 @@ function SingerCreateComponent() {
       formData,
       accessToken
     );
-    console.log(result);
+
     if (result.statusCode != 201) {
       showMessage(result.message || "Something went wrong", "error");
     } else {

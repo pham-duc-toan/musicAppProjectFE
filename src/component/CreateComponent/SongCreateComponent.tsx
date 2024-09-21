@@ -25,7 +25,6 @@ import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBackEndCreateWithFile } from "@/app/utils/request";
 
-const accessToken = getAccessTokenFromLocalStorage();
 function SongCreateComponent() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [audioPreview, setAudioPreview] = useState<string | null>(null);
@@ -55,7 +54,7 @@ function SongCreateComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    const accessToken = getAccessTokenFromLocalStorage();
     const form = e.currentTarget;
     //@ts-ignore
     const title = form.title.value || "";
@@ -98,7 +97,7 @@ function SongCreateComponent() {
       formData,
       accessToken
     );
-    console.log(result);
+
     if (result.statusCode != 201) {
       showMessage(result.message || "Something went wrong", "error");
     } else {

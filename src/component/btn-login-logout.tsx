@@ -2,48 +2,54 @@
 
 import Link from "next/link";
 import { Button } from "@mui/material";
-import { deleteCookie, getCookie } from "@/app/helper/cookieClient";
-import { postProtect } from "@/app/utils/request";
+
+import {
+  getAccessTokenFromLocalStorage,
+  removeTokensFromLocalStorage,
+} from "@/app/helper/localStorageClient";
+import { logout } from "@/app/utils/request";
+import { useEffect, useState } from "react";
+import { decodeToken } from "@/app/helper/jwt";
+import { JwtPayload } from "jsonwebtoken";
 
 export default function BtnLoginLogout() {
-  if (true) {
-    return (
-      <Button
-        onClick={async () => {
-          //check ko vao duoc token
-          // signOut();
-        }}
-        variant="contained"
-        sx={{
-          marginRight: "5px",
-        }}
-      >
-        Logout
-      </Button>
-    );
-  }
-
+  const [isLogin, setIsLogin] = useState<string | JwtPayload | null>(null);
+  useEffect(() => {
+    const accessToken = getAccessTokenFromLocalStorage();
+    if (!accessToken) {
+      setIsLogin(null);
+    } else {
+      setIsLogin(decodeToken(accessToken));
+    }
+  }, []);
   return (
-    <Link href={"/login"}>
-      <Button
-        variant="contained"
-        sx={{
-          marginRight: "5px",
-        }}
-      >
-        Login
-      </Button>
-    </Link>
-    // <Button
-    //   variant="contained"
-    //   sx={{
-    //     marginRight: "5px",
-    //   }}
-    //   onClick={() => {
-    //     signIn();
-    //   }}
-    // >
-    //   Login
-    // </Button>
+    <>
+      {isLogin ? (
+        <Button
+          onClick={async () => {
+            await logout();
+            setIsLogin(null);
+            removeTokensFromLocalStorage();
+          }}
+          variant="contained"
+          sx={{
+            marginRight: "5px",
+          }}
+        >
+          Logout
+        </Button>
+      ) : (
+        <Link href={"/login"}>
+          <Button
+            variant="contained"
+            sx={{
+              marginRight: "5px",
+            }}
+          >
+            Login
+          </Button>
+        </Link>
+      )}
+    </>
   );
 }

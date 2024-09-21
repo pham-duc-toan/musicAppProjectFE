@@ -1,5 +1,5 @@
+import { decode } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 
 const SERVER = process.env.NEXT_PUBLIC_BACK_END_URL;
 
@@ -18,41 +18,40 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare the request to send to the backend server
-    const response = await fetch(`${SERVER}/auth/login`, {
+    const res = await fetch(`${SERVER}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
-    const data = await response.json();
+    const data = await res.json();
 
-    return NextResponse.json(data);
+    if (data.data) {
+      const expire_access_token = decode(data.data.access_token);
+      const expire_refresh_token = decode(data.data.refresh_token);
 
-    // Check if accessToken and refreshToken exist in the backend response
-    const { accessToken, refreshToken } = data;
-    if (!accessToken || !refreshToken) {
+      const response = NextResponse.json(data);
+
+      response.cookies.set("access_token", data.data.access_token, {
+        httpOnly: true,
+        path: "/",
+        //@ts-ignore
+        expires: new Date(expire_access_token.exp * 1000),
+      });
+      response.cookies.set("refresh_token", data.data.refresh_token, {
+        httpOnly: true,
+        path: "/",
+        //@ts-ignore
+        expires: new Date(expire_refresh_token.exp * 1000),
+      });
+      return response;
+    } else {
       return NextResponse.json(
-        { message: "Thiếu accessToken hoặc refreshToken!" },
-        { status: 500 }
+        { message: "Sai tài khoản hoặc mật khẩu" },
+        { status: 400 }
       );
     }
-
-    // Set the accessToken and refreshToken as cookies
-    const cookieStore = cookies();
-    cookieStore.set("access_token", accessToken, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 86400,
-    });
-    cookieStore.set("refresh_token", refreshToken, {
-      httpOnly: true,
-      path: "/",
-      maxAge: 86400 * 7,
-    });
-
-    // Return success response
-    return NextResponse.json({ message: "Đăng nhập thành công!" });
   } catch (error) {
     return NextResponse.json(
       { message: "Lỗi xảy ra khi xử lý yêu cầu!" },

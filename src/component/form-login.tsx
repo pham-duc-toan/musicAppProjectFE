@@ -1,19 +1,30 @@
 "use client";
+import { setAccessTokenToLocalStorage } from "@/app/helper/localStorageClient";
+import { login } from "@/app/utils/request";
 import BtnBack from "@/component/btn.back";
 import {
   CustomTextFieldPassword,
   CustomTextFieldUsername,
 } from "@/component/customComponentMui/text-field-customize";
 import ListProvider from "@/component/list-btn-login-provider";
+import { useAppContext } from "@/context-app";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, IconButton, InputAdornment, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  IconButton,
+  InputAdornment,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
 export default function FormLoginComponent() {
+  const { showMessage } = useAppContext();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isErrorUsername, setIsErrorUsername] = useState<boolean>(false);
   const [isErrorPassword, setIsErrorPassword] = useState<boolean>(false);
@@ -36,6 +47,19 @@ export default function FormLoginComponent() {
       setIsErrorPassword(true);
       setErrorPassword("Password is not empty.");
       return;
+    }
+    setIsLoading(true);
+    const data = await login({
+      username: user,
+      password: password,
+    });
+    if (data.data) {
+      setAccessTokenToLocalStorage(data.data.access_token);
+      setIsLoading(false);
+      router.push("/");
+    } else {
+      showMessage(data.message, "error");
+      setIsLoading(false);
     }
   };
 
@@ -102,6 +126,8 @@ export default function FormLoginComponent() {
         color="primary"
         sx={{ marginTop: "20px" }}
         fullWidth
+        disabled={isLoading}
+        endIcon={isLoading ? <CircularProgress size={24} /> : null}
       >
         Đăng nhập
       </Button>

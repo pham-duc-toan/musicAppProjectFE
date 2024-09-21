@@ -13,11 +13,9 @@ export async function POST(request: NextRequest) {
     const token = authHeader.split(" ")[1];
     accessLocal = token;
   }
-
-  if (
-    (access_token && access_token == accessLocal) ||
-    (!accessLocal && !access_token)
-  ) {
+  console.log("check<<<<<", access_token);
+  console.log("check<<<<<", accessLocal);
+  if (access_token && accessLocal && access_token == accessLocal) {
     try {
       let queryParams = "";
       if (query) {
@@ -45,6 +43,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message: "Token không đúng ! Vui lòng đăng nhập lại!",
+        redirect: true,
       },
       { status: 400 }
     );
