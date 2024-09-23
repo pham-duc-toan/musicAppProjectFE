@@ -1,3 +1,4 @@
+"use client";
 import {
   ListItem,
   ListItemButton,
@@ -6,6 +7,7 @@ import {
   Theme,
 } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface I {
   theme: Theme;
@@ -18,33 +20,40 @@ interface I {
 }
 const ItemSider = (props: I) => {
   const { theme, open, data, children } = props;
+  const route = useRouter();
   return (
     <>
-      <Link href={`${data.router}`}>
-        <ListItem disablePadding sx={{ display: "block" }}>
-          <ListItemButton
+      <ListItem
+        onClick={() => {
+          console.log("clicked");
+
+          route.push(`${data.router}`);
+        }}
+        disablePadding
+        sx={{ display: "block" }}
+      >
+        <ListItemButton
+          sx={{
+            minHeight: 48,
+            justifyContent: open ? "initial" : "center",
+            px: 2.5,
+          }}
+        >
+          <ListItemIcon
             sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
+              minWidth: 0,
+              mr: open ? 3 : "auto",
+              justifyContent: "center",
             }}
           >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
-              }}
-            >
-              {children}
-            </ListItemIcon>
-            <ListItemText
-              primary={`${data.name}`}
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItemButton>
-        </ListItem>
-      </Link>
+            {children}
+          </ListItemIcon>
+          <ListItemText
+            primary={`${data.name}`}
+            sx={{ opacity: open ? 1 : 0 }}
+          />
+        </ListItemButton>
+      </ListItem>
     </>
   );
 };

@@ -11,9 +11,13 @@ import { logout } from "@/app/utils/request";
 import { useEffect, useState } from "react";
 import { decodeToken } from "@/app/helper/jwt";
 import { JwtPayload } from "jsonwebtoken";
+import { useRouter } from "next/navigation";
 
 export default function BtnLoginLogout() {
-  const [isLogin, setIsLogin] = useState<string | JwtPayload | null>(null);
+  const [isLogin, setIsLogin] = useState<
+    string | JwtPayload | null | undefined
+  >(null);
+  const router = useRouter();
   useEffect(() => {
     const accessToken = getAccessTokenFromLocalStorage();
     if (!accessToken) {
@@ -30,6 +34,7 @@ export default function BtnLoginLogout() {
             await logout();
             setIsLogin(null);
             removeTokensFromLocalStorage();
+            router.push("/login");
           }}
           variant="contained"
           sx={{
@@ -39,16 +44,19 @@ export default function BtnLoginLogout() {
           Logout
         </Button>
       ) : (
-        <Link href={"/login"}>
-          <Button
-            variant="contained"
-            sx={{
-              marginRight: "5px",
-            }}
-          >
-            Login
-          </Button>
-        </Link>
+        <Button
+          onClick={() => {
+            console.log("clicked");
+
+            router.push("/login");
+          }}
+          variant="contained"
+          sx={{
+            marginRight: "5px",
+          }}
+        >
+          Login
+        </Button>
       )}
     </>
   );

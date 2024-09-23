@@ -13,8 +13,7 @@ export async function POST(request: NextRequest) {
     const token = authHeader.split(" ")[1];
     accessLocal = token;
   }
-  console.log("check<<<<<", access_token);
-  console.log("check<<<<<", accessLocal);
+
   if (access_token && accessLocal && access_token == accessLocal) {
     try {
       let queryParams = "";

@@ -1,6 +1,9 @@
 "use client";
-import { setAccessTokenToLocalStorage } from "@/app/helper/localStorageClient";
-import { login } from "@/app/utils/request";
+import {
+  removeTokensFromLocalStorage,
+  setAccessTokenToLocalStorage,
+} from "@/app/helper/localStorageClient";
+import { login, logout } from "@/app/utils/request";
 import BtnBack from "@/component/btn.back";
 import {
   CustomTextFieldPassword,
@@ -19,7 +22,7 @@ import {
 import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function FormLoginComponent() {
   const { showMessage } = useAppContext();
@@ -30,6 +33,13 @@ export default function FormLoginComponent() {
   const [isErrorPassword, setIsErrorPassword] = useState<boolean>(false);
   const [errorUserName, setErrorUserName] = useState<string>("");
   const [errorPassword, setErrorPassword] = useState<string>("");
+  useEffect(() => {
+    const clearToken = async () => {
+      removeTokensFromLocalStorage();
+      await logout();
+    };
+    clearToken();
+  }, []);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsErrorPassword(false);
