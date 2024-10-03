@@ -4,7 +4,7 @@ import TopicCreateComponent from "@/component/CreateComponent/TopicCreateCompone
 const createPage = () => {
   return (
     <>
-      <h1>Tạo ca sĩ mới</h1>
+      <h1>Tạo chủ đề mới</h1>
       <TopicCreateComponent />
     </>
   );

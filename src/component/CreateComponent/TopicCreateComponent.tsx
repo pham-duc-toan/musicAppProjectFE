@@ -1,6 +1,7 @@
 "use client";
+import axios, { AxiosProgressEvent } from "axios";
 import React, { useState, useCallback } from "react";
-import { useDropzone, FileWithPath } from "react-dropzone";
+import { FileWithPath } from "react-dropzone";
 import {
   TextField,
   Button,
@@ -15,20 +16,22 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  TextareaAutosize,
+  LinearProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./style.css";
-import { Box } from "@mui/system";
+
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBackEndCreateWithFile } from "@/app/utils/request";
+import DropzoneComponent from "../customDropzone/dropzoneComponent";
 
 function TopicCreateComponent() {
   const { showMessage } = useAppContext();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<string>("active");
   // Hàm để xử lý file upload và xem trước avatar/audio
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
@@ -40,14 +43,10 @@ function TopicCreateComponent() {
     });
   }, []);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: { "image/*": [] },
-  });
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const accessToken = getAccessTokenFromLocalStorage();
+    setLoading(true);
     const form = e.currentTarget;
     //@ts-ignore
     const title = form.title.value || "";
@@ -67,20 +66,35 @@ function TopicCreateComponent() {
     }
 
     // Gửi formData lên server
-    setLoading(true);
-    const result = await apiBackEndCreateWithFile(
-      "/topics/create",
-      formData,
-      accessToken
-    );
+    try {
+      // Sử dụng Axios để upload file và theo dõi tiến trình
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_BACK_END_URL + "/topics/create",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+            const { loaded, total } = progressEvent;
+            const percentCompleted = Math.round((loaded * 100) / total!);
+            setProgress(percentCompleted); // Cập nhật tiến trình
+          },
+        }
+      );
 
-    if (result.statusCode != 201) {
-      showMessage(result.message || "Something went wrong", "error");
-    } else {
-      showMessage("Tạo mới thành công !", "success");
+      if (response.status === 201) {
+        showMessage("Tạo mới thành công !", "success");
+      } else {
+        showMessage(response.data.message || "Something went wrong", "error");
+      }
+    } catch (error: any) {
+      showMessage(error.response?.data?.message || "Lỗi khi upload!", "error");
+    } finally {
+      setLoading(false);
+      setProgress(0);
     }
-
-    setLoading(false);
   };
 
   const handleRemoveAvatar = () => {
@@ -178,21 +192,29 @@ function TopicCreateComponent() {
             alignItems: !avatarPreview ? "center" : undefined,
           }}
         >
-          <Box
-            sx={{
-              width: {
-                xs: "100%",
-                md: "60%",
-              },
-            }}
-            {...getRootProps({ className: "dropzone" })}
-          >
-            <input {...getInputProps()} />
-            <Button sx={{ padding: "50px" }} variant="outlined">
-              Chọn poster cho chủ đề. Kéo thả file hoặc chọn file cần tải lên
-            </Button>
-          </Box>
+          <DropzoneComponent onDrop={onDrop} />
         </Grid>
+        {/* Progress Bar */}
+        {loading && (
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <LinearProgress
+              sx={{
+                width: "100px",
+              }}
+              variant="determinate"
+              value={progress}
+            />{" "}
+            <span style={{ marginLeft: "10px" }}>{progress}%</span>
+          </Grid>
+        )}
         <Grid
           item
           xs={12}

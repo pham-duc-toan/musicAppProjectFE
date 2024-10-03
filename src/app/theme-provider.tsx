@@ -62,7 +62,7 @@ const theme = extendTheme({
           contrastText: "#fff",
         },
         text: {
-          primary: "#BF94BF",
+          primary: "#fff",
         },
         secondary: {
           main: "#414140",
