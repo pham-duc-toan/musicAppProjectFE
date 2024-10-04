@@ -8,6 +8,7 @@ import { useMediaQuery } from "@mui/system";
 import HeaderComponent from "./header";
 import SiderComponent from "./slider";
 import FooterComponent from "./footer";
+import RightSlider from "@/component/sliderPlayList";
 
 export default function LayOutClient({
   children,
@@ -58,6 +59,7 @@ export default function LayOutClient({
             {children}
           </Container>
         </Box>
+        <RightSlider />
       </Box>
       <FooterComponent />
     </>
