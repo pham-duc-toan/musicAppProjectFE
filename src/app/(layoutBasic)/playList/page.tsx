@@ -33,6 +33,7 @@ const Playlists = async () => {
   }
 
   interface Playlist {
+    _id: string;
     title: string;
     listSong: Array<string>;
     [key: string]: any;

@@ -50,13 +50,12 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   const info_user = decodeToken(access_token || undefined);
 
   const { showMessage } = useAppContext();
-  const [open, setOpen] = useState(false); // Trạng thái modal
-  const [playlists, setPlaylists] = useState<Playlist[]>([]); // Danh sách playlist
-  const [newPlaylistTitle, setNewPlaylistTitle] = useState(""); // Tiêu đề playlist mới
-  const [isCreatingNew, setIsCreatingNew] = useState(false); // Trạng thái mở form thêm playlist mới
+  const [open, setOpen] = useState(false);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Lấy dữ liệu từ API khi mở modal
   const fetchPlaylists = async () => {
     setLoading(true); // Bắt đầu loading
     try {

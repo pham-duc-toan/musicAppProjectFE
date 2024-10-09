@@ -14,10 +14,8 @@ import { decodeToken } from "@/app/helper/jwt";
 import { useAppContext } from "@/context-app";
 import { apiBasicClient } from "@/app/utils/request";
 import { revalidateByTag } from "@/app/action";
-import { useRouter } from "next/navigation";
 
 const CreatePlaylistButton = () => {
-  const router = useRouter();
   const access_token = getAccessTokenFromLocalStorage();
   const info_user = decodeToken(access_token || undefined);
   const { showMessage } = useAppContext();
@@ -25,7 +23,10 @@ const CreatePlaylistButton = () => {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false); // State để theo dõi trạng thái loading
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+    setTitle("");
+  };
   const handleClose = () => {
     setOpen(false);
     setTitle("");
@@ -45,8 +46,8 @@ const CreatePlaylistButton = () => {
       });
 
       if (response?.data) {
-        revalidateByTag("tag-list-playlist");
-        router.refresh();
+        await revalidateByTag("tag-list-playlist");
+
         showMessage("Đã tạo playlist mới thành công", "success");
       } else {
         showMessage("Lỗi khi tạo playlist", "error");
