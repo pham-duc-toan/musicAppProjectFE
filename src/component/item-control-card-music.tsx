@@ -7,9 +7,10 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import SkipNextIcon from "@mui/icons-material/SkipNext";
+
 import PauseIcon from "@mui/icons-material/Pause";
 import Link from "next/link";
 import { TSongDetail } from "@/dataType/song";
@@ -17,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import Image from "next/image";
+import IconAddToPlayList from "./iconbutton/IconAddToPlayList";
 
 export default function ItemControlCard({ data }: { data: TSongDetail }) {
   const theme = useTheme();
@@ -65,36 +67,25 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
           </Typography>
         </CardContent>
         <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
-          <IconButton aria-label="previous">
-            {theme.direction === "rtl" ? (
-              <SkipNextIcon />
-            ) : (
-              <SkipPreviousIcon />
-            )}
-          </IconButton>
-
           {songCurrent._id != data._id ? (
             <IconButton
               aria-label="playing"
               onClick={handleChangeNewSongPlaying}
             >
-              <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+              <PlayArrowIcon sx={{ fontSize: "48px" }} />
             </IconButton>
           ) : (
             <IconButton aria-label="play/pause" onClick={handleChangeIsPlaying}>
               {!songCurrent.isPlaying && songCurrent._id == data._id ? (
-                <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+                <PlayArrowIcon sx={{ fontSize: "48px" }} />
               ) : (
-                <PauseIcon sx={{ height: 38, width: 38 }} />
+                <PauseIcon sx={{ fontSize: "48px" }} />
               )}
             </IconButton>
           )}
-          <IconButton aria-label="next">
-            {theme.direction === "rtl" ? (
-              <SkipPreviousIcon />
-            ) : (
-              <SkipNextIcon />
-            )}
+          <IconAddToPlayList songId={data._id} />
+          <IconButton>
+            <FavoriteBorderIcon sx={{ fontSize: "20px" }} />
           </IconButton>
         </Box>
       </Box>

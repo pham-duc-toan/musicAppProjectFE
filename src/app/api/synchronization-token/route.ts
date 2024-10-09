@@ -20,6 +20,9 @@ export async function POST(request: NextRequest) {
       if (query) {
         queryParams = new URLSearchParams(query).toString();
       }
+      console.log("option", option);
+
+      const body = option ? JSON.stringify(option) : undefined; // Chỉ đặt body nếu có option
 
       const data = await fetch(`${SERVER}${path}?${queryParams}`, {
         method: method,
@@ -27,8 +30,7 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
           ...(access_token && { Authorization: `Bearer ${access_token}` }),
         },
-
-        ...(option ?? { body: JSON.stringify(option) }),
+        ...(body && { body }), // Chỉ thêm body nếu có
       }).then((res) => res.json());
 
       return NextResponse.json(data);

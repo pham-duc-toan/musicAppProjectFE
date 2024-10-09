@@ -8,7 +8,8 @@ export const apiBasicClient = async (
   method: string,
   path: string,
   query?: any,
-  option?: object
+  option?: object,
+  tagNext: Array<string> = []
 ) => {
   const accessToken = getAccessTokenFromLocalStorage();
   const body = {
@@ -16,7 +17,7 @@ export const apiBasicClient = async (
     query,
     method: method,
 
-    ...(option ?? option),
+    ...(option ? { option: option } : {}),
   };
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASIC_API}`, {
     method: "POST",
@@ -25,9 +26,50 @@ export const apiBasicClient = async (
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
     body: JSON.stringify(body),
+    ...(tagNext.length > 0 && {
+      next: {
+        tags: tagNext, // Thêm tags nếu có
+      },
+    }),
   }).then((res) => res.json());
 
   return response;
+};
+export const apiBasicServer = async (
+  method: string,
+  path: string,
+  query?: any,
+  option?: object,
+  access_token?: any,
+  tagNext: Array<string> = []
+) => {
+  let queryParams = "";
+  if (query) {
+    queryParams = new URLSearchParams(query).toString(); // Chuyển đổi query thành chuỗi
+  }
+  if (access_token) {
+    access_token = access_token.value; // Lấy giá trị của access_token
+  }
+
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_BACK_END_URL + path + `?${queryParams}`,
+    {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+      ...(option ? { body: JSON.stringify(option) } : {}),
+      credentials: "include",
+      ...(tagNext.length > 0 && {
+        next: {
+          tags: tagNext, // Thêm tags nếu có
+        },
+      }),
+    }
+  );
+  const result = await response.json(); // Giải mã JSON
+  return result; // Trả về kết quả
 };
 export const apiBackEndCreateWithFile = async (
   path: string,
@@ -45,33 +87,7 @@ export const apiBackEndCreateWithFile = async (
   const result = await response.json();
   return result;
 };
-//api call trực tiếp tới server backend
-export const apiBasicServer = async (
-  method: string,
-  path: string,
-  query?: any,
-  option?: object
-) => {
-  let queryParams = "";
-  if (query) {
-    queryParams = new URLSearchParams(query).toString();
-  }
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_BACK_END_URL + path + `?${queryParams}`,
-    {
-      method: method,
 
-      headers: {
-        "Content-Type": "application/json",
-        // Authorization: `Bearer ${accessToken}`,
-      },
-      ...(option ?? { body: JSON.stringify(option) }),
-      credentials: "include",
-    }
-  );
-  const result = await response.json();
-  return result;
-};
 export const login = async (body: { username: string; password: string }) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API}/login`, {
     method: "POST",

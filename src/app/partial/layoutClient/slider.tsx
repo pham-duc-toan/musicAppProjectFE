@@ -17,6 +17,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ItemSider from "@/component/item-of-list-button-sider";
 import HomeIcon from "@mui/icons-material/Home";
+import Link from "next/link";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -136,6 +137,28 @@ export default function SiderComponent({
       </List>
       <Divider />
       <List>
+        <Link href={"/playList"}>
+          <ListItem key="a" disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <QueueMusicIcon />
+              </ListItemIcon>
+              <ListItemText primary="Playlist" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
         {listMenu2.map((item, index) => (
           <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
             <ListItemButton
