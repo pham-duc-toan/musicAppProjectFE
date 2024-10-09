@@ -1,11 +1,12 @@
 import { apiBasicClient, apiBasicServer } from "@/app/utils/request";
+import CreatePlaylistButton from "@/component/createPlayListButton";
 import PlaylistItem from "@/component/PlaylistItem";
 import { Grid, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const Songs = async () => {
+const Playlists = async () => {
   const cookieStore = cookies();
 
   const refresh_token = cookieStore.get("refresh_token");
@@ -17,7 +18,6 @@ const Songs = async () => {
   if (!refresh_token) {
     redirect(`/login`);
   }
-  console.log("access_token", access_token);
 
   const datall: any = await apiBasicServer(
     "GET",
@@ -31,7 +31,7 @@ const Songs = async () => {
   if (!datas && datall.redirect) {
     redirect("/login");
   }
-  console.log("datall", datall);
+
   interface Playlist {
     title: string;
     listSong: Array<string>;
@@ -43,9 +43,10 @@ const Songs = async () => {
         <Typography variant="h4" gutterBottom>
           Playlists
         </Typography>
+        <CreatePlaylistButton />
         <Grid container spacing={2}>
           {datas.map((playlist: Playlist, index: any) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item md={4} sm={6} xs={12} key={index}>
               <PlaylistItem playlist={playlist} />
             </Grid>
           ))}
@@ -54,4 +55,4 @@ const Songs = async () => {
     </>
   );
 };
-export default Songs;
+export default Playlists;

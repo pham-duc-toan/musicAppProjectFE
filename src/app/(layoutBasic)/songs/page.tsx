@@ -25,10 +25,10 @@ const Songs = async () => {
   return (
     <>
       <h1>Tat ca cac bai hat</h1>
-      <Grid container columns={{ xs: 4, sm: 8, md: 12 }}>
+      <Grid container>
         {datas.map((data: any, index: number) => {
           return (
-            <Grid xs={2} sm={4} md={4} key={index}>
+            <Grid md={4} sm={6} xs={12} key={index}>
               <Box sx={{ padding: "10px" }}>
                 <ItemControlCard data={data} />
               </Box>

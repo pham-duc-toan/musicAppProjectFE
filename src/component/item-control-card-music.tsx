@@ -66,7 +66,7 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
             {data.singerId.fullName}
           </Typography>
         </CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", pl: 1, pb: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>
           {songCurrent._id != data._id ? (
             <IconButton
               aria-label="playing"
@@ -93,8 +93,8 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
       <Image
         src={data.avatar}
         alt={data.title}
-        width={207}
-        height={207}
+        width={210}
+        height={210}
         style={{ objectFit: "cover" }}
         priority
       />

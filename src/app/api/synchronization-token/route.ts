@@ -20,7 +20,6 @@ export async function POST(request: NextRequest) {
       if (query) {
         queryParams = new URLSearchParams(query).toString();
       }
-      console.log("option", option);
 
       const body = option ? JSON.stringify(option) : undefined; // Chỉ đặt body nếu có option
 

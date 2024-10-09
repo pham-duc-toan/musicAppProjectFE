@@ -46,8 +46,6 @@ export default function BtnLoginLogout() {
       ) : (
         <Button
           onClick={() => {
-            console.log("clicked");
-
             router.push("/login");
           }}
           variant="contained"
