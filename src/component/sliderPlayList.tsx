@@ -1,18 +1,13 @@
 "use client";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useState, DragEvent } from "react"; // Thêm DragEvent
 import {
   Drawer,
   Button,
   IconButton,
   useMediaQuery,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Avatar,
   Box,
 } from "@mui/material";
-
 import NotInterestedOutlinedIcon from "@mui/icons-material/NotInterestedOutlined";
 import MultipleStopOutlinedIcon from "@mui/icons-material/MultipleStopOutlined";
 import RepeatOutlinedIcon from "@mui/icons-material/RepeatOutlined";
@@ -23,6 +18,8 @@ import { RootState } from "@/store/store";
 import ItemSongInSlider from "./ItemSongInSlider";
 import { toggleLooping, updatePlaylist } from "@/store/playListSlice";
 import { exitPlaylist } from "@/app/utils/updateCurrentPLayList";
+import { apiBasicClient } from "@/app/utils/request";
+import { revalidateByTag } from "@/app/action";
 
 // Định nghĩa kiểu cho bài hát
 interface Song {
@@ -50,9 +47,45 @@ const RightSlider = () => {
     (open: boolean) => (event: SyntheticEvent | KeyboardEvent) => {
       setIsOpen(open);
     };
+
   const handleExitPlayList = () => {
     exitPlaylist(dispatch);
   };
+
+  // Hàm xử lý sự kiện kéo
+  const handleDragStart = (event: DragEvent<HTMLDivElement>, index: number) => {
+    event.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  // Hàm xử lý sự kiện thả
+  const handleDrop = async (
+    event: DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    event.preventDefault();
+    const fromIndex = Number(event.dataTransfer.getData("text/plain"));
+
+    // Cập nhật danh sách bài hát
+    const updatedList = [...currentPlaylist.listSong];
+    const [movedSong] = updatedList.splice(fromIndex, 1);
+    updatedList.splice(index, 0, movedSong);
+
+    // Cập nhật Redux
+    dispatch(updatePlaylist({ ...currentPlaylist, listSong: updatedList }));
+
+    // Lấy danh sách _id của các bài hát trong updatedList
+    const updatedIds = updatedList.map((song) => song._id);
+
+    // Cập nhật dữ liệu lên server
+    await apiBasicClient(
+      "PATCH",
+      `/playlists/${currentPlaylist._id}`,
+      undefined,
+      { listSong: updatedIds } // Gửi mảng _id của updatedList
+    );
+    revalidateByTag("tag-list-playlist");
+  };
+
   return (
     <>
       {/* Button nằm ở góc trên bên phải */}
@@ -141,9 +174,19 @@ const RightSlider = () => {
                   {currentPlaylist.listSong.length == 0 ? (
                     <p>Danh sách nhạc này đang rỗng.</p>
                   ) : (
-                    currentPlaylist.listSong.map((song: Song) => (
-                      <ItemSongInSlider key={song._id} song={song} />
-                    ))
+                    currentPlaylist.listSong.map(
+                      (song: Song, index: number) => (
+                        <Box
+                          key={song._id}
+                          draggable
+                          onDragStart={(event) => handleDragStart(event, index)}
+                          onDrop={(event) => handleDrop(event, index)}
+                          onDragOver={(event) => event.preventDefault()}
+                        >
+                          <ItemSongInSlider song={song} />
+                        </Box>
+                      )
+                    )
                   )}
                 </List>
               </>

@@ -64,12 +64,14 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
     setLoading(true);
 
     handleClose();
-    await apiBasicClient(
+    const res1 = await apiBasicClient(
       "DELETE",
       `/playlists/removeSong/${currentPlaylist._id}`,
       undefined,
       { idSong: song._id }
     );
+    console.log(res1);
+
     revalidateByTag("tag-list-playlist");
     //CALL API
     const res = await apiBasicClient(
