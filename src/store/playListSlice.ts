@@ -1,51 +1,56 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// src/redux/slices/playlistSlice.ts
 
+// Định nghĩa kiểu cho trạng thái của bài hát
 interface SongState {
   _id: string;
   title: string;
   avatar: string;
   audio: string;
-  singerId: string;
+  singerId: {
+    _id: string;
+    fullName: string;
+    [key: string]: any;
+  };
   like: number;
 }
 
+// Định nghĩa kiểu cho trạng thái của playlist
 interface PlayListState {
   _id: string;
   title: string;
   userId: string;
   listSong: SongState[];
+  isLooping: boolean;
 }
 
 // Khởi tạo trạng thái ban đầu cho playlist
-const initialState: PlayListState[] = [];
+const initialState: PlayListState = {
+  _id: "",
+  title: "",
+  userId: "",
+  listSong: [],
+  isLooping: false,
+};
 
+// Tạo slice cho playlist
 export const playlistSlice = createSlice({
-  name: "playlist",
-  initialState,
+  name: "playlist", // Tên slice
+  initialState, // Trạng thái ban đầu
   reducers: {
-    // Action để thêm playlist
-    addPlaylist: (state, action: PayloadAction<PlayListState>) => {
-      state.push(action.payload);
-    },
-    // Action để cập nhật playlist
+    // Reducer để cập nhật toàn bộ trạng thái playlist
     updatePlaylist: (state, action: PayloadAction<PlayListState>) => {
-      const index = state.findIndex(
-        (playlist) => playlist._id === action.payload._id
-      );
-      if (index !== -1) {
-        state[index] = action.payload;
-      }
+      return { ...state, ...action.payload }; // Cập nhật trạng thái bằng cách kết hợp với payload mới
     },
-    // Action để xóa playlist
-    removePlaylist: (state, action: PayloadAction<string>) => {
-      return state.filter((playlist) => playlist._id !== action.payload);
+
+    // Reducer để toggle giá trị isLooping
+    toggleLooping: (state) => {
+      state.isLooping = !state.isLooping; // Phủ định giá trị isLooping
     },
   },
 });
 
-// Xuất ra các action
-export const { addPlaylist, updatePlaylist, removePlaylist } =
-  playlistSlice.actions;
+// Export action để sử dụng trong component
+export const { updatePlaylist, toggleLooping } = playlistSlice.actions;
 
+// Export reducer để thêm vào store
 export default playlistSlice.reducer;

@@ -15,15 +15,33 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import { apiBasicClient } from "@/app/utils/request";
 import { revalidateByTag } from "@/app/action";
 import { useAppContext } from "@/context-app";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePlaylist } from "@/store/playListSlice";
+import { RootState } from "@/store/store";
+import { setNewSong } from "@/store/playingMusicSlice";
+import { TSongDetail } from "@/dataType/song";
 
 // Định nghĩa kiểu cho đối tượng playlist
+interface SongState {
+  _id: string;
+  title: string;
+  avatar: string;
+  audio: string;
+  singerId: {
+    _id: string;
+    fullName: string;
+    [key: string]: any;
+  };
+  like: number;
+}
 interface Playlist {
   title: string;
-  listSong: Array<string>;
+  listSong: Array<SongState>;
   _id: string;
   [key: string]: any;
 }
@@ -33,6 +51,8 @@ interface PlaylistItemProps {
 }
 
 const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
+  const dispatch = useDispatch();
+  const currentPlaylist = useSelector((state: RootState) => state.playlist);
   const { showMessage } = useAppContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loading, setLoading] = useState(false);
@@ -40,6 +60,42 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const [newTitle, setNewTitle] = useState(playlist.title);
   const open = Boolean(anchorEl);
 
+  const handleClickPlayList = () => {
+    // Cập nhật Redux store với playlist đã xử lý
+    const playlistData = {
+      _id: playlist._id,
+      title: playlist.title,
+      userId: playlist.userId,
+      listSong: playlist.listSong,
+      isLooping: false,
+    };
+
+    dispatch(updatePlaylist(playlistData));
+    dispatch(
+      setNewSong(
+        (playlist.listSong[0] as TSongDetail) || {
+          _id: "",
+          title: "",
+          singerFullName: "",
+          audio: "",
+          slug: "",
+          isPlaying: false,
+        }
+      )
+    );
+  };
+  const handleExitPlayList = () => {
+    // Cập nhật Redux store với playlist đã xử lý
+    const playlistData = {
+      _id: "",
+      title: "",
+      userId: "",
+      listSong: [],
+      isLooping: false,
+    };
+
+    dispatch(updatePlaylist(playlistData));
+  };
   // Xử lý mở Menu
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -168,6 +224,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
 
         {/* Overlay hiển thị khi hover */}
         <Box
+          onClick={
+            currentPlaylist._id === playlist._id
+              ? handleExitPlayList
+              : handleClickPlayList
+          }
           className="hover-overlay"
           sx={{
             position: "absolute",
@@ -187,8 +248,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
             },
           }}
         >
-          {/* Nút Play */}
-          <PlayCircleIcon sx={{ fontSize: 48, color: "#fff" }} />
+          {currentPlaylist._id !== playlist._id ? (
+            <PlayCircleIcon sx={{ fontSize: 48, color: "#fff" }} />
+          ) : (
+            <PauseCircleIcon sx={{ fontSize: 48, color: "#fff" }} />
+          )}
         </Box>
       </Box>
 

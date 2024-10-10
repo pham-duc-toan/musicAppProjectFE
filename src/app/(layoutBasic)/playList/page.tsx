@@ -31,11 +31,22 @@ const Playlists = async () => {
   if (!datas && datall.redirect) {
     redirect("/login");
   }
-
+  interface SongState {
+    _id: string;
+    title: string;
+    avatar: string;
+    audio: string;
+    singerId: {
+      _id: string;
+      fullName: string;
+      [key: string]: any;
+    };
+    like: number;
+  }
   interface Playlist {
     _id: string;
     title: string;
-    listSong: Array<string>;
+    listSong: Array<SongState>;
     [key: string]: any;
   }
   return (

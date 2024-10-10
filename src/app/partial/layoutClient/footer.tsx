@@ -1,7 +1,6 @@
-"use client";
-
 import { useHasMounted } from "@/app/utils/customHook";
-import { pause, play } from "@/store/playingMusicSlice";
+import { TSongDetail } from "@/dataType/song";
+import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useTheme } from "@mui/material";
 import { Box, Container, styled } from "@mui/system";
@@ -21,6 +20,9 @@ const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
     color: theme.palette.text.primary,
     backgroundColor: theme.palette.text.primary,
   },
+  "& .rhap_main-controls": {
+    flex: "2 auto",
+  },
   "& .rhap_main-controls-button": {
     color: theme.palette.text.primary,
   },
@@ -33,12 +35,28 @@ const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   "& .rhap_volume-indicator": {
     backgroundColor: theme.palette.text.primary,
   },
+  "& .rhap_controls-section": {
+    display: "flex",
+    flex: "1 1 auto",
+
+    alignItems: "center",
+  },
+  "& .rhap_additional-controls": {
+    display: "flex",
+    flex: "0",
+    marginLeft: "20px",
+    alignItems: "center",
+  },
+  "& .rhap_volume-controls": {
+    flex: "1 auto",
+  },
 }));
 
 const FooterComponent = () => {
   const theme = useTheme();
   const dispatch: AppDispatch = useDispatch();
   const songCurrent = useSelector((state: RootState) => state.playingMusic);
+  const currentPlaylist = useSelector((state: RootState) => state.playlist);
 
   const playerRef = useRef<H5AudioPlayer | null>(null);
   const mounted = useHasMounted();
@@ -48,8 +66,6 @@ const FooterComponent = () => {
 
     if (audioElement) {
       const handleCanPlay = () => {
-        // nếu ko biết hàm được gọi do gì thì viết thêm hàm handleCanPlay2 để log ra xem được gọi bởi gì
-
         if (songCurrent.isPlaying) {
           audioElement.play().catch((error) => {
             console.log("Error playing audio:", error);
@@ -59,13 +75,44 @@ const FooterComponent = () => {
         }
       };
 
+      const handleEnded = () => {
+        const currentIndex = currentPlaylist.listSong.findIndex(
+          (song) => song._id === songCurrent._id
+        );
+
+        let nextSong = undefined;
+        if (currentPlaylist.isLooping) {
+          const nextIndex =
+            (currentIndex + 1) % currentPlaylist.listSong.length;
+          nextSong = currentPlaylist.listSong[nextIndex];
+        } else {
+          const nextIndex = currentIndex + 1;
+          if (nextIndex < currentPlaylist.listSong.length) {
+            nextSong = currentPlaylist.listSong[nextIndex];
+          }
+        }
+
+        if (nextSong) {
+          dispatch(setNewSong(nextSong as TSongDetail)); // Cập nhật bài hát mới
+          audioElement.src = nextSong.audio; // Cập nhật src
+          audioElement.play().catch((error) => {
+            console.log("Error playing next audio:", error);
+          });
+        } else {
+          dispatch(pause());
+        }
+      };
+
       if (audioElement.currentSrc) handleCanPlay();
       audioElement.addEventListener("canplay", handleCanPlay);
+      audioElement.addEventListener("ended", handleEnded);
+
       return () => {
         audioElement.removeEventListener("canplay", handleCanPlay);
+        audioElement.removeEventListener("ended", handleEnded);
       };
     }
-  }, [songCurrent.audio, songCurrent.isPlaying]);
+  }, [songCurrent.audio, songCurrent.isPlaying, currentPlaylist]);
 
   if (!mounted) {
     return null;
@@ -100,6 +147,7 @@ const FooterComponent = () => {
             backgroundColor: theme.palette.secondary.main,
             boxShadow: "unset",
           }}
+          layout="horizontal"
           src={songCurrent.audio}
           onPause={() => {
             dispatch(pause());
@@ -107,6 +155,7 @@ const FooterComponent = () => {
           onPlay={() => {
             dispatch(play());
           }}
+          showJumpControls={false}
         />
         <Box
           sx={{

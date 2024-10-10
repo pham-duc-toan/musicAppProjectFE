@@ -48,6 +48,8 @@ const theme = extendTheme({
         },
         secondary: {
           main: "#B2B4B8",
+          A100: "#F6F6F3",
+          A200: "#F8EEC5",
         },
         background: {
           default: "#ffffff",
@@ -66,6 +68,8 @@ const theme = extendTheme({
         },
         secondary: {
           main: "#414140",
+          A100: "#B2B4B8",
+          A200: "#E7C97E",
         },
         background: {
           default: "#6a0dad",
