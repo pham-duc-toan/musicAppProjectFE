@@ -2,6 +2,7 @@
 import React, { useState, MouseEvent } from "react";
 import {
   Avatar,
+  CircularProgress,
   IconButton,
   ListItem,
   ListItemAvatar,
@@ -20,6 +21,9 @@ import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import { TSongDetail } from "@/dataType/song";
 import theme from "@/app/theme-provider";
 import { useTheme } from "@emotion/react";
+import { revalidateByTag } from "@/app/action";
+import { apiBasicClient } from "@/app/utils/request";
+import { updateNewPlaylist } from "@/app/utils/updateCurrentPLayList";
 
 // Định nghĩa kiểu cho props của component
 interface Song {
@@ -44,7 +48,7 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
   const songCurrent = useSelector((state: RootState) => state.playingMusic);
   const currentPlaylist = useSelector((state: RootState) => state.playlist);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const [loading, setLoading] = useState(false);
   // Hàm mở menu
   const handleMenuClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -56,8 +60,27 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
   };
 
   // Hàm xử lý sự kiện xóa
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    setLoading(true);
+
     handleClose();
+    await apiBasicClient(
+      "DELETE",
+      `/playlists/removeSong/${currentPlaylist._id}`,
+      undefined,
+      { idSong: song._id }
+    );
+    revalidateByTag("tag-list-playlist");
+    //CALL API
+    const res = await apiBasicClient(
+      "GET",
+      `/playlists/findOne/${currentPlaylist._id}`
+    );
+    updateNewPlaylist(res.data, dispatch);
+    // console.log(res.data);
+
+    setLoading(false); // Kết thúc loading sau khi hoàn tất gọi API
+    // Đóng modal sau khi lưu
   };
   //xu ly su kien song
   const handleChangeNewSongPlaying = () => {
@@ -96,7 +119,7 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
       <Box display="flex" flexDirection="column" alignItems="center">
         {/* Nút menu */}
         <IconButton onClick={handleMenuClick}>
-          <MoreVertIcon />
+          {loading ? <CircularProgress size={24} /> : <MoreVertIcon />}
         </IconButton>
         <Menu
           anchorEl={anchorEl}
