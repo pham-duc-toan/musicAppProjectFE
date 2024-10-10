@@ -59,7 +59,6 @@ export default function LayOutClient({
             {children}
           </Container>
         </Box>
-        <RightSlider />
       </Box>
       <FooterComponent />
     </>

@@ -91,9 +91,10 @@ const RightSlider = () => {
       {/* Button nằm ở góc trên bên phải */}
       <Button
         onClick={toggleDrawer(true)}
-        style={{ position: "fixed", bottom: "90px", right: "3px" }}
+        style={{ position: "absolute", top: "-43px", right: "3px" }}
         variant="contained"
         color="primary"
+        sx={{ display: isOpen ? "none" : "flex" }}
       >
         <MenuOpenIcon
           sx={{
@@ -108,8 +109,8 @@ const RightSlider = () => {
 
       {/* Slider nằm bên phải */}
       <Drawer
+        sx={{ zIndex: 1001 }}
         anchor="right"
-        sx={{ height: "calc(100vh - 88px)" }}
         open={isOpen}
         onClose={toggleDrawer(false)} // Đóng drawer khi nhấn bên ngoài
       >
@@ -118,7 +119,7 @@ const RightSlider = () => {
             display: "flex",
             flexDirection: "column",
             width: 300,
-            height: "100%",
+            height: "calc(100vh - 88px)",
             overflowY: "auto",
           }}
           role="presentation"

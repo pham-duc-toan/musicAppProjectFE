@@ -1,4 +1,5 @@
 import { useHasMounted } from "@/app/utils/customHook";
+import RightSlider from "@/component/sliderPlayList";
 import { TSongDetail } from "@/dataType/song";
 import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -132,6 +133,7 @@ const FooterComponent = () => {
         zIndex: "9999",
       }}
     >
+      <RightSlider />
       <Container
         sx={{
           gap: 10,
