@@ -4,7 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
+
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -21,7 +21,6 @@ import Image from "next/image";
 import IconAddToPlayList from "./iconbutton/IconAddToPlayList";
 
 export default function ItemControlCard({ data }: { data: TSongDetail }) {
-  const theme = useTheme();
   const songCurrent = useSelector((state: RootState) => state.playingMusic);
   const dispatch: AppDispatch = useDispatch();
   const handleChangeNewSongPlaying = () => {

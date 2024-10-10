@@ -15,7 +15,7 @@ export interface TSongDetail {
   audio: string;
   status: string;
   slug: string;
-
+  isPlaying?: boolean;
   deleted: boolean;
 }
 export interface TSongFooter {

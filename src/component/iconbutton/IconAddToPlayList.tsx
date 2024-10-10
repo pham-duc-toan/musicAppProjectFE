@@ -28,6 +28,13 @@ import { decodeToken } from "@/app/helper/jwt";
 
 import { revalidateByTag } from "@/app/action";
 
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import {
+  exitPlaylist,
+  updateNewPlaylist,
+} from "@/app/utils/updateCurrentPLayList";
+
 interface Playlist {
   _id: string;
   title: string;
@@ -48,7 +55,8 @@ interface IconAddToPlayListProps {
 const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   const access_token = getAccessTokenFromLocalStorage();
   const info_user = decodeToken(access_token || undefined);
-
+  const dispatch = useDispatch();
+  const currentPlaylist = useSelector((state: RootState) => state.playlist);
   const { showMessage } = useAppContext();
   const [open, setOpen] = useState(false);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -152,6 +160,14 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
 
     // Gọi revalidation sau khi hoàn tất
     revalidateByTag("tag-list-playlist");
+    //CALL API
+    const res = await apiBasicClient(
+      "GET",
+      `/playlists/findOne/${currentPlaylist._id}`
+    );
+    updateNewPlaylist(res.data, dispatch);
+    // console.log(res.data);
+
     setLoading(false); // Kết thúc loading sau khi hoàn tất gọi API
     handleClose(); // Đóng modal sau khi lưu
   };
@@ -159,7 +175,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   // Xử lý khi xóa playlist
   const handleDeletePlaylist = async (playlistId: string) => {
     const res = await apiBasicClient("DELETE", `/playlists/${playlistId}`);
-
+    if (playlistId == currentPlaylist._id) exitPlaylist(dispatch);
     revalidateByTag("tag-list-playlist");
 
     if (res.data) {

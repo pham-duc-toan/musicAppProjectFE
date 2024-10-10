@@ -174,7 +174,7 @@ const FooterComponent = () => {
           </div>
           <div
             style={{
-              fontSize: "20px",
+              fontSize: "18px",
               fontWeight: "700",
             }}
           >

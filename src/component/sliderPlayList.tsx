@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import ItemSongInSlider from "./ItemSongInSlider";
 import { toggleLooping, updatePlaylist } from "@/store/playListSlice";
+import { exitPlaylist } from "@/app/utils/updateCurrentPLayList";
 
 // Định nghĩa kiểu cho bài hát
 interface Song {
@@ -50,16 +51,7 @@ const RightSlider = () => {
       setIsOpen(open);
     };
   const handleExitPlayList = () => {
-    // Cập nhật Redux store với playlist đã xử lý
-    const playlistData = {
-      _id: "",
-      title: "",
-      userId: "",
-      listSong: [],
-      isLooping: false,
-    };
-
-    dispatch(updatePlaylist(playlistData));
+    exitPlaylist(dispatch);
   };
   return (
     <>
@@ -146,13 +138,17 @@ const RightSlider = () => {
                 </Box>
 
                 <List>
-                  {currentPlaylist.listSong.map((song: Song) => (
-                    <ItemSongInSlider key={song._id} song={song} />
-                  ))}
+                  {currentPlaylist.listSong.length == 0 ? (
+                    <p>Danh sách nhạc này đang rỗng.</p>
+                  ) : (
+                    currentPlaylist.listSong.map((song: Song) => (
+                      <ItemSongInSlider key={song._id} song={song} />
+                    ))
+                  )}
                 </List>
               </>
             ) : (
-              <p>Hiện đang không có danh sách nhạc nào được phát</p>
+              <p>Hiện đang không có danh sách nhạc nào được phát.</p>
             )}
           </Box>
         </Box>

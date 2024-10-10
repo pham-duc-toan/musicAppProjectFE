@@ -21,10 +21,14 @@ import { revalidateByTag } from "@/app/action";
 import { useAppContext } from "@/context-app";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePlaylist } from "@/store/playListSlice";
+
 import { RootState } from "@/store/store";
-import { setNewSong } from "@/store/playingMusicSlice";
-import { TSongDetail } from "@/dataType/song";
+
+import {
+  exitPlaylist,
+  updateNewPlaylistAndRun,
+  updateNewPlaylistPartial,
+} from "@/app/utils/updateCurrentPLayList";
 
 // Định nghĩa kiểu cho đối tượng playlist
 interface SongState {
@@ -61,40 +65,10 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
   const open = Boolean(anchorEl);
 
   const handleClickPlayList = () => {
-    // Cập nhật Redux store với playlist đã xử lý
-    const playlistData = {
-      _id: playlist._id,
-      title: playlist.title,
-      userId: playlist.userId,
-      listSong: playlist.listSong,
-      isLooping: false,
-    };
-
-    dispatch(updatePlaylist(playlistData));
-    dispatch(
-      setNewSong(
-        (playlist.listSong[0] as TSongDetail) || {
-          _id: "",
-          title: "",
-          singerFullName: "",
-          audio: "",
-          slug: "",
-          isPlaying: false,
-        }
-      )
-    );
+    updateNewPlaylistAndRun(playlist, dispatch);
   };
   const handleExitPlayList = () => {
-    // Cập nhật Redux store với playlist đã xử lý
-    const playlistData = {
-      _id: "",
-      title: "",
-      userId: "",
-      listSong: [],
-      isLooping: false,
-    };
-
-    dispatch(updatePlaylist(playlistData));
+    exitPlaylist(dispatch);
   };
   // Xử lý mở Menu
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -119,6 +93,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
 
       if (response?.data) {
         revalidateByTag("tag-list-playlist");
+        if (playlist._id == currentPlaylist._id) handleExitPlayList();
         showMessage("Đã xóa playlist thành công", "success");
       } else {
         showMessage("Lỗi khi xóa playlist", "error");
@@ -149,8 +124,9 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       );
 
       if (response?.data) {
-        revalidateByTag("tag-list-playlist");
+        await revalidateByTag("tag-list-playlist");
         showMessage("Đã sửa playlist thành công", "success");
+        updateNewPlaylistPartial({ title: newTitle }, dispatch);
       } else {
         showMessage("Lỗi khi sửa playlist", "error");
       }

@@ -23,6 +23,15 @@ interface PlayListState {
   isLooping: boolean;
 }
 
+// Định nghĩa kiểu cho payload patchUpdate (có thể chỉ cập nhật một phần)
+interface PatchPlayListPayload {
+  _id?: string;
+  title?: string;
+  userId?: string;
+  listSong?: SongState[];
+  isLooping?: boolean;
+}
+
 // Khởi tạo trạng thái ban đầu cho playlist
 const initialState: PlayListState = {
   _id: "",
@@ -46,11 +55,23 @@ export const playlistSlice = createSlice({
     toggleLooping: (state) => {
       state.isLooping = !state.isLooping; // Phủ định giá trị isLooping
     },
+
+    // Reducer để cập nhật patch (chỉ update các trường có trong payload)
+    patchUpdate: (state, action: PayloadAction<PatchPlayListPayload>) => {
+      const { _id, title, userId, listSong, isLooping } = action.payload;
+
+      if (_id !== undefined) state._id = _id;
+      if (title !== undefined) state.title = title;
+      if (userId !== undefined) state.userId = userId;
+      if (listSong !== undefined) state.listSong = listSong;
+      if (isLooping !== undefined) state.isLooping = isLooping;
+    },
   },
 });
 
 // Export action để sử dụng trong component
-export const { updatePlaylist, toggleLooping } = playlistSlice.actions;
+export const { updatePlaylist, toggleLooping, patchUpdate } =
+  playlistSlice.actions;
 
 // Export reducer để thêm vào store
 export default playlistSlice.reducer;
