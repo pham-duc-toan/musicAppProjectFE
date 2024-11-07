@@ -45,29 +45,35 @@ const Lyric = ({ songId, lyrics }: { songId: string; lyrics: string }) => {
 
   return (
     <>
-      {parsedLyrics.map((lyric, index) => (
-        //@ts-ignore
-        <Typography
-          key={index}
-          variant="body2"
-          whiteSpace="pre-line"
+      {parsedLyrics.length > 0 ? (
+        parsedLyrics.map((lyric, index) => (
           //@ts-ignore
-          ref={(el) => (lyricRefs.current[index] = el)} // Lưu ref cho từng dòng lời
-          sx={{
-            fontWeight:
-              index === currentLyricIndex && songId === currentSongId
-                ? "bold"
-                : "normal", // Bôi đậm nếu dòng hiện tại trùng với currentLyricIndex và songId
-            color:
-              index === currentLyricIndex && songId === currentSongId
-                ? "primary.main"
-                : "text.secondary.main",
-            transition: "font-weight 0.3s ease, color 0.3s ease",
-          }}
-        >
-          {lyric.text}
+          <Typography
+            key={index}
+            variant="body2"
+            whiteSpace="pre-line"
+            //@ts-ignore
+            ref={(el) => (lyricRefs.current[index] = el)} // Lưu ref cho từng dòng lời
+            sx={{
+              fontWeight:
+                index === currentLyricIndex && songId === currentSongId
+                  ? "bold"
+                  : "normal", // Bôi đậm nếu dòng hiện tại trùng với currentLyricIndex và songId
+              color:
+                index === currentLyricIndex && songId === currentSongId
+                  ? "primary.main"
+                  : "text.secondary",
+              transition: "font-weight 0.3s ease, color 0.3s ease",
+            }}
+          >
+            {lyric.text}
+          </Typography>
+        ))
+      ) : (
+        <Typography variant="body2" color="text.secondary">
+          {lyrics}
         </Typography>
-      ))}
+      )}
     </>
   );
 };
