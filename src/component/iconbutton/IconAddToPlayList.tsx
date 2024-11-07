@@ -161,12 +161,14 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
     // Gọi revalidation sau khi hoàn tất
     revalidateByTag("tag-list-playlist");
     //CALL API
-    const res = await apiBasicClient(
-      "GET",
-      `/playlists/findOne/${currentPlaylist._id}`
-    );
-    updateNewPlaylist(res.data, dispatch);
-    // console.log(res.data);
+    if (currentPlaylist._id) {
+      const res = await apiBasicClient(
+        "GET",
+        `/playlists/findOne/${currentPlaylist._id}`
+      );
+      updateNewPlaylist(res.data, dispatch);
+      // console.log(res.data);
+    }
 
     setLoading(false); // Kết thúc loading sau khi hoàn tất gọi API
     handleClose(); // Đóng modal sau khi lưu

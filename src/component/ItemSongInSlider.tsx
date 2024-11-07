@@ -24,6 +24,7 @@ import { useTheme } from "@emotion/react";
 import { revalidateByTag } from "@/app/action";
 import { apiBasicClient } from "@/app/utils/request";
 import { updateNewPlaylist } from "@/app/utils/updateCurrentPLayList";
+import { useRouter } from "next/navigation";
 
 // Định nghĩa kiểu cho props của component
 interface Song {
@@ -45,6 +46,7 @@ interface ItemSongInSliderProps {
 const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const router = useRouter();
   const songCurrent = useSelector((state: RootState) => state.playingMusic);
   const currentPlaylist = useSelector((state: RootState) => state.playlist);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -83,6 +85,9 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
 
     setLoading(false); // Kết thúc loading sau khi hoàn tất gọi API
     // Đóng modal sau khi lưu
+  };
+  const handleDetail = async () => {
+    router.push(`/songs/detail/${song._id}`);
   };
   //xu ly su kien song
   const handleChangeNewSongPlaying = () => {
@@ -137,6 +142,16 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
             onClick={handleDelete}
           >
             Xóa
+          </MenuItem>
+          <MenuItem
+            sx={{
+              padding: "4px 8px", // Giảm padding
+              minHeight: "30px", // Thiết lập chiều cao tối thiểu
+              fontSize: "14px", // Giảm kích thước font
+            }}
+            onClick={handleDetail}
+          >
+            Chi tiết
           </MenuItem>
         </Menu>
         {/* Nút phát nhạc */}
