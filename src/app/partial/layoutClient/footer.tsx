@@ -1,7 +1,12 @@
 import { useHasMounted } from "@/app/utils/customHook";
 import RightSlider from "@/component/sliderPlayList";
 import { TSongDetail } from "@/dataType/song";
-import { pause, play, setNewSong } from "@/store/playingMusicSlice";
+import {
+  pause,
+  play,
+  setCurrentTime,
+  setNewSong,
+} from "@/store/playingMusicSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useTheme } from "@mui/material";
 import { Box, Container, styled } from "@mui/system";
@@ -104,13 +109,18 @@ const FooterComponent = () => {
         }
       };
 
+      const handleTimeUpdate = () => {
+        dispatch(setCurrentTime(audioElement.currentTime));
+      };
+
       if (audioElement.currentSrc) handleCanPlay();
       audioElement.addEventListener("canplay", handleCanPlay);
       audioElement.addEventListener("ended", handleEnded);
-
+      audioElement.addEventListener("timeupdate", handleTimeUpdate);
       return () => {
         audioElement.removeEventListener("canplay", handleCanPlay);
         audioElement.removeEventListener("ended", handleEnded);
+        audioElement.removeEventListener("timeupdate", handleTimeUpdate);
       };
     }
   }, [songCurrent.audio, songCurrent.isPlaying, currentPlaylist]);

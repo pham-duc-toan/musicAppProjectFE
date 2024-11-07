@@ -25,4 +25,5 @@ export interface TSongFooter {
   audio: string;
   slug: string;
   isPlaying: boolean;
+  currentTime: number;
 }

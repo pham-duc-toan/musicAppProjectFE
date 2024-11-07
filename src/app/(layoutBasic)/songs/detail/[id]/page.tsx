@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Box, Typography, Avatar, CircularProgress } from "@mui/material";
 import { apiBasicClient } from "@/app/utils/request";
+import Lyric from "./lyric";
 
 interface TSongDetail {
   listen: number;
@@ -117,7 +118,7 @@ const SongDetailPage = () => {
             whiteSpace="pre-line"
             className="lyrics-content"
           >
-            {songDetail.lyrics}
+            <Lyric songId={songDetail._id} lyrics={songDetail.lyrics} />
           </Typography>
         ) : (
           <Typography variant="body2" whiteSpace="pre-line" fontStyle="italic">
