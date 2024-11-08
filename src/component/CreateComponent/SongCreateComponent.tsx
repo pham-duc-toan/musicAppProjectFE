@@ -56,9 +56,7 @@ function SongCreateComponent() {
     //@ts-ignore
     const title = form.title.value || "";
     const description = form.description.value || "";
-    const inputSinger = form.querySelector('input[name="singer"]');
 
-    const valueidSinger = inputSinger?.getAttribute("valueid") || "";
     const inputTopic = form.querySelector('input[name="topic"]');
 
     const valueidTopic = inputTopic?.getAttribute("valueid") || "";
@@ -69,7 +67,6 @@ function SongCreateComponent() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("singerId", valueidSinger);
     formData.append("topicId", valueidTopic);
     formData.append("status", status);
     formData.append("lyrics", lyrics);
@@ -147,15 +144,6 @@ function SongCreateComponent() {
             label="Title"
             name="title"
             required
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <SelectorSuggest
-            suggestKey="fullName"
-            urlFetch="/singers"
-            label="Ca sĩ"
-            name="singer"
           />
         </Grid>
 
