@@ -11,6 +11,7 @@ const createPage = () => {
           display: "flex",
           justifyContent: "space-between",
         }}
+        marginBottom={"15px"}
       >
         <h1>tao bai hat moi</h1>
         <ButtonRedirect content="Quản lý bài hát" link="/managerSong" />

@@ -93,7 +93,11 @@ const ManagerSong: React.FC = () => {
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Box display={"flex"} justifyContent={"space-between"}>
+      <Box
+        display={"flex"}
+        justifyContent={"space-between"}
+        marginBottom={"15px"}
+      >
         <Typography variant="h4" gutterBottom>
           Quản lý bài hát
         </Typography>
