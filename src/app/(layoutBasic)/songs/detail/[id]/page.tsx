@@ -1,8 +1,19 @@
 "use client";
 import "./style.css";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store/store";
+import { play, pause, setNewSong } from "@/store/playingMusicSlice";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Typography, Avatar, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
 import { apiBasicClient } from "@/app/utils/request";
 import Lyric from "./lyric";
 
@@ -28,6 +39,11 @@ const SongDetailPage = () => {
   const { id } = useParams();
   const [songDetail, setSongDetail] = useState<TSongDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const songCurrent = useSelector((state: RootState) => state.playingMusic);
+  const isPlaying = useSelector(
+    (state: RootState) => state.playingMusic.isPlaying
+  );
 
   useEffect(() => {
     const fetchSongDetail = async () => {
@@ -43,7 +59,14 @@ const SongDetailPage = () => {
 
     fetchSongDetail();
   }, [id]);
-
+  const handlePlayPauseClick = () => {
+    if (isPlaying && songCurrent?._id === songDetail?._id) {
+      dispatch(pause());
+    } else {
+      dispatch(setNewSong(songDetail as any)); // Set bài hát hiện tại nếu chưa phát
+      dispatch(play());
+    }
+  };
   if (loading) {
     return (
       <Box
@@ -66,23 +89,40 @@ const SongDetailPage = () => {
   return (
     <Box sx={{ p: 4, maxWidth: 800, mx: "auto" }}>
       {/* Ảnh và tiêu đề bài hát */}
-      <Box display="flex" alignItems="center" mb={4}>
-        <Avatar
-          src={songDetail.avatar}
-          alt={songDetail.title}
-          sx={{ width: 100, height: 100, mr: 2 }}
-        />
-        <Box>
-          <Typography variant="h4" fontWeight="bold">
-            {songDetail.title}
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Ca sĩ: {songDetail.singerId.fullName}
-          </Typography>
-          <Typography variant="subtitle2" color="text.secondary">
-            Chủ đề: {songDetail.topicId.title}
-          </Typography>
+      <Box
+        display="flex"
+        justifyContent={"space-between"}
+        padding={"20px"}
+        boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
+        marginBottom={"20px"}
+      >
+        <Box display="flex" alignItems="center" mb={4}>
+          <Avatar
+            src={songDetail.avatar}
+            alt={songDetail.title}
+            sx={{ width: 100, height: 100, mr: 2 }}
+          />
+          <Box>
+            <Typography variant="h4" fontWeight="bold">
+              {songDetail.title}
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary">
+              Ca sĩ: {songDetail.singerId.fullName}
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary">
+              Chủ đề: {songDetail.topicId.title}
+            </Typography>
+          </Box>
+
+          {/* Icon phát/dừng */}
         </Box>
+        <IconButton color="primary" onClick={handlePlayPauseClick}>
+          {isPlaying && songCurrent?._id === songDetail._id ? (
+            <PauseIcon fontSize="large" />
+          ) : (
+            <PlayArrowIcon fontSize="large" />
+          )}
+        </IconButton>
       </Box>
 
       {/* Lượt nghe và lượt thích */}

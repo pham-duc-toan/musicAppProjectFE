@@ -15,13 +15,19 @@ import {
   Chip,
   Tooltip,
   CircularProgress,
-  Backdrop,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import PauseIcon from "@mui/icons-material/Pause";
 import InfoIcon from "@mui/icons-material/Info";
 import { apiBasicClient } from "@/app/utils/request";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { pause, play, setNewSong } from "@/store/playingMusicSlice";
+import { TSongDetail } from "@/dataType/song";
+import ButtonRedirect from "@/component/buttonRedirect";
+import { useRouter } from "next/navigation";
 
 interface Topic {
   _id: string;
@@ -50,12 +56,26 @@ interface Song {
 }
 
 const ManagerSong: React.FC = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { isPlaying, _id: playingSongId } = useSelector(
+    (state: RootState) => state.playingMusic
+  );
   const [songs, setSongs] = useState<Song[]>([]);
-  const [loading, setLoading] = useState<boolean>(false); // Trạng thái loading
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handlePlayPauseClick = (song: any) => {
+    if (isPlaying && playingSongId === song._id) {
+      dispatch(pause());
+    } else {
+      dispatch(setNewSong(song)); // Cập nhật bài hát mới nếu bài hát khác đang phát
+      dispatch(play());
+    }
+  };
 
   useEffect(() => {
     const fetchSongs = async () => {
-      setLoading(true); // Bắt đầu loading khi fetch API
+      setLoading(true);
       const response = await apiBasicClient(
         "GET",
         "/songs/managerSong",
@@ -66,28 +86,20 @@ const ManagerSong: React.FC = () => {
       if (response?.data) {
         setSongs(response.data);
       }
-      setLoading(false); // Kết thúc loading khi đã nhận được dữ liệu
+      setLoading(false);
     };
     fetchSongs();
   }, []);
 
-  const playAudio = (audioUrl: string) => {};
-
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Quản lý bài hát
-      </Typography>
-      <Backdrop
-        sx={{
-          color: "#fff",
-          position: "absolute",
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-        }}
-        open={loading} // Hiển thị backdrop khi đang loading
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <Box display={"flex"} justifyContent={"space-between"}>
+        <Typography variant="h4" gutterBottom>
+          Quản lý bài hát
+        </Typography>
+        <ButtonRedirect link="/createSong" content="Thêm mới bài hát" />
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -102,57 +114,74 @@ const ManagerSong: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {songs.map((song, index) => (
-              <TableRow key={song._id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>
-                  <Avatar
-                    src={song.avatar}
-                    alt={song.title}
-                    variant="rounded"
-                  />
-                </TableCell>
-                <TableCell>{song.title}</TableCell>
-                <TableCell>{song.topicId.title}</TableCell>
-                <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => playAudio(song.audio)}
-                  >
-                    <PlayArrowIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <Tooltip title="Đổi trạng thái" arrow>
-                    <Chip
-                      label={
-                        song.status === "active"
-                          ? "Hoạt động"
-                          : "Không hoạt động"
-                      }
-                      color={song.status === "active" ? "success" : "error"}
-                    />
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  <Tooltip title="Xem chi tiết" arrow>
-                    <IconButton color="info">
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Chỉnh sửa" arrow>
-                    <IconButton color="warning">
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Xóa bài hát" arrow>
-                    <IconButton color="error">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                  <CircularProgress />
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              songs.map((song, index) => (
+                <TableRow key={song._id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    <Avatar
+                      src={song.avatar}
+                      alt={song.title}
+                      variant="rounded"
+                    />
+                  </TableCell>
+                  <TableCell>{song.title}</TableCell>
+                  <TableCell>{song.topicId.title}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handlePlayPauseClick(song)}
+                    >
+                      {isPlaying && playingSongId === song._id ? (
+                        <PauseIcon />
+                      ) : (
+                        <PlayArrowIcon />
+                      )}
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title="Đổi trạng thái" arrow>
+                      <Chip
+                        label={
+                          song.status === "active"
+                            ? "Hoạt động"
+                            : "Không hoạt động"
+                        }
+                        color={song.status === "active" ? "success" : "error"}
+                      />
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title="Xem chi tiết" arrow>
+                      <IconButton
+                        onClick={() => {
+                          router.push(`/songs/detail/${song._id}`);
+                        }}
+                        color="info"
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Chỉnh sửa" arrow>
+                      <IconButton color="warning">
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Xóa bài hát" arrow>
+                      <IconButton color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

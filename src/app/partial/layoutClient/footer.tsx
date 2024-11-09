@@ -14,6 +14,7 @@ import { useEffect, useRef } from "react";
 import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useDispatch, useSelector } from "react-redux";
+import DivNavigation from "./component/footerComponent";
 
 const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   "& .rhap_time": {
@@ -184,14 +185,10 @@ const FooterComponent = () => {
           >
             {songCurrent.singerFullName}
           </div>
-          <div
-            style={{
-              fontSize: "18px",
-              fontWeight: "700",
-            }}
-          >
-            {songCurrent.title}
-          </div>
+          <DivNavigation
+            link={"/songs/detail/" + songCurrent._id}
+            content={songCurrent.title}
+          />
         </Box>
       </Container>
     </footer>

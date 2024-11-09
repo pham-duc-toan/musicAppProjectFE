@@ -13,7 +13,7 @@ const createPage = () => {
         }}
       >
         <h1>tao bai hat moi</h1>
-        <ButtonRedirect link="/" />
+        <ButtonRedirect content="Quản lý bài hát" link="/managerSong" />
       </Box>
       <SongCreateComponent />
     </>
