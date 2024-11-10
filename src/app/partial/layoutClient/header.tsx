@@ -2,11 +2,13 @@
 import { styled, useTheme } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import { Box, Container, Button } from "@mui/material";
+import { Box, Container, Button, InputBase, IconButton } from "@mui/material";
 import { SwitchThemeButton } from "@/component/button-dark-mode";
-import Link from "next/link";
+
 import BtnLoginLogout from "@/component/btn-login-logout";
+import SearchIcon from "@mui/icons-material/Search";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ButtonUpdateSingerHeader from "./component/buttonUpdateSinger";
 
 const drawerWidth = 240;
 
@@ -16,29 +18,36 @@ interface AppBarProps extends MuiAppBarProps {
 
 const Header = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => {
-  return {
-    zIndex: theme.zIndex.drawer - 1,
-
+})<AppBarProps>(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer - 1,
+  transition: theme.transitions.create(["width", "margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px) !important`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px) !important`,
-      transition: theme.transitions.create(["width", "margin"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-    ...(!open && {
-      width: `calc(100% - calc(${theme.spacing(7)} + 1px))`,
-      [theme.breakpoints.up("sm")]: {
-        width: `calc(100% - calc(${theme.spacing(8)} + 1px))`,
-      },
-    }),
-  };
-});
+  }),
+  ...(!open && {
+    width: `calc(100% - calc(${theme.spacing(7)} + 1px))`,
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(100% - calc(${theme.spacing(8)} + 1px))`,
+    },
+  }),
+}));
+
+const SearchBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+
+  borderRadius: theme.shape.borderRadius,
+  padding: "4px 8px",
+  marginRight: theme.spacing(2),
+  color: "white",
+}));
 
 export default function HeaderComponent({ open }: { open: boolean }) {
   return (
@@ -51,18 +60,18 @@ export default function HeaderComponent({ open }: { open: boolean }) {
           justifyContent: "space-between",
         }}
       >
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Header
-          </Typography>
+        <Toolbar disableGutters>
+          <SearchBox>
+            <SearchIcon />
+            <InputBase
+              placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
+              inputProps={{ "aria-label": "search" }}
+              sx={{ color: "inherit", ml: 1, width: "auto" }}
+            />
+          </SearchBox>
+          <ButtonUpdateSingerHeader />
         </Toolbar>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <BtnLoginLogout />
           <SwitchThemeButton />
         </Box>

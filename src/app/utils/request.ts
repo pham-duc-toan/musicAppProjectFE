@@ -87,7 +87,66 @@ export const apiBackEndCreateWithFile = async (
   const result = await response.json();
   return result;
 };
+export const apiBasicClientPublic = async (
+  method: string,
+  path: string,
+  query?: any,
+  option?: object,
+  tagNext: Array<string> = []
+) => {
+  const body = {
+    path,
+    query,
+    method: method,
 
+    ...(option ? { option: option } : {}),
+  };
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    ...(tagNext.length > 0 && {
+      next: {
+        tags: tagNext, // Thêm tags nếu có
+      },
+    }),
+  }).then((res) => res.json());
+
+  return response;
+};
+export const apiBasicServerPublic = async (
+  method: string,
+  path: string,
+  query?: any,
+  option?: object,
+  tagNext: Array<string> = []
+) => {
+  let queryParams = "";
+  if (query) {
+    queryParams = new URLSearchParams(query).toString(); // Chuyển đổi query thành chuỗi
+  }
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_BACK_END_URL + path + `?${queryParams}`,
+    {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      ...(option ? { body: JSON.stringify(option) } : {}),
+      credentials: "include",
+      ...(tagNext.length > 0 && {
+        next: {
+          tags: tagNext, // Thêm tags nếu có
+        },
+      }),
+    }
+  );
+  const result = await response.json(); // Giải mã JSON
+  return result; // Trả về kết quả
+};
+//--------------------auth
 export const login = async (body: { username: string; password: string }) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API}/login`, {
     method: "POST",

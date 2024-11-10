@@ -1,23 +1,14 @@
-import { apiBasicClient, apiBasicServer } from "@/app/utils/request";
+import { CheckTokenFromCookie } from "@/app/utils/checkRole";
+import { apiBasicServer } from "@/app/utils/request";
 import CreatePlaylistButton from "@/component/createPlayListButton";
 import PlaylistItem from "@/component/PlaylistItem";
 import { Grid, Typography } from "@mui/material";
-import { Box, Container } from "@mui/system";
-import { cookies } from "next/headers";
+import { Container } from "@mui/system";
+
 import { redirect } from "next/navigation";
 
 const Playlists = async () => {
-  const cookieStore = cookies();
-
-  const refresh_token = cookieStore.get("refresh_token");
-  const access_token = cookieStore.get("access_token");
-
-  if (!access_token) {
-    redirect(`/`);
-  }
-  if (!refresh_token) {
-    redirect(`/login`);
-  }
+  const access_token = CheckTokenFromCookie();
 
   const datall: any = await apiBasicServer(
     "GET",
@@ -28,6 +19,7 @@ const Playlists = async () => {
     ["tag-list-playlist"]
   );
   const datas = datall?.data || undefined;
+
   if (!datas && datall.redirect) {
     redirect("/login");
   }

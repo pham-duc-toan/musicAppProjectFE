@@ -1,23 +1,23 @@
 "use client";
-
-import Link from "next/link";
-import { Button } from "@mui/material";
-
+import { useState, useEffect, MouseEvent } from "react";
+import { useRouter } from "next/navigation";
+import { Avatar, Button, Menu, MenuItem } from "@mui/material";
 import {
   getAccessTokenFromLocalStorage,
   removeTokensFromLocalStorage,
 } from "@/app/helper/localStorageClient";
 import { logout } from "@/app/utils/request";
-import { useEffect, useState } from "react";
 import { decodeToken } from "@/app/helper/jwt";
 import { JwtPayload } from "jsonwebtoken";
-import { useRouter } from "next/navigation";
+import { Box } from "@mui/system";
 
 export default function BtnLoginLogout() {
   const [isLogin, setIsLogin] = useState<
     string | JwtPayload | null | undefined
   >(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
+
   useEffect(() => {
     const accessToken = getAccessTokenFromLocalStorage();
     if (!accessToken) {
@@ -26,36 +26,85 @@ export default function BtnLoginLogout() {
       setIsLogin(decodeToken(accessToken));
     }
   }, []);
+
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setIsLogin(null);
+    removeTokensFromLocalStorage();
+    router.push("/login");
+    handleClose();
+  };
+
   return (
-    <>
+    <Box
+      sx={{
+        marginRight: "10px",
+      }}
+    >
       {isLogin ? (
-        <Button
-          onClick={async () => {
-            await logout();
-            setIsLogin(null);
-            removeTokensFromLocalStorage();
-            router.push("/login");
-          }}
-          variant="contained"
-          sx={{
-            marginRight: "5px",
-          }}
-        >
-          Logout
-        </Button>
+        <>
+          <Avatar
+            //@ts-ignore
+            src={isLogin.avatar} // Thay đổi đường dẫn này đến ảnh avatar của người dùng
+            onClick={handleClick}
+            sx={{ cursor: "pointer", marginRight: "5px" }}
+          />
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                router.push("/profile");
+              }}
+            >
+              Thông tin cá nhân
+            </MenuItem>
+
+            {
+              //@ts-ignore
+              isLogin.singerId ? (
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    router.push("/managerSong");
+                  }}
+                >
+                  Quản lý bài hát
+                </MenuItem>
+              ) : null
+            }
+
+            <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
+          </Menu>
+        </>
       ) : (
         <Button
-          onClick={() => {
-            router.push("/login");
-          }}
+          onClick={() => router.push("/login")}
           variant="contained"
-          sx={{
-            marginRight: "5px",
-          }}
+          sx={{ marginRight: "5px" }}
         >
           Login
         </Button>
       )}
-    </>
+    </Box>
   );
 }
