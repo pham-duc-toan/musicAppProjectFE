@@ -129,7 +129,7 @@ export default function SiderComponent({
           open={open}
           data={{
             name: "Thêm bài hát",
-            router: "/createSong",
+            router: "/songs/createSong",
           }}
         >
           <FileUploadIcon />

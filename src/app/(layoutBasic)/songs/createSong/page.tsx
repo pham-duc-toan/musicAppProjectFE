@@ -22,7 +22,10 @@ const createPage = () => {
             marginBottom={"15px"}
           >
             <h1>tao bai hat moi</h1>
-            <ButtonRedirect content="Quản lý bài hát" link="/managerSong" />
+            <ButtonRedirect
+              content="Quản lý bài hát"
+              link="/songs/managerSong"
+            />
           </Box>
           <SongCreateComponent />
         </>

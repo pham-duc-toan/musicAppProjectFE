@@ -85,7 +85,7 @@ export default function BtnLoginLogout() {
                 <MenuItem
                   onClick={() => {
                     handleClose();
-                    router.push("/managerSong");
+                    router.push("/songs/managerSong");
                   }}
                 >
                   Quản lý bài hát
