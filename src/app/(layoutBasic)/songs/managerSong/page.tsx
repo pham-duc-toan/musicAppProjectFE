@@ -223,7 +223,7 @@ const ManagerSong: React.FC = () => {
             open={openEditModal}
             onClose={() => setOpenEditModal(false)}
             song={selectedSong}
-            router={router}
+            setSongs={setSongs}
           />
         </Table>
       </TableContainer>

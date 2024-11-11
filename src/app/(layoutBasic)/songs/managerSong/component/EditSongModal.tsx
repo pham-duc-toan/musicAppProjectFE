@@ -30,19 +30,34 @@ import axios, { AxiosProgressEvent } from "axios";
 import SelectorSuggest from "@/component/selectorSuggest";
 import { revalidateByTag } from "@/app/action";
 import { useRouter } from "next/navigation";
-
+import { apiBasicClient } from "@/app/utils/request";
+interface Song {
+  _id: string;
+  title: string;
+  avatar: string;
+  singerId: string;
+  topicId: any;
+  like: number;
+  listen: number;
+  audio: string;
+  status: string;
+  deleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  slug: string;
+}
 interface EditSongModalProps {
   open: boolean;
   onClose: () => void;
   song: any;
-  router: any;
+  setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
 }
 
 const EditSongModal: React.FC<EditSongModalProps> = ({
   open,
   onClose,
   song,
-  router,
+  setSongs,
 }) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -134,8 +149,17 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       showMessage(error.response?.data?.message || "Lỗi khi upload!", "error");
     } finally {
       setLoading(false);
-      // await revalidateByTag("revalidate-tag-songs");
-      // router.refresh();
+      await revalidateByTag("revalidate-tag-songs");
+      const response = await apiBasicClient(
+        "GET",
+        "/songs/managerSong",
+        undefined,
+        undefined,
+        ["revalidate-tag-songs"]
+      );
+      if (response?.data) {
+        setSongs(response.data);
+      }
       setProgress(0);
     }
   };
