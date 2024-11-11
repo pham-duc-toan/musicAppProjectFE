@@ -74,7 +74,7 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
     );
     console.log(res1);
 
-    revalidateByTag("tag-list-playlist");
+    revalidateByTag("revalidate-tag-list-playlist");
     //CALL API
     const res = await apiBasicClient(
       "GET",

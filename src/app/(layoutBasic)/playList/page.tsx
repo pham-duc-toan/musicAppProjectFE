@@ -16,7 +16,7 @@ const Playlists = async () => {
     undefined,
     undefined,
     access_token,
-    ["tag-list-playlist"]
+    ["revalidate-tag-list-playlist"]
   );
   const datas = datall?.data || undefined;
 

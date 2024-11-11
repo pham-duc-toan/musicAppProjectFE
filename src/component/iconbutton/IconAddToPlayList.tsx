@@ -72,7 +72,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
         "/playlists/detail",
         undefined,
         undefined,
-        ["tag-list-playlist"]
+        ["revalidate-tag-list-playlist"]
       );
       if (response?.data) {
         setPlaylists(response.data); // Cập nhật danh sách playlist từ API
@@ -159,7 +159,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
     }
 
     // Gọi revalidation sau khi hoàn tất
-    revalidateByTag("tag-list-playlist");
+    revalidateByTag("revalidate-tag-list-playlist");
     //CALL API
     if (currentPlaylist._id) {
       const res = await apiBasicClient(
@@ -178,7 +178,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   const handleDeletePlaylist = async (playlistId: string) => {
     const res = await apiBasicClient("DELETE", `/playlists/${playlistId}`);
     if (playlistId == currentPlaylist._id) exitPlaylist(dispatch);
-    revalidateByTag("tag-list-playlist");
+    revalidateByTag("revalidate-tag-list-playlist");
 
     if (res.data) {
       showMessage("Đã xóa thành công", "success");

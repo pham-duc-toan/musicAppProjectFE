@@ -46,7 +46,7 @@ const CreatePlaylistButton = () => {
       });
 
       if (response?.data) {
-        await revalidateByTag("tag-list-playlist");
+        await revalidateByTag("revalidate-tag-list-playlist");
 
         showMessage("Đã tạo playlist mới thành công", "success");
       } else {

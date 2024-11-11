@@ -23,37 +23,46 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 import { FileWithPath } from "react-dropzone";
-import { apiBackEndCreateWithFile } from "@/app/utils/request";
 import DropzoneComponent from "@/component/customDropzone/dropzoneComponent";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import axios, { AxiosProgressEvent } from "axios";
 import SelectorSuggest from "@/component/selectorSuggest";
+import { revalidateByTag } from "@/app/action";
+import { useRouter } from "next/navigation";
 
 interface EditSongModalProps {
   open: boolean;
   onClose: () => void;
   song: any;
+  router: any;
 }
 
 const EditSongModal: React.FC<EditSongModalProps> = ({
   open,
   onClose,
   song,
+  router,
 }) => {
-  if (!song) return null;
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    song.avatar || null
-  );
-  const [audioPreview, setAudioPreview] = useState<string | null>(
-    song.audio || null
-  );
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [audioPreview, setAudioPreview] = useState<string | null>(null);
   const { showMessage } = useAppContext();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<string>("active");
+
+  useEffect(() => {
+    if (song && open) {
+      setAvatarPreview(song.avatar || null);
+      setAudioPreview(song.audio || null);
+      setStatus(song.status || "active");
+      setMounted(true);
+    }
+  }, [song, open]);
+
   // Hàm để xử lý file upload và xem trước avatar/audio
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     acceptedFiles.forEach((file) => {
@@ -89,20 +98,12 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
     formData.append("topicId", valueidTopic);
     formData.append("status", status);
     formData.append("lyrics", lyrics);
-    // Thêm file vào formData nếu có
     if (avatarFile) {
       formData.append("avatar", avatarFile);
-    } else {
-      //thông báo lỗi
-      showMessage("Vui lòng tải thêm file ảnh", "error");
     }
     if (audioFile) {
       formData.append("audio", audioFile);
-    } else {
-      //thông báo lỗi
-      showMessage("Vui lòng tải thêm file audio", "error");
     }
-
     // Gửi formData lên server
     setLoading(true);
     try {
@@ -123,8 +124,9 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
         }
       );
 
-      if (response.status === 201) {
-        showMessage("Tạo mới thành công !", "success");
+      if (response.status === 200) {
+        showMessage("Chỉnh sửa thành công !", "success");
+        onClose(); // Đóng modal khi submit thành công
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
       }
@@ -132,6 +134,8 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       showMessage(error.response?.data?.message || "Lỗi khi upload!", "error");
     } finally {
       setLoading(false);
+      // await revalidateByTag("revalidate-tag-songs");
+      // router.refresh();
       setProgress(0);
     }
   };
@@ -148,6 +152,7 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
   const handleStatusChange = (event: any) => {
     setStatus(event.target.value as string);
   };
+  if (!mounted) return null;
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Edit Song</DialogTitle>
@@ -350,7 +355,9 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
         </form>
       </DialogContent>
       <DialogActions>
-        <Button color="primary">Cancel</Button>
+        <Button color="primary" onClick={onClose}>
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );

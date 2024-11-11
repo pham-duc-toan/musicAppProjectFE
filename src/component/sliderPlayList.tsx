@@ -83,7 +83,7 @@ const RightSlider = () => {
       undefined,
       { listSong: updatedIds } // Gửi mảng _id của updatedList
     );
-    revalidateByTag("tag-list-playlist");
+    revalidateByTag("revalidate-tag-list-playlist");
   };
 
   return (

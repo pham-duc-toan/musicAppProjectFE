@@ -118,7 +118,7 @@ const ManagerSong: React.FC = () => {
         "/songs/managerSong",
         undefined,
         undefined,
-        ["tag-list-playlist"]
+        ["revalidate-tag-songs"]
       );
       if (response?.data) {
         setSongs(response.data);
@@ -223,6 +223,7 @@ const ManagerSong: React.FC = () => {
             open={openEditModal}
             onClose={() => setOpenEditModal(false)}
             song={selectedSong}
+            router={router}
           />
         </Table>
       </TableContainer>

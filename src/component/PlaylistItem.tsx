@@ -92,7 +92,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       );
 
       if (response?.data) {
-        revalidateByTag("tag-list-playlist");
+        revalidateByTag("revalidate-tag-list-playlist");
         if (playlist._id == currentPlaylist._id) handleExitPlayList();
         showMessage("Đã xóa playlist thành công", "success");
       } else {
@@ -124,7 +124,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
       );
 
       if (response?.data) {
-        await revalidateByTag("tag-list-playlist");
+        await revalidateByTag("revalidate-tag-list-playlist");
         showMessage("Đã sửa playlist thành công", "success");
         updateNewPlaylistPartial({ title: newTitle }, dispatch);
       } else {

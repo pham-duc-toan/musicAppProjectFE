@@ -1,3 +1,4 @@
+"use client";
 import { apiBasicClient } from "@/app/utils/request";
 import { TableCell, Tooltip, Chip } from "@mui/material";
 import { useState } from "react";
