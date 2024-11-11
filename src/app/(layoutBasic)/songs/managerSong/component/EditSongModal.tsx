@@ -140,6 +140,18 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       );
 
       if (response.status === 200) {
+        await revalidateByTag("revalidate-tag-songs");
+        const response = await apiBasicClient(
+          "GET",
+          "/songs/managerSong",
+          undefined,
+          undefined,
+          ["revalidate-tag-songs"]
+        );
+        if (response?.data) {
+          setSongs(response.data);
+        }
+
         showMessage("Chỉnh sửa thành công !", "success");
         onClose(); // Đóng modal khi submit thành công
       } else {
@@ -148,19 +160,8 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
     } catch (error: any) {
       showMessage(error.response?.data?.message || "Lỗi khi upload!", "error");
     } finally {
-      setLoading(false);
-      await revalidateByTag("revalidate-tag-songs");
-      const response = await apiBasicClient(
-        "GET",
-        "/songs/managerSong",
-        undefined,
-        undefined,
-        ["revalidate-tag-songs"]
-      );
-      if (response?.data) {
-        setSongs(response.data);
-      }
       setProgress(0);
+      setLoading(false);
     }
   };
 

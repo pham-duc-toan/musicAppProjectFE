@@ -219,12 +219,14 @@ const ManagerSong: React.FC = () => {
               ))
             )}
           </TableBody>
-          <EditSongModal
-            open={openEditModal}
-            onClose={() => setOpenEditModal(false)}
-            song={selectedSong}
-            setSongs={setSongs}
-          />
+          {songs && songs.length > 0 && (
+            <EditSongModal
+              open={openEditModal}
+              onClose={() => setOpenEditModal(false)}
+              song={selectedSong}
+              setSongs={setSongs}
+            />
+          )}
         </Table>
       </TableContainer>
 
