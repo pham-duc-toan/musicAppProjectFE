@@ -33,6 +33,7 @@ import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import { TSongDetail } from "@/dataType/song";
 import ButtonRedirect from "@/component/buttonRedirect";
 import { useRouter } from "next/navigation";
+import ChangeStatus from "./component/ChangStatus";
 
 interface Topic {
   _id: string;
@@ -177,18 +178,7 @@ const ManagerSong: React.FC = () => {
                       )}
                     </IconButton>
                   </TableCell>
-                  <TableCell>
-                    <Tooltip title="Đổi trạng thái" arrow>
-                      <Chip
-                        label={
-                          song.status === "active"
-                            ? "Hoạt động"
-                            : "Không hoạt động"
-                        }
-                        color={song.status === "active" ? "success" : "error"}
-                      />
-                    </Tooltip>
-                  </TableCell>
+                  <ChangeStatus song={song} />
                   <TableCell>
                     <Tooltip title="Xem chi tiết" arrow>
                       <IconButton
