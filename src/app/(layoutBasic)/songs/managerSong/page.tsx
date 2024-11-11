@@ -15,6 +15,11 @@ import {
   Chip,
   Tooltip,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -63,6 +68,8 @@ const ManagerSong: React.FC = () => {
   );
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
 
   const handlePlayPauseClick = (song: any) => {
     if (isPlaying && playingSongId === song._id) {
@@ -71,6 +78,27 @@ const ManagerSong: React.FC = () => {
       dispatch(setNewSong(song)); // Cập nhật bài hát mới nếu bài hát khác đang phát
       dispatch(play());
     }
+  };
+
+  const handleDeleteClick = (songId: string) => {
+    setSelectedSongId(songId);
+    setOpenDialog(true);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedSongId) {
+      await apiBasicClient("DELETE", `/songs/${selectedSongId}`);
+      setSongs((prevSongs) =>
+        prevSongs.filter((song) => song._id !== selectedSongId)
+      );
+      setOpenDialog(false);
+      setSelectedSongId(null);
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedSongId(null);
   };
 
   useEffect(() => {
@@ -178,7 +206,10 @@ const ManagerSong: React.FC = () => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa bài hát" arrow>
-                      <IconButton color="error">
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDeleteClick(song._id)}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
@@ -189,6 +220,21 @@ const ManagerSong: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>Bạn có chắc muốn xóa bài hát này không?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={confirmDelete} color="error" autoFocus>
+            Có
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
