@@ -34,6 +34,7 @@ import { TSongDetail } from "@/dataType/song";
 import ButtonRedirect from "@/component/buttonRedirect";
 import { useRouter } from "next/navigation";
 import ChangeStatus from "./component/ChangStatus";
+import EditSongModal from "./component/EditSongModal";
 
 interface Topic {
   _id: string;
@@ -100,6 +101,13 @@ const ManagerSong: React.FC = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedSongId(null);
+  };
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+
+  const handleEditClick = (song: Song) => {
+    setSelectedSong(song);
+    setOpenEditModal(true);
   };
 
   useEffect(() => {
@@ -191,7 +199,10 @@ const ManagerSong: React.FC = () => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Chỉnh sửa" arrow>
-                      <IconButton color="warning">
+                      <IconButton
+                        color="warning"
+                        onClick={() => handleEditClick(song)}
+                      >
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
@@ -208,6 +219,11 @@ const ManagerSong: React.FC = () => {
               ))
             )}
           </TableBody>
+          <EditSongModal
+            open={openEditModal}
+            onClose={() => setOpenEditModal(false)}
+            song={selectedSong}
+          />
         </Table>
       </TableContainer>
 

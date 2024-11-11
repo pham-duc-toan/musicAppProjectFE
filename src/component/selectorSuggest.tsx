@@ -21,13 +21,13 @@ import { useAppContext } from "@/context-app";
 const SelectorSuggest = (props: TPropSelector) => {
   const router = useRouter();
   const { showMessage } = useAppContext();
-  const { name, label, urlFetch, suggestKey } = props;
+  const { name, label, urlFetch, suggestKey, defaultKey } = props;
   const [filteredSuggests, setFilteredSuggests] = useState<TSuggestAvaSlugId[]>(
     []
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [valueId, setValueId] = useState("");
-  const [shrink, setShrink] = useState(false);
+  const [valueId, setValueId] = useState(defaultKey?.id || "");
+  const [shrink, setShrink] = useState(!!defaultKey?.value && !!defaultKey?.id);
   const handleChangSuggest = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toLowerCase();
 
@@ -107,8 +107,9 @@ const SelectorSuggest = (props: TPropSelector) => {
           valueid: valueId,
         }}
         InputLabelProps={{
-          shrink: !!shrink,
+          shrink: shrink,
         }}
+        defaultValue={defaultKey?.value}
         fullWidth
         size="small"
         label={label}

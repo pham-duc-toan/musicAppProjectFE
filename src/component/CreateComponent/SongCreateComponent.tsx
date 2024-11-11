@@ -61,7 +61,7 @@ function SongCreateComponent() {
 
     const valueidTopic = inputTopic?.getAttribute("valueid") || "";
 
-    const lyrics = form.lyric.value || "";
+    const lyrics = form.lyrics.value || "";
     // Tạo một đối tượng FormData
 
     const formData = new FormData();
@@ -174,7 +174,7 @@ function SongCreateComponent() {
             size="small"
             fullWidth
             label="Lyric"
-            name="lyric"
+            name="lyrics"
             multiline
             placeholder={
               "Nhập định dạng LRC ...\nVí dụ:\n[00:19.12] Một ngày thu đầy gió\n[00:21.78] Trong nắng chiều là màu mắt em"

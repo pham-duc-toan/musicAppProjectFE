@@ -3,4 +3,8 @@ export interface TPropSelector {
   label: string;
   urlFetch: string;
   suggestKey: string;
+  defaultKey?: {
+    value: string;
+    id: string;
+  };
 }
