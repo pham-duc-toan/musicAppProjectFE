@@ -154,7 +154,7 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={"10px"}>
               <TextField
                 sx={{
                   width: {
@@ -350,9 +350,7 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
         </form>
       </DialogContent>
       <DialogActions>
-        <Button type="submit" color="primary" disabled={loading}>
-          Save
-        </Button>
+        <Button color="primary">Cancel</Button>
       </DialogActions>
     </Dialog>
   );
