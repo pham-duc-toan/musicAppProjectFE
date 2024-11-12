@@ -186,3 +186,23 @@ export const refreshtoken = async () => {
   }
   return data;
 };
+//call api thông tin user
+export const getInfoUser = async (value_access_token: string) => {
+  const response = await fetch(
+    process.env.NEXT_PUBLIC_BACK_END_URL + "/users/profile",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${value_access_token}`,
+      },
+      credentials: "include",
+      next: {
+        tags: ["revalidate-tag-infoUser"], // Thêm tags nếu có
+      },
+    }
+  );
+
+  const result = await response.json(); // Giải mã JSON
+  return result; // Trả về kết quả
+};

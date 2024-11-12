@@ -192,7 +192,7 @@ const RightSlider = () => {
                 </List>
               </>
             ) : (
-              <p>Hiện đang không có danh sách nhạc nào được phát.</p>
+              <h4>Hiện đang không có danh sách nhạc nào được phát.</h4>
             )}
           </Box>
         </Box>

@@ -50,7 +50,7 @@ const CreatePlaylistButton = () => {
 
         showMessage("Đã tạo playlist mới thành công", "success");
       } else {
-        showMessage("Lỗi khi tạo playlist", "error");
+        showMessage("Bạn cần đăng nhập để tạo Playlist", "error");
       }
     } catch (error) {
       showMessage("Có lỗi xảy ra khi gọi API", "error");

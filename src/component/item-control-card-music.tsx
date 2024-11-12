@@ -53,7 +53,7 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
               wordWrap: "break-word",
             }}
           >
-            <Link href={`/songDetail/${data.slug}`}>{data.title}</Link>
+            <Link href={`/songs/detail/${data._id}`}>{data.title}</Link>
           </Typography>
           <Typography
             variant="subtitle1"

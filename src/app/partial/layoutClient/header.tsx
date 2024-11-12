@@ -60,15 +60,18 @@ export default function HeaderComponent({ open }: { open: boolean }) {
           justifyContent: "space-between",
         }}
       >
-        <Toolbar disableGutters>
-          <SearchBox>
+        <Toolbar sx={{ flex: "1" }} disableGutters>
+          <SearchBox
+            sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+          >
             <SearchIcon />
             <InputBase
               placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
               inputProps={{ "aria-label": "search" }}
-              sx={{ color: "inherit", ml: 1, width: "auto" }}
+              sx={{ color: "inherit", ml: 1, maxWidth: "400px", flexGrow: "1" }}
             />
           </SearchBox>
+
           <ButtonUpdateSingerHeader />
         </Toolbar>
         <Box sx={{ display: "flex", alignItems: "center" }}>

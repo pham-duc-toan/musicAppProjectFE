@@ -25,6 +25,7 @@ import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBackEndCreateWithFile } from "@/app/utils/request";
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
+import { revalidateByTag } from "@/app/action";
 
 function SongCreateComponent() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -106,12 +107,21 @@ function SongCreateComponent() {
 
       if (response.status === 201) {
         showMessage("Tạo mới thành công !", "success");
+        // Reset form và trạng thái
+        form.reset();
+        setAvatarPreview(null);
+        setAudioPreview(null);
+        setAvatarFile(null);
+        setAudioFile(null);
+        setStatus("active");
+        setProgress(0);
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
       }
     } catch (error: any) {
       showMessage(error.response?.data?.message || "Lỗi khi upload!", "error");
     } finally {
+      revalidateByTag("revalidate-tag-songs");
       setLoading(false);
       setProgress(0);
     }

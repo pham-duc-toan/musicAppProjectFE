@@ -72,7 +72,6 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
       undefined,
       { idSong: song._id }
     );
-    console.log(res1);
 
     revalidateByTag("revalidate-tag-list-playlist");
     //CALL API

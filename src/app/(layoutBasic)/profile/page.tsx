@@ -1,50 +1,15 @@
 // app/profile/page.tsx
 import { Box, Typography, Avatar, Paper, Button, Stack } from "@mui/material";
-import { apiBasicServer } from "@/app/utils/request";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { getInfoUser } from "@/app/utils/request";
 import Link from "next/link";
 import { CheckTokenFromCookie } from "@/app/utils/checkRole";
+import IUserInfo from "@/dataType/infoUser";
 
-interface UserProfile {
-  fullName: string;
-  username: string;
-  role: {
-    roleName: string;
-    _id: string;
-    permissions: string[];
-  };
-  avatar: string;
-  type: string;
-  singerId?: string;
-  dataSinger?: {
-    _id: string;
-    fullName: string;
-    avatar: string;
-    status: string;
-  };
-}
-
-async function fetchProfileData(): Promise<UserProfile | null> {
+async function fetchProfileData(): Promise<IUserInfo | null> {
   const access_token = CheckTokenFromCookie();
 
   try {
-    const data = await apiBasicServer(
-      "GET",
-      "/users/profile",
-      undefined,
-      undefined,
-      access_token
-    );
-
-    if (data?.data && data.data.singerId) {
-      const dataSinger = await apiBasicServer(
-        "GET",
-        `/singers/detail/${data.data.singerId}`
-      );
-
-      data.data.dataSinger = dataSinger.data;
-    }
+    const data = await getInfoUser(access_token.value);
 
     return data?.data || null;
   } catch (error) {
@@ -103,7 +68,7 @@ export default async function ProfilePage() {
         </Typography>
       </Paper>
 
-      {profileData.dataSinger && (
+      {profileData.singerId && (
         <Paper
           elevation={3}
           sx={{
@@ -117,15 +82,13 @@ export default async function ProfilePage() {
             Thông tin ca sĩ quản lý
           </Typography>
           <Avatar
-            src={`${profileData.dataSinger.avatar}`}
-            alt={profileData.dataSinger.fullName}
+            src={`${profileData.singerId.avatar}`}
+            alt={profileData.singerId.fullName}
             sx={{ width: 80, height: 80, marginBottom: "10px" }}
           />
-          <Typography variant="h5">
-            {profileData.dataSinger.fullName}
-          </Typography>
+          <Typography variant="h5">{profileData.singerId.fullName}</Typography>
           <Typography color="textSecondary" sx={{ marginBottom: "10px" }}>
-            <strong>Trạng thái:</strong> {profileData.dataSinger.status}
+            <strong>Trạng thái:</strong> {profileData.singerId.status}
           </Typography>
 
           <Stack direction="row" spacing={2} justifyContent="center">
@@ -133,7 +96,7 @@ export default async function ProfilePage() {
               variant="outlined"
               color="primary"
               component={Link}
-              href={`/detailSinger/${profileData.dataSinger._id}`}
+              href={`/singers/detailSinger/${profileData.singerId._id}`}
             >
               Xem chi tiết
             </Button>
