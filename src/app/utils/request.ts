@@ -8,8 +8,7 @@ export const apiBasicClient = async (
   method: string,
   path: string,
   query?: any,
-  option?: object,
-  tagNext: Array<string> = []
+  option?: object
 ) => {
   const accessToken = getAccessTokenFromLocalStorage();
   const body = {
@@ -26,11 +25,6 @@ export const apiBasicClient = async (
       ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
     body: JSON.stringify(body),
-    ...(tagNext.length > 0 && {
-      next: {
-        tags: tagNext, // Thêm tags nếu có
-      },
-    }),
   }).then((res) => res.json());
 
   return response;
@@ -91,8 +85,7 @@ export const apiBasicClientPublic = async (
   method: string,
   path: string,
   query?: any,
-  option?: object,
-  tagNext: Array<string> = []
+  option?: object
 ) => {
   const body = {
     path,
@@ -107,45 +100,11 @@ export const apiBasicClientPublic = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-    ...(tagNext.length > 0 && {
-      next: {
-        tags: tagNext, // Thêm tags nếu có
-      },
-    }),
   }).then((res) => res.json());
 
   return response;
 };
-export const apiBasicServerPublic = async (
-  method: string,
-  path: string,
-  query?: any,
-  option?: object,
-  tagNext: Array<string> = []
-) => {
-  let queryParams = "";
-  if (query) {
-    queryParams = new URLSearchParams(query).toString(); // Chuyển đổi query thành chuỗi
-  }
-  const response = await fetch(
-    process.env.NEXT_PUBLIC_BACK_END_URL + path + `?${queryParams}`,
-    {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      ...(option ? { body: JSON.stringify(option) } : {}),
-      credentials: "include",
-      ...(tagNext.length > 0 && {
-        next: {
-          tags: tagNext, // Thêm tags nếu có
-        },
-      }),
-    }
-  );
-  const result = await response.json(); // Giải mã JSON
-  return result; // Trả về kết quả
-};
+
 //--------------------auth
 export const login = async (body: { username: string; password: string }) => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_AUTH_API}/login`, {
@@ -186,8 +145,13 @@ export const refreshtoken = async () => {
   }
   return data;
 };
-//call api thông tin user
-export const getInfoUser = async (value_access_token: string) => {
+//------------call api thông tin user
+export const getInfoUser = async (value_access_token: string | null) => {
+  if (!value_access_token)
+    return {
+      message: "Bạn chưa đăng nhập",
+      statusCode: 400,
+    };
   const response = await fetch(
     process.env.NEXT_PUBLIC_BACK_END_URL + "/users/profile",
     {

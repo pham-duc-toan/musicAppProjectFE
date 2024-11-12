@@ -32,6 +32,6 @@ interface IUserInfo {
     avatar: string;
     status: string;
   };
-  listFavoriteSong: TSongDetail[];
+  listFavoriteSong: string[];
 }
 export default IUserInfo;

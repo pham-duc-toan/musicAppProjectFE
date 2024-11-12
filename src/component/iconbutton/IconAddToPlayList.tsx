@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IconButton,
   Dialog,
@@ -21,7 +21,7 @@ import QueueIcon from "@mui/icons-material/Queue";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material/styles";
-import { apiBasicClient } from "@/app/utils/request";
+import { apiBasicClient, getInfoUser } from "@/app/utils/request";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { decodeToken } from "@/app/helper/jwt";
@@ -34,6 +34,7 @@ import {
   exitPlaylist,
   updateNewPlaylist,
 } from "@/app/utils/updateCurrentPLayList";
+import IUserInfo from "@/dataType/infoUser";
 
 interface Playlist {
   _id: string;
@@ -63,7 +64,14 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  // const [infoUser, setInfoUser] = useState<IUserInfo | undefined>(undefined);
+  // useEffect(() => {
+  //   const fetchInfoUser = async () => {
+  //     const infoUserData = await getInfoUser(access_token);
+  //     setInfoUser(infoUserData);
+  //   };
+  //   fetchInfoUser();
+  // }, []);
   const fetchPlaylists = async () => {
     setLoading(true); // Bắt đầu loading
     try {
@@ -71,8 +79,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
         "GET",
         "/playlists/detail",
         undefined,
-        undefined,
-        ["revalidate-tag-list-playlist"]
+        undefined
       );
       if (response?.data) {
         setPlaylists(response.data); // Cập nhật danh sách playlist từ API
@@ -85,6 +92,18 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   };
 
   const handleClickOpen = async () => {
+    const infoUser = await getInfoUser(access_token);
+    if (
+      !infoUser.data.listFavoriteSong ||
+      !infoUser.data.listFavoriteSong.some((song: any) => song === songId)
+    ) {
+      showMessage(
+        "Bài hát này không có trong danh sách bài hát yêu thích của bạn",
+        "error"
+      );
+      return;
+    }
+
     await fetchPlaylists();
     setOpen(true);
   };
