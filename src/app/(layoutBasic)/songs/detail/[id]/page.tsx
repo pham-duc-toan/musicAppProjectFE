@@ -14,7 +14,7 @@ import {
   CircularProgress,
   IconButton,
 } from "@mui/material";
-import { apiBasicClient } from "@/app/utils/request";
+import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
 import Lyric from "./lyric";
 
 interface TSongDetail {
@@ -48,7 +48,7 @@ const SongDetailPage = () => {
   useEffect(() => {
     const fetchSongDetail = async () => {
       try {
-        const res = await apiBasicClient("GET", `/songs/detail/${id}`);
+        const res = await apiBasicClientPublic("GET", `/songs/detail/${id}`);
         setSongDetail(res.data);
       } catch (error) {
         console.error("Error fetching song detail:", error);

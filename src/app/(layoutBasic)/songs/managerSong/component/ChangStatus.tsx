@@ -1,4 +1,5 @@
 "use client";
+import { revalidateByTag } from "@/app/action";
 import { apiBasicClient } from "@/app/utils/request";
 import { TableCell, Tooltip, Chip } from "@mui/material";
 import { useState } from "react";
@@ -13,7 +14,7 @@ const ChangeStatus = ({ song }: any) => {
       await apiBasicClient("PATCH", `/songs/${song._id}`, undefined, {
         status: newStatus,
       });
-
+      revalidateByTag("revalidate-by-songs");
       // Cập nhật lại trạng thái nếu API gọi thành công
     } catch (error) {
       console.error("Failed to change status:", error);

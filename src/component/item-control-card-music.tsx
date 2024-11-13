@@ -19,8 +19,15 @@ import { AppDispatch, RootState } from "@/store/store";
 import { pause, play, setNewSong } from "@/store/playingMusicSlice";
 import Image from "next/image";
 import IconAddToPlayList from "./iconbutton/IconAddToPlayList";
+import IconLikeSong from "./iconbutton/IconLikeSong";
 
-export default function ItemControlCard({ data }: { data: TSongDetail }) {
+export default function ItemControlCard({
+  fSongs,
+  data,
+}: {
+  fSongs: string[];
+  data: TSongDetail;
+}) {
   const songCurrent = useSelector((state: RootState) => state.playingMusic);
   const dispatch: AppDispatch = useDispatch();
   const handleChangeNewSongPlaying = () => {
@@ -33,6 +40,7 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
       dispatch(play());
     }
   };
+
   return (
     <Card sx={{ display: "flex" }}>
       <Box sx={{ display: "flex", flexDirection: "column", width: "50%" }}>
@@ -82,10 +90,8 @@ export default function ItemControlCard({ data }: { data: TSongDetail }) {
               )}
             </IconButton>
           )}
-          <IconAddToPlayList songId={data._id} />
-          <IconButton>
-            <FavoriteBorderIcon sx={{ fontSize: "20px" }} />
-          </IconButton>
+          <IconAddToPlayList songId={data._id} fSongs={fSongs} />
+          <IconLikeSong songId={data._id} fSongs={fSongs} />
         </Box>
       </Box>
 

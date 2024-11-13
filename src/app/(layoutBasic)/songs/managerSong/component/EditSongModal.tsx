@@ -140,14 +140,13 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       );
 
       if (response.status === 200) {
-        await revalidateByTag("revalidate-tag-songs");
         const response = await apiBasicClient(
           "GET",
           "/songs/managerSong",
           undefined,
-          undefined,
-          ["revalidate-tag-songs"]
+          undefined
         );
+        await revalidateByTag("revalidate-tag-songs");
         if (response?.data) {
           setSongs(response.data);
         }

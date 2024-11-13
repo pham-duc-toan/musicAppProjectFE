@@ -51,9 +51,13 @@ const PlaylistList = styled(List)({
 
 interface IconAddToPlayListProps {
   songId: string;
+  fSongs: string[];
 }
 
-const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
+const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({
+  songId,
+  fSongs,
+}) => {
   const access_token = getAccessTokenFromLocalStorage();
   const info_user = decodeToken(access_token || undefined);
   const dispatch = useDispatch();
@@ -92,11 +96,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
   };
 
   const handleClickOpen = async () => {
-    const infoUser = await getInfoUser(access_token);
-    if (
-      !infoUser.data.listFavoriteSong ||
-      !infoUser.data.listFavoriteSong.some((song: any) => song === songId)
-    ) {
+    if (!fSongs || !fSongs.some((song: any) => song === songId)) {
       showMessage(
         "Bài hát này không có trong danh sách bài hát yêu thích của bạn",
         "error"
@@ -160,19 +160,25 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({ songId }) => {
       // Gọi API dựa trên trạng thái checkbox
       if (isChecked != wasChecked) {
         if (isChecked) {
-          await apiBasicClient(
+          const data = await apiBasicClient(
             "POST",
             `/playlists/addSong/${playlist._id}`,
             undefined,
             { idSong: songId }
           );
+          if (data.statusCode != 201 && data?.message) {
+            showMessage(`${data.message}`, "error");
+          }
         } else {
-          await apiBasicClient(
+          const data = await apiBasicClient(
             "DELETE",
             `/playlists/removeSong/${playlist._id}`,
             undefined,
             { idSong: songId }
           );
+          if (data.statusCode != 201 && data?.message) {
+            showMessage(`${data.message}`, "error");
+          }
         }
       }
     }

@@ -1,4 +1,4 @@
-import { CheckTokenFromCookie } from "@/app/utils/checkRole";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import { apiBasicServer } from "@/app/utils/request";
 import CreatePlaylistButton from "@/component/createPlayListButton";
 import PlaylistItem from "@/component/PlaylistItem";
@@ -8,7 +8,7 @@ import { Container } from "@mui/system";
 import { redirect } from "next/navigation";
 
 const Playlists = async () => {
-  const access_token = CheckTokenFromCookie();
+  const access_token = GetAccessTokenFromCookie();
 
   const datall: any = await apiBasicServer(
     "GET",

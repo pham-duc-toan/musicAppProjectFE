@@ -35,6 +35,7 @@ import ButtonRedirect from "@/component/buttonRedirect";
 import { useRouter } from "next/navigation";
 import ChangeStatus from "./component/ChangStatus";
 import EditSongModal from "./component/EditSongModal";
+import { revalidateByTag } from "@/app/action";
 
 interface Topic {
   _id: string;
@@ -93,6 +94,7 @@ const ManagerSong: React.FC = () => {
       setSongs((prevSongs) =>
         prevSongs.filter((song) => song._id !== selectedSongId)
       );
+      await revalidateByTag("revalidate-tag-songs");
       setOpenDialog(false);
       setSelectedSongId(null);
     }
@@ -117,8 +119,7 @@ const ManagerSong: React.FC = () => {
         "GET",
         "/songs/managerSong",
         undefined,
-        undefined,
-        ["revalidate-tag-songs"]
+        undefined
       );
       if (response?.data) {
         setSongs(response.data);

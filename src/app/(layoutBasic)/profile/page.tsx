@@ -2,11 +2,11 @@
 import { Box, Typography, Avatar, Paper, Button, Stack } from "@mui/material";
 import { getInfoUser } from "@/app/utils/request";
 import Link from "next/link";
-import { CheckTokenFromCookie } from "@/app/utils/checkRole";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import IUserInfo from "@/dataType/infoUser";
 
 async function fetchProfileData(): Promise<IUserInfo | null> {
-  const access_token = CheckTokenFromCookie();
+  const access_token = GetAccessTokenFromCookie();
 
   try {
     const data = await getInfoUser(access_token.value);

@@ -1,5 +1,5 @@
 import { decodeToken } from "@/app/helper/jwt";
-import { CheckTokenFromCookie } from "@/app/utils/checkRole";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import ButtonRedirect from "@/component/buttonRedirect";
 import SongCreateComponent from "@/component/CreateComponent/SongCreateComponent";
 import { Button } from "@mui/material";
@@ -8,7 +8,7 @@ interface UserInfo {
   singerId?: string;
 }
 const createPage = () => {
-  const access_token: any = CheckTokenFromCookie();
+  const access_token: any = GetAccessTokenFromCookie();
   const userInfo = decodeToken(access_token.value) as UserInfo;
   return (
     <>
