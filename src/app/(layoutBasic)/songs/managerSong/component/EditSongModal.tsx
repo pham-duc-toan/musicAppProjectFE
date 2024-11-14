@@ -124,7 +124,7 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
     try {
       // Sử dụng Axios để upload file và theo dõi tiến trình
       const response = await axios.patchForm(
-        process.env.NEXT_PUBLIC_BACK_END_URL + `/songs/${song._id}`,
+        process.env.NEXT_PUBLIC_BACK_END_URL + `/songs/editSong/${song._id}`,
         formData,
         {
           headers: {

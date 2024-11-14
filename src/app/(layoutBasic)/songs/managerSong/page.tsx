@@ -90,7 +90,7 @@ const ManagerSong: React.FC = () => {
 
   const confirmDelete = async () => {
     if (selectedSongId) {
-      await apiBasicClient("DELETE", `/songs/${selectedSongId}`);
+      await apiBasicClient("DELETE", `/songs/deleteSong/${selectedSongId}`);
       setSongs((prevSongs) =>
         prevSongs.filter((song) => song._id !== selectedSongId)
       );
