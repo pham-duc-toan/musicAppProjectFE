@@ -115,12 +115,7 @@ const ManagerSong: React.FC = () => {
   useEffect(() => {
     const fetchSongs = async () => {
       setLoading(true);
-      const response = await apiBasicClient(
-        "GET",
-        "/songs/managerSong",
-        undefined,
-        undefined
-      );
+      const response = await apiBasicClient("GET", "/songs/managerSong");
       if (response?.data) {
         setSongs(response.data);
       }
