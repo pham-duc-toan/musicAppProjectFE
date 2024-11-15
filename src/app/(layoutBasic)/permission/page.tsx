@@ -16,8 +16,12 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  CircularProgress, // Import CircularProgress
+  CircularProgress,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
+import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
+import VisibilityIcon from "@mui/icons-material/Visibility"; // Import View icon
 import { apiBasicClient } from "@/app/utils/request";
 
 // Định nghĩa kiểu cho role
@@ -124,6 +128,21 @@ export default function Permissions() {
     await fetchRolesAndPermissions();
   };
 
+  const handleDelete = (roleId: string) => {
+    // Handle delete logic here
+    console.log("Deleting role with ID:", roleId);
+  };
+
+  const handleView = (roleId: string) => {
+    // Handle view logic here
+    console.log("Viewing role with ID:", roleId);
+  };
+
+  const handleEdit = (roleId: string) => {
+    // Handle edit logic here
+    console.log("Editing role with ID:", roleId);
+  };
+
   return (
     <Box sx={{ p: 4 }}>
       <Box
@@ -145,7 +164,7 @@ export default function Permissions() {
       </Box>
       <form onSubmit={handleSaveChanges}>
         <TableContainer>
-          {loading ? ( // Hiển thị loading nếu đang tải dữ liệu
+          {loading ? (
             <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
               <CircularProgress />
             </Box>
@@ -157,6 +176,7 @@ export default function Permissions() {
                   {roles.map((role, index) => (
                     <TableCell key={index}>{role.roleName}</TableCell>
                   ))}
+                  <TableCell>Hành động</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -173,6 +193,31 @@ export default function Permissions() {
                         />
                       </TableCell>
                     ))}
+                    <TableCell>
+                      <IconButton
+                        onClick={() => handleView(permission.id)}
+                        color="primary"
+                        size="small"
+                        sx={{ mr: 1 }}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleEdit(permission.id)}
+                        color="secondary"
+                        size="small"
+                        sx={{ mr: 1 }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleDelete(permission.id)}
+                        color="error"
+                        size="small"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
