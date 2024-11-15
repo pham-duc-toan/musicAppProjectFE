@@ -131,11 +131,13 @@ const FooterComponent = () => {
         }
       };
 
-      // Thiết lập interval để chạy `handleTimeUpdate` mỗi giây
-      if (audioElement) {
+      if (songCurrent.isPlaying && audioElement) {
         interval = setInterval(handleTimeUpdate2, 1000);
       }
-
+      // Dừng interval khi bài hát dừng hoặc không còn phát
+      if (!songCurrent.isPlaying && interval) {
+        clearInterval(interval);
+      }
       const handleTimeUpdate = () => {
         dispatch(setCurrentTime(audioElement.currentTime));
       };
