@@ -35,6 +35,8 @@ interface Role {
 interface Permission {
   name: string;
   id: string;
+  pathName: string;
+  method: string;
 }
 
 export default function Permissions() {
@@ -42,7 +44,12 @@ export default function Permissions() {
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]); // Danh sách quyền
   const [open, setOpen] = useState<boolean>(false); // Điều khiển trạng thái mở/đóng của modal
   const [loading, setLoading] = useState<boolean>(true); // Trạng thái loading
-
+  const [openEditModal, setOpenEditModal] = useState(false); // Modal chỉnh sửa
+  const [openViewModal, setOpenViewModal] = useState(false); // Modal xem chi tiết
+  const [openDeleteModal, setOpenDeleteModal] = useState(false); // Modal xóa
+  const [currentPermission, setCurrentPermission] = useState<Permission | null>(
+    null
+  );
   const fetchRolesAndPermissions = async () => {
     setLoading(true); // Bắt đầu tải
     try {
@@ -59,6 +66,8 @@ export default function Permissions() {
       const permissionsData = permissionsRes.data.map((permission: any) => ({
         name: permission.name,
         id: permission._id, // Lưu lại id của quyền để đối chiếu
+        pathName: permission.pathName,
+        method: permission.method,
       }));
 
       setRoles(rolesData);
@@ -90,7 +99,24 @@ export default function Permissions() {
 
     handleClose();
   };
+  const handleEditPermission = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newPermission = {
+      name: formData.get("name") as string,
+      pathName: formData.get("pathName") as string,
+      method: formData.get("method") as string,
+    };
+    await apiBasicClient(
+      "PATCH",
+      `/permissions/${currentPermission?.id}`,
+      undefined,
+      newPermission
+    );
+    await fetchRolesAndPermissions();
 
+    setOpenEditModal(false);
+  };
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updatedRoles = [...roles];
@@ -128,19 +154,20 @@ export default function Permissions() {
     await fetchRolesAndPermissions();
   };
 
-  const handleDelete = (roleId: string) => {
-    // Handle delete logic here
-    console.log("Deleting role with ID:", roleId);
+  const handleDelete = (permission: Permission) => {
+    setCurrentPermission(permission); // Lưu quyền cần xóa
+    setOpenDeleteModal(true);
   };
 
-  const handleView = (roleId: string) => {
+  const handleView = (permission: Permission) => {
     // Handle view logic here
-    console.log("Viewing role with ID:", roleId);
+    setCurrentPermission(permission); // Lưu quyền cần xem
+    setOpenViewModal(true);
   };
 
-  const handleEdit = (roleId: string) => {
-    // Handle edit logic here
-    console.log("Editing role with ID:", roleId);
+  const handleEdit = (permission: Permission) => {
+    setCurrentPermission(permission); // Lưu quyền đang chỉnh sửa
+    setOpenEditModal(true);
   };
 
   return (
@@ -193,31 +220,33 @@ export default function Permissions() {
                         />
                       </TableCell>
                     ))}
-                    <TableCell>
-                      <IconButton
-                        onClick={() => handleView(permission.id)}
-                        color="primary"
-                        size="small"
-                        sx={{ mr: 1 }}
-                      >
-                        <VisibilityIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleEdit(permission.id)}
-                        color="secondary"
-                        size="small"
-                        sx={{ mr: 1 }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleDelete(permission.id)}
-                        color="error"
-                        size="small"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+                    {permissionsList.length > 0 && (
+                      <TableCell>
+                        <IconButton
+                          onClick={() => handleView(permission)}
+                          color="primary"
+                          size="small"
+                          sx={{ mr: 1 }}
+                        >
+                          <VisibilityIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleEdit(permission)}
+                          color="secondary"
+                          size="small"
+                          sx={{ mr: 1 }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDelete(permission)}
+                          color="error"
+                          size="small"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))}
               </TableBody>
@@ -261,6 +290,111 @@ export default function Permissions() {
           </DialogActions>
         </form>
       </Dialog>
+      {permissionsList.length > 0 && (
+        <>
+          <Dialog open={openEditModal} onClose={() => setOpenEditModal(false)}>
+            <form onSubmit={handleEditPermission}>
+              <DialogTitle>Chỉnh sửa quyền</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="name"
+                  label="Tên quyền"
+                  defaultValue={currentPermission?.name}
+                  fullWidth
+                />
+                <TextField
+                  margin="dense"
+                  name="pathName"
+                  label="Path Name"
+                  defaultValue={currentPermission?.pathName.substring(8)}
+                  fullWidth
+                />
+                <TextField
+                  margin="dense"
+                  name="method"
+                  label="Method"
+                  defaultValue={currentPermission?.method}
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => setOpenEditModal(false)}>Hủy</Button>
+                <Button
+                  disabled={loading ? true : false}
+                  type="submit"
+                  color="primary"
+                >
+                  Lưu thay đổi
+                </Button>
+              </DialogActions>
+            </form>
+          </Dialog>
+          <Dialog open={openViewModal} onClose={() => setOpenViewModal(false)}>
+            <DialogTitle>Xem chi tiết quyền</DialogTitle>
+            <DialogContent>
+              <TextField
+                margin="dense"
+                name="name"
+                label="Tên quyền"
+                value={currentPermission?.name}
+                fullWidth
+                disabled
+              />
+              <TextField
+                margin="dense"
+                name="pathName"
+                label="Path Name"
+                value={currentPermission?.pathName}
+                fullWidth
+                disabled
+              />
+              <TextField
+                margin="dense"
+                name="method"
+                label="Method"
+                value={currentPermission?.method}
+                fullWidth
+                disabled
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenViewModal(false)}>Đóng</Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openDeleteModal}
+            onClose={() => setOpenDeleteModal(false)}
+          >
+            <DialogTitle>Xác nhận xóa quyền</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Bạn có chắc muốn xóa quyền "{currentPermission?.name}" không?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenDeleteModal(false)}>Hủy</Button>
+              <Button
+                disabled={loading ? true : false}
+                color="error"
+                onClick={async () => {
+                  if (currentPermission) {
+                    await apiBasicClient(
+                      "DELETE",
+                      `/permissions/${currentPermission.id}`
+                    );
+                    await fetchRolesAndPermissions();
+                    setOpenDeleteModal(false);
+                  }
+                }}
+              >
+                Xóa
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )}
     </Box>
   );
 }
