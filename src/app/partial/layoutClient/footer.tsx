@@ -15,6 +15,7 @@ import H5AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import DivNavigation from "./component/footerComponent";
+import { apiBasicClientPublic } from "@/app/utils/request";
 
 const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   "& .rhap_time": {
@@ -70,7 +71,7 @@ const FooterComponent = () => {
 
   useEffect(() => {
     const audioElement = playerRef.current?.audio.current;
-
+    let interval: NodeJS.Timeout | null = null;
     if (audioElement) {
       const handleCanPlay = () => {
         if (songCurrent.isPlaying) {
@@ -109,6 +110,31 @@ const FooterComponent = () => {
           dispatch(pause());
         }
       };
+      const handleTimeUpdate2 = async () => {
+        const eightyPercentTime = Math.round(audioElement!.duration * 0.8);
+        const currentTime = Math.round(audioElement!.currentTime);
+
+        console.log(currentTime, eightyPercentTime);
+
+        // Kiểm tra nếu thời gian hiện tại đã đạt 80% thời lượng
+        if (currentTime === eightyPercentTime) {
+          console.log("this time!");
+          try {
+            await apiBasicClientPublic(
+              "PATCH",
+              `/songs/listen/increase/${songCurrent._id}`
+            );
+            clearInterval(interval!); // Ngừng kiểm tra sau khi đạt 80%
+          } catch (error) {
+            console.log("Lỗi khi tăng view:", error);
+          }
+        }
+      };
+
+      // Thiết lập interval để chạy `handleTimeUpdate` mỗi giây
+      if (audioElement) {
+        interval = setInterval(handleTimeUpdate2, 1000);
+      }
 
       const handleTimeUpdate = () => {
         dispatch(setCurrentTime(audioElement.currentTime));
@@ -122,6 +148,7 @@ const FooterComponent = () => {
         audioElement.removeEventListener("canplay", handleCanPlay);
         audioElement.removeEventListener("ended", handleEnded);
         audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+        if (interval) clearInterval(interval);
       };
     }
   }, [songCurrent.audio, songCurrent.isPlaying, currentPlaylist]);
