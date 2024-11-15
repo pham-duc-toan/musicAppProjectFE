@@ -114,10 +114,13 @@ const FooterComponent = () => {
         const eightyPercentTime = Math.round(audioElement!.duration * 0.8);
         const currentTime = Math.round(audioElement!.currentTime);
 
-        console.log(currentTime, eightyPercentTime);
+        // console.log(currentTime, eightyPercentTime);
 
         // Kiểm tra nếu thời gian hiện tại đã đạt 80% thời lượng
-        if (currentTime === eightyPercentTime) {
+        if (
+          currentTime >= eightyPercentTime &&
+          currentTime <= eightyPercentTime + 1
+        ) {
           console.log("this time!");
           try {
             await apiBasicClientPublic(
