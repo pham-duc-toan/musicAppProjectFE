@@ -11,7 +11,7 @@ const ChangeStatus = ({ song }: any) => {
     const newStatus = status === "active" ? "inactive" : "active";
     try {
       setStatus(newStatus);
-      await apiBasicClient("PATCH", `/songs/${song._id}`, undefined, {
+      await apiBasicClient("PATCH", `/songs/editSong/${song._id}`, undefined, {
         status: newStatus,
       });
       revalidateByTag("revalidate-by-songs");
