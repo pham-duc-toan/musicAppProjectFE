@@ -17,7 +17,7 @@ import {
   Button,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
+import { apiBasicClient } from "@/app/utils/request";
 import Link from "next/link";
 import { useAppContext } from "@/context-app";
 
@@ -73,7 +73,7 @@ const ManageFeaturedSongs: React.FC = () => {
   const handleRemoveFromFeatured = async (songId: string) => {
     setLoading(true);
     try {
-      await apiBasicClientPublic("DELETE", `/song-for-you/remove/${songId}`);
+      await apiBasicClient("DELETE", `/song-for-you/remove/${songId}`);
       // Cập nhật lại danh sách bài hát sau khi xóa
       setFeaturedSongs((prev) => prev.filter((song) => song._id !== songId));
     } catch (error) {
