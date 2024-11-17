@@ -15,6 +15,7 @@ import {
   CircularProgress,
   Tooltip,
   Chip,
+  Button,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -30,6 +31,7 @@ import { useRouter } from "next/navigation";
 
 import { revalidateByTag } from "@/app/action";
 import { TSongDetail } from "@/dataType/song";
+import Link from "next/link";
 
 interface Topic {
   _id: string;
@@ -74,7 +76,9 @@ const ManagerSong: React.FC = () => {
     try {
       const res = await apiBasicClientPublic("GET", "/song-for-you");
       if (res?.data) {
-        setListSongForYou(res.data.map((song: { _id: string }) => song._id)); // Extract the song IDs
+        setListSongForYou(
+          res.data.listSong.map((song: { _id: string }) => song._id)
+        ); // Extract the song IDs
       }
     } catch (error) {
       console.error("Error fetching songs for you", error);
@@ -161,6 +165,11 @@ const ManagerSong: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Quản lý bài hát
         </Typography>
+        <Button>
+          <Link href={"/admin/managerSong/songs-for-you"}>
+            Quản lý bài hát đề cử
+          </Link>
+        </Button>
       </Box>
 
       <TableContainer component={Paper}>
@@ -174,7 +183,7 @@ const ManagerSong: React.FC = () => {
               <TableCell>Ca sĩ</TableCell>
               <TableCell>Phát</TableCell>
               <TableCell>Trạng thái</TableCell>
-              <TableCell>Đề cử</TableCell> {/* Cột đề cử */}
+              <TableCell>Đề cử</TableCell>
             </TableRow>
           </TableHead>
 
