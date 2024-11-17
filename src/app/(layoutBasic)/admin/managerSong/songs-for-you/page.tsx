@@ -19,6 +19,7 @@ import {
 import StarIcon from "@mui/icons-material/Star";
 import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
 import Link from "next/link";
+import { useAppContext } from "@/context-app";
 
 interface Topic {
   _id: string;
@@ -49,6 +50,7 @@ interface Song {
 }
 
 const ManageFeaturedSongs: React.FC = () => {
+  const { showMessage } = useAppContext();
   const [featuredSongs, setFeaturedSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -57,7 +59,6 @@ const ManageFeaturedSongs: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiBasicClient("GET", "/song-for-you");
-
       if (response?.data) {
         setFeaturedSongs(response.data.listSong || []); // Lấy danh sách bài hát đề cử
       }
@@ -82,10 +83,61 @@ const ManageFeaturedSongs: React.FC = () => {
     }
   };
 
+  // Cập nhật lại danh sách bài hát sau khi kéo thả
+  const handleDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    event.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDrop = async (
+    event: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    event.preventDefault();
+    const fromIndex = Number(event.dataTransfer.getData("text/plain"));
+    const updatedList = [...featuredSongs];
+    const [movedSong] = updatedList.splice(fromIndex, 1);
+    updatedList.splice(index, 0, movedSong);
+    setFeaturedSongs(updatedList);
+  };
+
+  // Gửi yêu cầu cập nhật thứ tự bài hát
+  const updateSongOrder = async () => {
+    setLoading(true);
+
+    try {
+      const updatedIds = featuredSongs.map((song) => song._id);
+      await apiBasicClient("PATCH", "/song-for-you/update-order", undefined, {
+        listSong: updatedIds,
+      });
+      showMessage("Cập nhật thứ tự thành công!", "success");
+    } catch (error) {
+      console.error("Error updating song order", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Lấy danh sách bài hát đề cử khi component load
   useEffect(() => {
     fetchFeaturedSongs();
   }, [fetchFeaturedSongs]);
+
+  // Hàm để xác định màu nền cho thứ tự ưu tiên
+  const getPriorityBackgroundColor = (index: number) => {
+    switch (index) {
+      case 0:
+        return "gold"; // Top 1
+      case 1:
+        return "silver"; // Top 2
+      case 2:
+        return "#cd7f32"; // Top 3 (Màu đồng)
+      default:
+        return "transparent"; // Không có màu nền cho các vị trí khác
+    }
+  };
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -102,11 +154,20 @@ const ManageFeaturedSongs: React.FC = () => {
         </Button>
       </Box>
 
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={updateSongOrder}
+        sx={{ marginBottom: "20px" }}
+      >
+        Cập nhật thứ tự hiện tại
+      </Button>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>STT</TableCell>
+              <TableCell>Thứ tự ưu tiên</TableCell>
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tiêu đề</TableCell>
               <TableCell>Chủ đề</TableCell>
@@ -124,7 +185,16 @@ const ManageFeaturedSongs: React.FC = () => {
               </TableRow>
             ) : featuredSongs && featuredSongs.length > 0 ? (
               featuredSongs.map((song, index) => (
-                <TableRow key={song._id}>
+                <TableRow
+                  key={song._id}
+                  draggable
+                  onDragStart={(event) => handleDragStart(event, index)}
+                  onDrop={(event) => handleDrop(event, index)}
+                  onDragOver={(event) => event.preventDefault()}
+                  sx={{
+                    backgroundColor: getPriorityBackgroundColor(index), // Áp dụng màu nền cho dòng
+                  }}
+                >
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
                     <Avatar
@@ -149,7 +219,6 @@ const ManageFeaturedSongs: React.FC = () => {
                 </TableRow>
               ))
             ) : (
-              // Hiển thị thông báo khi không có bài hát nào trong danh sách đề cử
               <TableRow>
                 <TableCell
                   colSpan={6}
