@@ -18,8 +18,10 @@ import {
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-import { apiBasicClient } from "@/app/utils/request";
+import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { pause, play, setNewSong } from "@/store/playingMusicSlice";
@@ -43,7 +45,9 @@ interface Song {
   _id: string;
   title: string;
   avatar: string;
-  singerId: string;
+  singerId: {
+    fullName: string;
+  };
   topicId: Topic;
   like: number;
   listen: number;
@@ -57,18 +61,32 @@ interface Song {
 
 const ManagerSong: React.FC = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const { isPlaying, _id: playingSongId } = useSelector(
     (state: RootState) => state.playingMusic
   );
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [listSongForYou, setListSongForYou] = useState<string[]>([]);
 
+  // Fetch danh sách bài hát "Đề cử"
+  const fetchSongForYou = useCallback(async () => {
+    try {
+      const res = await apiBasicClientPublic("GET", "/song-for-you");
+      if (res?.data) {
+        setListSongForYou(res.data.map((song: { _id: string }) => song._id)); // Extract the song IDs
+      }
+    } catch (error) {
+      console.error("Error fetching songs for you", error);
+    }
+  }, []);
+
+  // Fetch danh sách bài hát đầy đủ
   const fetchSongs = useCallback(async () => {
     setLoading(true);
+
     try {
-      const response = await apiBasicClient("GET", "/songs/managerSong");
+      const response = await apiBasicClient("GET", "/songs/full");
       if (response?.data) {
         setSongs(response.data);
       }
@@ -80,20 +98,16 @@ const ManagerSong: React.FC = () => {
   }, []);
 
   const handleClick = async (song: Song) => {
-    const newStatus = song.status === "active" ? "inactive" : "active";
+    setLoading(true);
     try {
-      await apiBasicClient("PATCH", `/songs/editSong/${song._id}`, undefined, {
-        status: newStatus,
-      });
-      revalidateByTag("revalidate-by-songs");
+      await apiBasicClient("PATCH", `/songs/changeStatus/${song._id}`);
+
       // Update UI after successful API call
-      setSongs((prevSongs) =>
-        prevSongs.map((s) =>
-          s._id === song._id ? { ...s, status: newStatus } : s
-        )
-      );
+      fetchSongs();
+      revalidateByTag("revalidate-by-songs");
     } catch (error) {
       console.error("Failed to change status:", error);
+      setLoading(false);
     }
   };
 
@@ -106,9 +120,36 @@ const ManagerSong: React.FC = () => {
     }
   };
 
+  // Fetch song data và song-for-you data lần đầu
+  const fetchFirst = async () => {
+    await fetchSongs();
+    await fetchSongForYou();
+  };
+
+  // Gọi API thêm/xóa bài hát khỏi "Đề cử"
+  const handleStarClick = async (songId: string) => {
+    if (listSongForYou.includes(songId)) {
+      // Nếu bài hát đã có trong list, gọi API để xóa
+      try {
+        await apiBasicClient("DELETE", `/song-for-you/remove/${songId}`);
+        setListSongForYou((prev) => prev.filter((id) => id !== songId)); // Cập nhật lại state listSongForYou
+      } catch (error) {
+        console.error("Failed to remove song from 'For You' list", error);
+      }
+    } else {
+      // Nếu bài hát chưa có trong list, gọi API để thêm
+      try {
+        await apiBasicClient("POST", `/song-for-you/add/${songId}`);
+        setListSongForYou((prev) => [...prev, songId]); // Cập nhật lại state listSongForYou
+      } catch (error) {
+        console.error("Failed to add song to 'For You' list", error);
+      }
+    }
+  };
+
   useEffect(() => {
-    fetchSongs();
-  }, [fetchSongs]);
+    fetchFirst();
+  }, []);
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -130,14 +171,17 @@ const ManagerSong: React.FC = () => {
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tiêu đề</TableCell>
               <TableCell>Chủ đề</TableCell>
+              <TableCell>Ca sĩ</TableCell>
               <TableCell>Phát</TableCell>
               <TableCell>Trạng thái</TableCell>
+              <TableCell>Đề cử</TableCell> {/* Cột đề cử */}
             </TableRow>
           </TableHead>
+
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                <TableCell colSpan={8} sx={{ textAlign: "center" }}>
                   <CircularProgress />
                 </TableCell>
               </TableRow>
@@ -154,6 +198,7 @@ const ManagerSong: React.FC = () => {
                   </TableCell>
                   <TableCell>{song.title}</TableCell>
                   <TableCell>{song.topicId.title}</TableCell>
+                  <TableCell>{song.singerId.fullName}</TableCell>
                   <TableCell>
                     <IconButton
                       color="primary"
@@ -178,6 +223,15 @@ const ManagerSong: React.FC = () => {
                         onClick={() => handleClick(song)}
                       />
                     </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleStarClick(song._id)}>
+                      {listSongForYou.includes(song._id) ? (
+                        <StarIcon color="warning" />
+                      ) : (
+                        <StarBorderIcon />
+                      )}
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))

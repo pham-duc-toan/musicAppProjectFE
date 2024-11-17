@@ -10,13 +10,14 @@ import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
 const Songs = async () => {
   const datall: any = await apiBasicServer(
     "GET",
-    "/songs/full",
+    "/songs/",
     undefined,
     undefined,
     undefined,
     ["revalidate-tag-songs"]
   );
-  const datas = datall?.data || undefined;
+
+  const datas = datall?.data.data || undefined;
   if (!datas && datall.redirect) {
     redirect("/login");
   }
