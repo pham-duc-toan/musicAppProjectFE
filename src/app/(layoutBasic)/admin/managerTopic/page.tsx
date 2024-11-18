@@ -68,7 +68,7 @@ const ManagerTopic: React.FC = () => {
   }, []);
   const handleViewClick = (topic: Topic) => {
     setSelectedTopic(topic);
-    setOpenViewModal(true); // Mở modal xem chi tiết
+    setOpenViewModal(true);
   };
   const handleEditClick = (topic: Topic) => {
     setSelectedTopic(topic);

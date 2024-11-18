@@ -160,7 +160,7 @@ function SongCreateComponent() {
         <Grid item xs={12} md={4}>
           <SelectorSuggest
             suggestKey="title"
-            urlFetch="/topics"
+            urlFetch="/topics/client"
             label="Chủ đề"
             name="topic"
           />
