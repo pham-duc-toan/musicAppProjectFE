@@ -23,7 +23,6 @@ import "./style.css";
 
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
-import { apiBackEndCreateWithFile } from "@/app/utils/request";
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
 
 function TopicCreateComponent() {
@@ -148,7 +147,7 @@ function TopicCreateComponent() {
             maxRows={10}
           />
         </Grid>
-        {/* Avatar Upload */}
+
         {avatarPreview && (
           <Grid xs={12} item>
             <Card
@@ -194,7 +193,7 @@ function TopicCreateComponent() {
         >
           <DropzoneComponent onDrop={onDrop} />
         </Grid>
-        {/* Progress Bar */}
+
         {loading && (
           <Grid
             item

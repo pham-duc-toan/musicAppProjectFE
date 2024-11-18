@@ -165,7 +165,7 @@ const ManagerSong: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Quản lý bài hát
         </Typography>
-        <Button>
+        <Button variant="contained" color="primary">
           <Link href={"/admin/managerSong/songs-for-you"}>
             Quản lý bài hát đề cử
           </Link>
