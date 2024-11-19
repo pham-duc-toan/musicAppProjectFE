@@ -157,6 +157,7 @@ const SongDetailPage = () => {
             variant="body2"
             whiteSpace="pre-line"
             className="lyrics-content"
+            component="div"
           >
             <Lyric songId={songDetail._id} lyrics={songDetail.lyrics} />
           </Typography>

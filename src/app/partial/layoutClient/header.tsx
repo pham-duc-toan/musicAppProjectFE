@@ -104,9 +104,9 @@ export default function HeaderComponent({ open }: { open: boolean }) {
     }
   };
 
-  const handleSelectSuggestion = () => {
-    setShowSuggestions(false);
-  };
+  // const handleSelectSuggestion = () => {
+  //   setShowSuggestions(false);
+  // };
   const handleOnFocus = async (e: React.FocusEvent<HTMLInputElement>) => {
     setShowSuggestions(true);
   };
@@ -161,13 +161,14 @@ export default function HeaderComponent({ open }: { open: boolean }) {
           <List>
             {filteredSuggestions.map((suggestion, index) => (
               <Link
+                key={index}
                 href={
                   suggestion.title
                     ? `/songs/detail/${suggestion._id}`
                     : `/singers/detailSinger/${suggestion._id}`
                 }
               >
-                <ListItem key={index} disablePadding>
+                <ListItem disablePadding>
                   <ListItemButton
                     sx={{
                       display: "flex",
