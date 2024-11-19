@@ -51,6 +51,7 @@ export default function Permissions() {
   const [currentPermission, setCurrentPermission] = useState<Permission | null>(
     null
   );
+  const [openRoleModal, setOpenRoleModal] = useState(false);
   const { showMessage } = useAppContext();
   const fetchRolesAndPermissions = async () => {
     setLoading(true); // Bắt đầu tải
@@ -189,7 +190,27 @@ export default function Permissions() {
     setCurrentPermission(permission); // Lưu quyền đang chỉnh sửa
     setOpenEditModal(true);
   };
+  // Hàm xử lý tạo mới role
+  const handleAddRole = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const newRole = {
+      roleName: formData.get("roleName") as string,
+    };
 
+    try {
+      const res = await apiBasicClient("POST", "/roles", undefined, newRole);
+      if (res.statusCode >= 300) {
+        showMessage(res.message, "error");
+      } else {
+        showMessage("Tạo mới vai trò thành công!", "success");
+        setOpenRoleModal(false);
+        await fetchRolesAndPermissions();
+      }
+    } catch (error: any) {
+      showMessage(error?.message || "Không thể tạo vai trò", "error");
+    }
+  };
   return (
     <Box sx={{ p: 4 }}>
       <Box
@@ -208,7 +229,36 @@ export default function Permissions() {
         >
           Thêm quyền mới
         </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ mt: 2 }}
+          onClick={() => setOpenRoleModal(true)}
+        >
+          Tạo mới vai trò
+        </Button>
       </Box>
+      <Dialog open={openRoleModal} onClose={() => setOpenRoleModal(false)}>
+        <form onSubmit={handleAddRole}>
+          <DialogTitle>Thêm mới vai trò</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              name="roleName"
+              label="Tên vai trò"
+              fullWidth
+              required
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenRoleModal(false)}>Hủy</Button>
+            <Button type="submit" color="primary">
+              Tạo mới
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <form onSubmit={handleSaveChanges}>
         <TableContainer>
           {loading ? (
