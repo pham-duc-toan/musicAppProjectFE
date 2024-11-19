@@ -74,21 +74,36 @@ export default function HeaderComponent({ open }: { open: boolean }) {
     const input = e.target.value.toLowerCase();
 
     if (input) {
-      const response = await apiBasicClient("GET", "/songs", {
-        query: input,
-      });
+      try {
+        // Gửi đồng thời hai yêu cầu để tiết kiệm thời gian
+        const [response, response2] = await Promise.all([
+          apiBasicClient("GET", "/songs", { query: input }),
+          apiBasicClient("GET", "/singers", { query: input }),
+        ]);
 
-      if (response?.data.data) {
-        setFilteredSuggestions(response.data.data);
-        setShowSuggestions(true);
-      } else {
+        // Kết hợp dữ liệu từ hai phản hồi
+        const songs = response?.data.data || [];
+        const singers = response2?.data || [];
+        const combinedSuggestions = [...songs, ...singers];
+
+        if (combinedSuggestions.length > 0) {
+          setFilteredSuggestions(combinedSuggestions);
+          setShowSuggestions(true);
+        } else {
+          setFilteredSuggestions([]);
+          setShowSuggestions(false);
+        }
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
         setFilteredSuggestions([]);
         setShowSuggestions(false);
       }
     } else {
+      setFilteredSuggestions([]);
       setShowSuggestions(false);
     }
   };
+
   const handleSelectSuggestion = () => {
     setShowSuggestions(false);
   };
@@ -159,10 +174,18 @@ export default function HeaderComponent({ open }: { open: boolean }) {
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}
-                    onClick={handleSelectSuggestion}
                   >
                     <ListItemText
                       primary={suggestion.title || suggestion.fullName}
+                      secondary={
+                        suggestion.title
+                          ? suggestion.singerId?.fullName || "Không rõ tác giả"
+                          : "Nghệ sĩ"
+                      }
+                      primaryTypographyProps={{
+                        style: { fontWeight: "bold" },
+                      }}
+                      secondaryTypographyProps={{}}
                     />
                     <ListItemIcon
                       sx={{ display: "flex", flexDirection: "row-reverse" }}
@@ -173,7 +196,8 @@ export default function HeaderComponent({ open }: { open: boolean }) {
                         sx={{
                           objectFit: "cover",
                           aspectRatio: "1/1",
-                          height: "100%",
+                          height: "40px", // Kích thước avatar
+                          width: "40px",
                         }}
                       />
                     </ListItemIcon>
