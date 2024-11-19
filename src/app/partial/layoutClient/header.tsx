@@ -1,14 +1,30 @@
 "use client";
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import { Box, Container, Button, InputBase, IconButton } from "@mui/material";
-import { SwitchThemeButton } from "@/component/button-dark-mode";
-
-import BtnLoginLogout from "@/component/btn-login-logout";
+import {
+  Box,
+  Container,
+  Button,
+  InputBase,
+  IconButton,
+  Paper,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
+  Avatar,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import SettingsIcon from "@mui/icons-material/Settings";
 import ButtonUpdateSingerHeader from "./component/buttonUpdateSinger";
+import { apiBasicClient } from "@/app/utils/request"; // Assuming this is for API calls
+import { TSuggestAvaSlugId } from "@/dataType/suggest"; // Adjust based on your data types
+import BtnLoginLogout from "@/component/btn-login-logout";
+import { SwitchThemeButton } from "@/component/button-dark-mode";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -42,7 +58,6 @@ const Header = styled(MuiAppBar, {
 const SearchBox = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-
   borderRadius: theme.shape.borderRadius,
   padding: "4px 8px",
   marginRight: theme.spacing(2),
@@ -50,6 +65,41 @@ const SearchBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function HeaderComponent({ open }: { open: boolean }) {
+  const [filteredSuggestions, setFilteredSuggestions] = useState<
+    TSuggestAvaSlugId[]
+  >([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.toLowerCase();
+
+    if (input) {
+      const response = await apiBasicClient("GET", "/songs", {
+        query: input,
+      });
+
+      if (response?.data.data) {
+        setFilteredSuggestions(response.data.data);
+        setShowSuggestions(true);
+      } else {
+        setFilteredSuggestions([]);
+        setShowSuggestions(false);
+      }
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+  const handleSelectSuggestion = () => {
+    setShowSuggestions(false);
+  };
+  const handleOnFocus = async (e: React.FocusEvent<HTMLInputElement>) => {
+    setShowSuggestions(true);
+  };
+  const handleOnBlur = () => {
+    setTimeout(() => {
+      setShowSuggestions(false);
+    }, 200);
+  };
   return (
     <Header position="fixed" open={open} color="secondary">
       <Container
@@ -68,10 +118,12 @@ export default function HeaderComponent({ open }: { open: boolean }) {
             <InputBase
               placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
               inputProps={{ "aria-label": "search" }}
-              sx={{ color: "inherit", ml: 1, maxWidth: "400px", flexGrow: "1" }}
+              onChange={handleSearchChange}
+              onFocus={handleOnFocus}
+              onBlur={handleOnBlur}
+              sx={{ color: "inherit", ml: 1, maxWidth: "400px", flexGrow: 1 }}
             />
           </SearchBox>
-
           <ButtonUpdateSingerHeader />
         </Toolbar>
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -79,6 +131,59 @@ export default function HeaderComponent({ open }: { open: boolean }) {
           <SwitchThemeButton />
         </Box>
       </Container>
+      {showSuggestions && filteredSuggestions.length > 0 && (
+        <Paper
+          sx={{
+            position: "absolute",
+            zIndex: 2,
+            maxWidth: "400px",
+            width: "100%",
+            maxHeight: 200,
+            overflowY: "auto",
+            marginTop: "56px", // Adjust depending on the header height
+          }}
+        >
+          <List>
+            {filteredSuggestions.map((suggestion, index) => (
+              <Link
+                href={
+                  suggestion.title
+                    ? `/songs/detail/${suggestion._id}`
+                    : `/singers/detailSinger/${suggestion._id}`
+                }
+              >
+                <ListItem key={index} disablePadding>
+                  <ListItemButton
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                    onClick={handleSelectSuggestion}
+                  >
+                    <ListItemText
+                      primary={suggestion.title || suggestion.fullName}
+                    />
+                    <ListItemIcon
+                      sx={{ display: "flex", flexDirection: "row-reverse" }}
+                    >
+                      <Avatar
+                        src={suggestion.avatar}
+                        alt={suggestion.title || suggestion.fullName}
+                        sx={{
+                          objectFit: "cover",
+                          aspectRatio: "1/1",
+                          height: "100%",
+                        }}
+                      />
+                    </ListItemIcon>
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Paper>
+      )}
     </Header>
   );
 }
