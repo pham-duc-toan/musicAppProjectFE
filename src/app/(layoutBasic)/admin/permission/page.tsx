@@ -211,6 +211,20 @@ export default function Permissions() {
       showMessage(error?.message || "Không thể tạo vai trò", "error");
     }
   };
+  const handleDeleteRole = async (roleId: string) => {
+    try {
+      const res = await apiBasicClient("DELETE", `/roles/${roleId}`);
+      if (res.statusCode >= 300) {
+        showMessage(res.message, "error");
+      } else {
+        showMessage("Vai trò đã được xóa thành công!", "success");
+        await fetchRolesAndPermissions(); // Cập nhật lại danh sách vai trò
+      }
+    } catch (error: any) {
+      showMessage(error?.message || "Không thể xóa vai trò", "error");
+    }
+  };
+
   return (
     <Box sx={{ p: 4 }}>
       <Box
@@ -271,11 +285,23 @@ export default function Permissions() {
                 <TableRow>
                   <TableCell>Tính năng</TableCell>
                   {roles.map((role, index) => (
-                    <TableCell key={index}>{role.roleName}</TableCell>
+                    <TableCell key={index}>
+                      <Box>
+                        {role.roleName}
+                        <IconButton
+                          onClick={() => handleDeleteRole(role.roleId)}
+                          color="error"
+                          size="small"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
                   ))}
                   <TableCell>Hành động</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
                 {permissionsList.map((permission, permIndex) => (
                   <TableRow key={permIndex}>
