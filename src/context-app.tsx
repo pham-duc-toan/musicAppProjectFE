@@ -7,20 +7,24 @@ import React, {
   useState,
 } from "react";
 import { Snackbar, Alert } from "@mui/material";
-import RefreshToken from "./component/refresh-token";
-// Tạo context
 const AppContext = createContext({
-  showMessage: (message: string, severity: "success" | "error") => {},
+  showMessage: (
+    message: string,
+    severity: "success" | "error" | "info" | "warning"
+  ) => {},
 });
 
-// Tạo provider cho SnackbarContext
 const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  //alert
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [severity, setSeverity] = useState<"success" | "error">("success");
-  const showMessage = (message: string, severity: "success" | "error") => {
+  const [severity, setSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
+
+  const showMessage = (
+    message: string,
+    severity: "success" | "error" | "info" | "warning"
+  ) => {
     setSnackbarMessage(message);
     setSeverity(severity);
     setOpenSnackbar(true);
@@ -29,13 +33,12 @@ const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-  //end alert
 
   return (
     <AppContext.Provider value={{ showMessage }}>
       {children}
 
-      {/* Snackbar cho hiển thị thông báo */}
+      {/* Snackbar for displaying messages */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -44,7 +47,7 @@ const ContextApp: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       >
         <Alert
           onClose={handleCloseSnackbar}
-          severity={severity}
+          severity={severity} // This accepts "success", "error", "info", "warning"
           sx={{ width: "100%" }}
         >
           {snackbarMessage}

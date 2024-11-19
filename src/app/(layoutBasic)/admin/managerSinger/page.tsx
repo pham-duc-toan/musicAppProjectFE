@@ -17,12 +17,8 @@ import {
   Button,
 } from "@mui/material";
 import { apiBasicClient } from "@/app/utils/request";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { pause, play, setNewSong } from "@/store/playingMusicSlice";
-import { useRouter } from "next/navigation";
 import { revalidateByTag } from "@/app/action";
-import Link from "next/link";
+import { useAppContext } from "@/context-app";
 
 interface Singer {
   _id: string;
@@ -34,7 +30,7 @@ interface Singer {
 const ManagerSinger: React.FC = () => {
   const [singers, setSingers] = useState<Singer[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const { showMessage } = useAppContext();
   // Fetch danh sách ca sĩ
   const fetchSingers = useCallback(async () => {
     setLoading(true);
@@ -42,6 +38,9 @@ const ManagerSinger: React.FC = () => {
       const response = await apiBasicClient("GET", "/singers");
       if (response?.data) {
         setSingers(response.data);
+      }
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
       }
     } catch (error) {
       console.error("Error fetching singers:", error);
@@ -59,8 +58,13 @@ const ManagerSinger: React.FC = () => {
   const handleClick = async (singer: Singer) => {
     setLoading(true);
     try {
-      await apiBasicClient("PATCH", `/singers/changeStatus/${singer._id}`);
-      // Cập nhật lại danh sách ca sĩ sau khi thay đổi trạng thái
+      const response = await apiBasicClient(
+        "PATCH",
+        `/singers/changeStatus/${singer._id}`
+      );
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      }
       fetchSingers();
       revalidateByTag("revalidate-by-singers");
     } catch (error) {

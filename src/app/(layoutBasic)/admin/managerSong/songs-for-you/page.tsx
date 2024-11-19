@@ -62,6 +62,9 @@ const ManageFeaturedSongs: React.FC = () => {
       if (response?.data) {
         setFeaturedSongs(response.data.listSong || []); // Lấy danh sách bài hát đề cử
       }
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      }
     } catch (error) {
       console.error("Error fetching featured songs", error);
     } finally {
@@ -73,9 +76,16 @@ const ManageFeaturedSongs: React.FC = () => {
   const handleRemoveFromFeatured = async (songId: string) => {
     setLoading(true);
     try {
-      await apiBasicClient("DELETE", `/song-for-you/remove/${songId}`);
-      // Cập nhật lại danh sách bài hát sau khi xóa
-      setFeaturedSongs((prev) => prev.filter((song) => song._id !== songId));
+      const response = await apiBasicClient(
+        "DELETE",
+        `/song-for-you/remove/${songId}`
+      );
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      } else {
+        // Cập nhật lại danh sách bài hát sau khi xóa
+        setFeaturedSongs((prev) => prev.filter((song) => song._id !== songId));
+      }
     } catch (error) {
       console.error("Error removing song from featured list", error);
     } finally {
@@ -109,10 +119,19 @@ const ManageFeaturedSongs: React.FC = () => {
 
     try {
       const updatedIds = featuredSongs.map((song) => song._id);
-      await apiBasicClient("PATCH", "/song-for-you/update-order", undefined, {
-        listSong: updatedIds,
-      });
-      showMessage("Cập nhật thứ tự thành công!", "success");
+      const response = await apiBasicClient(
+        "PATCH",
+        "/song-for-you/update-order",
+        undefined,
+        {
+          listSong: updatedIds,
+        }
+      );
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      } else {
+        showMessage("Cập nhật thứ tự thành công!", "success");
+      }
     } catch (error) {
       console.error("Error updating song order", error);
     } finally {

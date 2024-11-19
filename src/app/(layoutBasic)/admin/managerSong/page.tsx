@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 import { revalidateByTag } from "@/app/action";
 import { TSongDetail } from "@/dataType/song";
 import Link from "next/link";
+import { useAppContext } from "@/context-app";
 
 interface Topic {
   _id: string;
@@ -63,6 +64,7 @@ interface Song {
 
 const ManagerSong: React.FC = () => {
   const dispatch = useDispatch();
+  const { showMessage } = useAppContext();
   const { isPlaying, _id: playingSongId } = useSelector(
     (state: RootState) => state.playingMusic
   );
@@ -94,6 +96,9 @@ const ManagerSong: React.FC = () => {
       if (response?.data) {
         setSongs(response.data);
       }
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      }
     } catch (error) {
       console.error("Error fetching songs:", error);
     } finally {
@@ -104,8 +109,13 @@ const ManagerSong: React.FC = () => {
   const handleClick = async (song: Song) => {
     setLoading(true);
     try {
-      await apiBasicClient("PATCH", `/songs/changeStatus/${song._id}`);
-
+      const response = await apiBasicClient(
+        "PATCH",
+        `/songs/changeStatus/${song._id}`
+      );
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      }
       // Update UI after successful API call
       fetchSongs();
       revalidateByTag("revalidate-by-songs");
@@ -135,7 +145,13 @@ const ManagerSong: React.FC = () => {
     if (listSongForYou.includes(songId)) {
       // Nếu bài hát đã có trong list, gọi API để xóa
       try {
-        await apiBasicClient("DELETE", `/song-for-you/remove/${songId}`);
+        const response = await apiBasicClient(
+          "DELETE",
+          `/song-for-you/remove/${songId}`
+        );
+        if (response.statusCode >= 300) {
+          showMessage(response.message, "error");
+        }
         setListSongForYou((prev) => prev.filter((id) => id !== songId)); // Cập nhật lại state listSongForYou
       } catch (error) {
         console.error("Failed to remove song from 'For You' list", error);
@@ -143,7 +159,13 @@ const ManagerSong: React.FC = () => {
     } else {
       // Nếu bài hát chưa có trong list, gọi API để thêm
       try {
-        await apiBasicClient("POST", `/song-for-you/add/${songId}`);
+        const response = await apiBasicClient(
+          "POST",
+          `/song-for-you/add/${songId}`
+        );
+        if (response.statusCode >= 300) {
+          showMessage(response.message, "error");
+        }
         setListSongForYou((prev) => [...prev, songId]); // Cập nhật lại state listSongForYou
       } catch (error) {
         console.error("Failed to add song to 'For You' list", error);

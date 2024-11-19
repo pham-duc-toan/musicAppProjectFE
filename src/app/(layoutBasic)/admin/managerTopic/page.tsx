@@ -29,6 +29,7 @@ import EditTopicModal from "./component/EditTopicModal";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { revalidateByTag } from "@/app/action";
 import ViewTopicModal from "./component/VIewTopicModal";
+import { useAppContext } from "@/context-app";
 
 interface Topic {
   _id: string;
@@ -41,6 +42,7 @@ interface Topic {
 }
 
 const ManagerTopic: React.FC = () => {
+  const { showMessage } = useAppContext();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -83,10 +85,18 @@ const ManagerTopic: React.FC = () => {
   const confirmDelete = async () => {
     if (selectedTopicId) {
       try {
-        await apiBasicClient("DELETE", `/topics/${selectedTopicId}`);
-        setTopics((prevTopics) =>
-          prevTopics.filter((topic) => topic._id !== selectedTopicId)
+        const response = await apiBasicClient(
+          "DELETE",
+          `/topics/${selectedTopicId}`
         );
+        if (response.statusCode >= 300) {
+          showMessage(response.message, "error");
+        } else {
+          setTopics((prevTopics) =>
+            prevTopics.filter((topic) => topic._id !== selectedTopicId)
+          );
+        }
+
         await revalidateByTag("revalidate-tag-topics");
         setOpenDialog(false);
         setSelectedTopicId(null);

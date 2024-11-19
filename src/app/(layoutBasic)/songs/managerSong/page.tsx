@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import ChangeStatus from "./component/ChangStatus";
 import EditSongModal from "./component/EditSongModal";
 import { revalidateByTag } from "@/app/action";
+import { useAppContext } from "@/context-app";
 
 interface Topic {
   _id: string;
@@ -66,6 +67,7 @@ interface Song {
 const ManagerSong: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { showMessage } = useAppContext();
   const { isPlaying, _id: playingSongId } = useSelector(
     (state: RootState) => state.playingMusic
   );
@@ -90,10 +92,18 @@ const ManagerSong: React.FC = () => {
 
   const confirmDelete = async () => {
     if (selectedSongId) {
-      await apiBasicClient("DELETE", `/songs/deleteSong/${selectedSongId}`);
-      setSongs((prevSongs) =>
-        prevSongs.filter((song) => song._id !== selectedSongId)
+      const response = await apiBasicClient(
+        "DELETE",
+        `/songs/deleteSong/${selectedSongId}`
       );
+      if (response.statusCode >= 300) {
+        showMessage(response.message, "error");
+      } else {
+        setSongs((prevSongs) =>
+          prevSongs.filter((song: any) => song._id !== selectedSongId)
+        );
+      }
+
       await revalidateByTag("revalidate-tag-songs");
       setOpenDialog(false);
       setSelectedSongId(null);

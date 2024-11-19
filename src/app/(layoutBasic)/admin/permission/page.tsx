@@ -23,6 +23,7 @@ import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
 import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
 import VisibilityIcon from "@mui/icons-material/Visibility"; // Import View icon
 import { apiBasicClient } from "@/app/utils/request";
+import { useAppContext } from "@/context-app";
 
 // Định nghĩa kiểu cho role
 interface Role {
@@ -50,6 +51,7 @@ export default function Permissions() {
   const [currentPermission, setCurrentPermission] = useState<Permission | null>(
     null
   );
+  const { showMessage } = useAppContext();
   const fetchRolesAndPermissions = async () => {
     setLoading(true); // Bắt đầu tải
     try {
@@ -73,6 +75,7 @@ export default function Permissions() {
       setRoles(rolesData);
       setPermissionsList(permissionsData);
     } catch (error) {
+      showMessage("Lỗi kết nối với server", "error");
       console.error("Không thể lấy dữ liệu từ API:", error);
     } finally {
       setLoading(false); // Kết thúc tải
@@ -94,7 +97,22 @@ export default function Permissions() {
       pathName: formData.get("pathName") as string,
       method: formData.get("method") as string,
     };
-    await apiBasicClient("POST", "/permissions", undefined, newPermission);
+    try {
+      const res = await apiBasicClient(
+        "POST",
+        "/permissions",
+        undefined,
+        newPermission
+      );
+      if (res.statusCode >= 300) {
+        showMessage(res.message, "error");
+      }
+    } catch (error: any) {
+      showMessage(
+        error?.message || "Bạn không thể thực hiện chức năng này",
+        "error"
+      );
+    }
     await fetchRolesAndPermissions();
 
     handleClose();
@@ -107,12 +125,15 @@ export default function Permissions() {
       pathName: formData.get("pathName") as string,
       method: formData.get("method") as string,
     };
-    await apiBasicClient(
+    const res = await apiBasicClient(
       "PATCH",
       `/permissions/${currentPermission?.id}`,
       undefined,
       newPermission
     );
+    if (res.statusCode >= 300) {
+      showMessage(res.message, "error");
+    }
     await fetchRolesAndPermissions();
 
     setOpenEditModal(false);
@@ -138,7 +159,6 @@ export default function Permissions() {
     });
 
     try {
-      console.log(updatedRoles);
       await Promise.all(
         updatedRoles.map((role) =>
           apiBasicClient("PATCH", `/roles/${role.roleId}`, undefined, {

@@ -120,12 +120,15 @@ const EditTopicModal: React.FC<EditTopicModalProps> = ({
           undefined,
           undefined
         );
+        if (response.statusCode >= 300) {
+          showMessage(response.message, "error");
+        }
         await revalidateByTag("revalidate-tag-topics");
         if (response?.data) {
           setTopics(response.data);
+          showMessage("Chỉnh sửa thành công!", "success");
         }
 
-        showMessage("Chỉnh sửa thành công!", "success");
         onClose();
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
