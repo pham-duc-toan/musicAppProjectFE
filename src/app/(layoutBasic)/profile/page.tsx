@@ -1,9 +1,9 @@
-// app/profile/page.tsx
 import { Box, Typography, Avatar, Paper, Button, Stack } from "@mui/material";
 import { getInfoUser } from "@/app/utils/request";
 import Link from "next/link";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import IUserInfo from "@/dataType/infoUser";
+import ButtonRedirect from "@/component/buttonRedirect";
 
 async function fetchProfileData(): Promise<IUserInfo | null> {
   const access_token = GetAccessTokenFromCookie();
@@ -52,9 +52,12 @@ export default async function ProfilePage() {
             alt={profileData.fullName}
             sx={{ width: 100, height: 100, marginBottom: "10px" }}
           />
-          <Button variant="contained" color="secondary">
-            Chỉnh sửa
-          </Button>
+          <ButtonRedirect
+            link="/profile/editProfile"
+            content="Chỉnh sửa"
+            variant="contained"
+            color="secondary"
+          />
         </Box>
         <Typography variant="h5">{profileData.fullName}</Typography>
         <Typography color="textSecondary" sx={{ marginBottom: "10px" }}>
@@ -92,17 +95,17 @@ export default async function ProfilePage() {
           </Typography>
 
           <Stack direction="row" spacing={2} justifyContent="center">
-            <Button
-              variant="outlined"
-              color="primary"
-              component={Link}
-              href={`/singers/detailSinger/${profileData.singerId._id}`}
-            >
-              Xem chi tiết
-            </Button>
-            <Button variant="contained" color="secondary">
-              Chỉnh sửa
-            </Button>
+            <ButtonRedirect
+              link={`/singers/detailSinger/${profileData.singerId._id}`}
+              content=" Xem chi tiết"
+            />
+
+            <ButtonRedirect
+              content="Chỉnh sửa"
+              link="/profile/editSinger"
+              variant="contained"
+              color="secondary"
+            />
           </Stack>
         </Paper>
       )}

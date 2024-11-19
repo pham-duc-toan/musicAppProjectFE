@@ -1,21 +1,23 @@
 "use client";
 
-import { Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Button, ButtonProps } from "@mui/material";
+import Link from "next/link";
 
-const ButtonRedirect = (props: { link: string; content: string }) => {
-  const { link, content } = props;
-  const router = useRouter();
-  const handleRedirect = () => {
-    if (link == "back") router.back();
-    else router.push(`${link}`);
-  };
+interface ButtonRedirectProps extends ButtonProps {
+  link: string;
+  content: string;
+}
+
+const ButtonRedirect = ({
+  link,
+  content,
+  ...buttonProps
+}: ButtonRedirectProps) => {
   return (
-    <>
-      <Button variant="contained" color="primary" onClick={handleRedirect}>
-        {content}
-      </Button>
-    </>
+    <Link href={link} passHref>
+      <Button {...buttonProps}>{content}</Button>
+    </Link>
   );
 };
+
 export default ButtonRedirect;
