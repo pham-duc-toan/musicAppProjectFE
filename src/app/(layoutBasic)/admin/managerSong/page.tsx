@@ -229,7 +229,9 @@ const ManagerSong: React.FC = () => {
                   </TableCell>
                   <TableCell>{song.title}</TableCell>
                   <TableCell>{song.topicId.title}</TableCell>
-                  <TableCell>{song.singerId.fullName}</TableCell>
+                  <TableCell>
+                    {song.singerId?.fullName || "Không rõ ca sĩ"}
+                  </TableCell>
                   <TableCell>
                     <IconButton
                       color="primary"

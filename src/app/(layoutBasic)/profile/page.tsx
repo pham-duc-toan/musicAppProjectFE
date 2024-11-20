@@ -85,18 +85,29 @@ export default async function ProfilePage() {
             Thông tin ca sĩ quản lý
           </Typography>
           <Avatar
-            src={`${profileData.singerId.avatar}`}
-            alt={profileData.singerId.fullName}
+            src={
+              profileData.singerId?.avatar
+                ? profileData.singerId.avatar
+                : "https://res.cloudinary.com/dsi9ercdo/image/upload/v1731207669/oagc6qxabksf7lzv2wy9.jpg"
+            }
+            alt={profileData.singerId?.fullName || "Không rõ ca sĩ"}
             sx={{ width: 80, height: 80, marginBottom: "10px" }}
           />
-          <Typography variant="h5">{profileData.singerId.fullName}</Typography>
+          <Typography variant="h5">
+            {profileData.singerId?.fullName || "Không rõ ca sĩ"}
+          </Typography>
           <Typography color="textSecondary" sx={{ marginBottom: "10px" }}>
-            <strong>Trạng thái:</strong> {profileData.singerId.status}
+            <strong>Trạng thái:</strong>{" "}
+            {profileData.singerId?.status || "Tài khoản đã bị xóa"}
           </Typography>
 
           <Stack direction="row" spacing={2} justifyContent="center">
             <ButtonRedirect
-              link={`/singers/detailSinger/${profileData.singerId._id}`}
+              link={
+                profileData.singerId?._id
+                  ? `/singers/detailSinger/${profileData.singerId._id}`
+                  : "#"
+              }
               content=" Xem chi tiết"
             />
 

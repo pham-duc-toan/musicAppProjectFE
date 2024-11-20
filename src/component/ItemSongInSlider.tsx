@@ -118,7 +118,7 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
       </ListItemAvatar>
       <ListItemText
         primary={song.title}
-        secondary={`Ca sĩ: ${song.singerId.fullName}`}
+        secondary={`Ca sĩ: ${song.singerId?.fullName || "Không rõ ca sĩ"}`}
       />
 
       {/* Box để sắp xếp các nút theo hàng dọc */}

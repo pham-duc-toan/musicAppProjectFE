@@ -26,7 +26,8 @@ const playingMusicSlice = createSlice({
       // Cập nhật thông tin bài hát từ TSongDetail
       state._id = action.payload._id;
       state.title = action.payload.title;
-      state.singerFullName = action.payload.singerId.fullName;
+      state.singerFullName =
+        action.payload.singerId?.fullName || "Không rõ ca sĩ";
       state.audio = action.payload.audio;
       state.slug = action.payload.slug;
       state.isPlaying = true; // Đặt trạng thái phát bài hát mới

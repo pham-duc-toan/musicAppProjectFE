@@ -70,7 +70,7 @@ export default function ItemControlCard({
             height={"50%"}
             noWrap
           >
-            {data.singerId.fullName}
+            {data.singerId?.fullName || "Không rõ ca sĩ"}
           </Typography>
         </CardContent>
         <Box sx={{ display: "flex", alignItems: "center", pb: 1 }}>

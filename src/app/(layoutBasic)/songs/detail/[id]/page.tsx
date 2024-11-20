@@ -107,7 +107,7 @@ const SongDetailPage = () => {
               {songDetail.title}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-              Ca sĩ: {songDetail.singerId.fullName}
+              Ca sĩ: {songDetail.singerId?.fullName || "Không rõ ca sĩ"}
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
               Chủ đề: {songDetail.topicId.title}

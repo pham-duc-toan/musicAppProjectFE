@@ -41,6 +41,7 @@ interface Permission {
 }
 
 export default function Permissions() {
+  const [saving, setSaving] = useState<boolean>(false);
   const [roles, setRoles] = useState<Role[]>([]); // Danh sách vai trò
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]); // Danh sách quyền
   const [open, setOpen] = useState<boolean>(false); // Điều khiển trạng thái mở/đóng của modal
@@ -58,6 +59,10 @@ export default function Permissions() {
     try {
       // Gọi API lấy danh sách vai trò
       const rolesRes = await apiBasicClient("GET", "/roles");
+      if (rolesRes.statusCode >= 300) {
+        showMessage(rolesRes.message, "error");
+      }
+
       const rolesData = rolesRes.data.map((role: any) => ({
         roleName: role.roleName,
         permissions: role.permissions, // Giả định mỗi vai trò có một mảng các permission IDs
@@ -66,6 +71,9 @@ export default function Permissions() {
 
       // Gọi API lấy danh sách quyền
       const permissionsRes = await apiBasicClient("GET", "/permissions");
+      if (permissionsRes.statusCode >= 300) {
+        showMessage(permissionsRes.message, "error");
+      }
       const permissionsData = permissionsRes.data.map((permission: any) => ({
         name: permission.name,
         id: permission._id, // Lưu lại id của quyền để đối chiếu
@@ -92,6 +100,7 @@ export default function Permissions() {
 
   const handleAddPermission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSaving(true);
     const formData = new FormData(e.currentTarget);
     const newPermission = {
       name: formData.get("name") as string,
@@ -114,9 +123,9 @@ export default function Permissions() {
         "error"
       );
     }
-    await fetchRolesAndPermissions();
-
+    setSaving(false);
     handleClose();
+    await fetchRolesAndPermissions();
   };
   const handleEditPermission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,21 +150,26 @@ export default function Permissions() {
   };
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const updatedRoles = [...roles];
+    setSaving(true);
+    const updatedRoles: { roleId: string; permissions: string[] }[] = [];
 
     const formData = new FormData(e.currentTarget);
-    permissionsList.forEach((permission) => {
-      roles.forEach((role, roleIndex) => {
+
+    // Duyệt qua từng role
+    roles.forEach((role) => {
+      const rolePermissions: string[] = [];
+      permissionsList.forEach((permission) => {
         const checkboxValue = formData.get(`${role.roleId}-${permission.id}`);
         if (checkboxValue) {
-          if (!role.permissions.includes(permission.id)) {
-            updatedRoles[roleIndex].permissions.push(permission.id);
-          }
-        } else {
-          updatedRoles[roleIndex].permissions = updatedRoles[
-            roleIndex
-          ].permissions.filter((id) => id !== permission.id);
+          // Nếu checkbox được tích, thêm permission ID vào mảng
+          rolePermissions.push(permission.id);
         }
+      });
+
+      // Thêm role vào updatedRoles với các permissions hiện tại
+      updatedRoles.push({
+        roleId: role.roleId,
+        permissions: rolePermissions,
       });
     });
 
@@ -171,7 +185,7 @@ export default function Permissions() {
     } catch (error) {
       console.error("Failed to update permissions for roles:", error);
     }
-
+    setSaving(false);
     await fetchRolesAndPermissions();
   };
 
@@ -284,45 +298,49 @@ export default function Permissions() {
               <TableHead>
                 <TableRow>
                   <TableCell>Tính năng</TableCell>
-                  {roles.map((role, index) => (
-                    <TableCell key={index}>
-                      <Box>
-                        {role.roleName}
-                        <IconButton
-                          onClick={() => handleDeleteRole(role.roleId)}
-                          color="error"
-                          size="small"
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    </TableCell>
-                  ))}
+                  {roles.length > 0 ? (
+                    roles.map((role, index) => (
+                      <TableCell key={index}>
+                        <Box>
+                          {role.roleName}
+                          <IconButton
+                            onClick={() => handleDeleteRole(role.roleId)}
+                            color="error"
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </TableCell>
+                    ))
+                  ) : (
+                    <TableCell>Chưa có vai trò nào</TableCell>
+                  )}
+
                   <TableCell>Hành động</TableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
-                {permissionsList.map((permission, permIndex) => (
-                  <TableRow key={permIndex}>
-                    <TableCell>{permission.name}</TableCell>
-                    {roles.map((role, roleIndex) => (
-                      <TableCell key={roleIndex}>
-                        <Checkbox
-                          name={`${role.roleId}-${permission.id}`}
-                          defaultChecked={role.permissions.includes(
-                            permission.id
-                          )}
-                        />
-                      </TableCell>
-                    ))}
-                    {permissionsList.length > 0 && (
+                {permissionsList.length > 0 ? (
+                  permissionsList.map((permission, permIndex) => (
+                    <TableRow key={permIndex}>
+                      <TableCell>{permission.name}</TableCell>
+                      {roles.map((role, roleIndex) => (
+                        <TableCell key={roleIndex}>
+                          <Checkbox
+                            name={`${role.roleId}-${permission.id}`}
+                            defaultChecked={role.permissions.includes(
+                              permission.id
+                            )}
+                          />
+                        </TableCell>
+                      ))}
                       <TableCell>
                         <IconButton
                           onClick={() => handleView(permission)}
                           color="primary"
                           size="small"
-                          sx={{ mr: 1 }}
                         >
                           <VisibilityIcon />
                         </IconButton>
@@ -330,7 +348,6 @@ export default function Permissions() {
                           onClick={() => handleEdit(permission)}
                           color="secondary"
                           size="small"
-                          sx={{ mr: 1 }}
                         >
                           <EditIcon />
                         </IconButton>
@@ -342,9 +359,15 @@ export default function Permissions() {
                           <DeleteIcon />
                         </IconButton>
                       </TableCell>
-                    )}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={roles.length + 2}>
+                      Chưa khởi tạo quyền nào
+                    </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           )}
@@ -353,6 +376,7 @@ export default function Permissions() {
           type="submit"
           variant="contained"
           color="primary"
+          disabled={saving ? true : false}
           sx={{ mt: 2 }}
         >
           Lưu thay đổi
@@ -380,7 +404,11 @@ export default function Permissions() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Hủy</Button>
-            <Button type="submit" color="primary">
+            <Button
+              disabled={saving ? true : false}
+              type="submit"
+              color="primary"
+            >
               Thêm
             </Button>
           </DialogActions>
