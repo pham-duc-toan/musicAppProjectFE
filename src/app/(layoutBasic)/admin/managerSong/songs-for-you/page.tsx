@@ -223,7 +223,9 @@ const ManageFeaturedSongs: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell>{song.title}</TableCell>
-                  <TableCell>{song.topicId.title}</TableCell>
+                  <TableCell>
+                    {song.topicId?.title || "Không rõ thể loại"}
+                  </TableCell>
                   <TableCell>
                     {song.singerId?.fullName || "Không rõ ca sĩ"}
                   </TableCell>

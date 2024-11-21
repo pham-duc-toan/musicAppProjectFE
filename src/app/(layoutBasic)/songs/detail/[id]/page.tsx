@@ -110,7 +110,7 @@ const SongDetailPage = () => {
               Ca sĩ: {songDetail.singerId?.fullName || "Không rõ ca sĩ"}
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              Chủ đề: {songDetail.topicId.title}
+              Chủ đề: {songDetail.topicId?.title || "Không rõ thể loại"}
             </Typography>
           </Box>
 
