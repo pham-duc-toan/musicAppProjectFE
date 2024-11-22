@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LayOutClient from "../partial/layoutClient/LayoutClient";
+import LayOutBasic from "../partial/LayOutBasic/LayoutBasic";
 import RefreshToken from "@/component/refresh-token";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <>
       <RefreshToken />
-      <LayOutClient>{children}</LayOutClient>
+      <LayOutBasic>{children}</LayOutBasic>
     </>
   );
 }

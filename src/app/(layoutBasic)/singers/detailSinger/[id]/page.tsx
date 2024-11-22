@@ -16,7 +16,7 @@ interface ISingerDetail {
 // Hàm server-side để lấy dữ liệu
 async function getSingerDetail(id: string): Promise<ISingerDetail | null> {
   try {
-    const response = await apiBasicServer("GET", `/singers/detail/${id}`);
+    const response = await apiBasicServer("GET", `/singers/detailClient/${id}`);
     return response.data;
   } catch (error) {
     console.error("Failed to fetch singer details:", error);

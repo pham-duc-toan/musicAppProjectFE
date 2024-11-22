@@ -8,9 +8,12 @@ import { useMediaQuery } from "@mui/system";
 import HeaderComponent from "./header";
 import SiderComponent from "./slider";
 import FooterComponent from "./footer";
-import RightSlider from "@/component/sliderPlayList";
+import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
+import { decodeToken } from "@/app/helper/jwt";
+import SiderAdminComponent from "./sliderAdmin";
+import IUserInfo from "@/dataType/infoUser";
 
-export default function LayOutClient({
+export default function LayoutBasic({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -18,6 +21,8 @@ export default function LayOutClient({
   const [open, setOpen] = React.useState(true);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const access_token = getAccessTokenFromLocalStorage() || undefined;
+  const userInfo: IUserInfo | undefined = decodeToken(access_token);
 
   React.useEffect(() => {
     if (isSmallScreen) {
@@ -39,11 +44,19 @@ export default function LayOutClient({
       <Box sx={{ display: "flex" }}>
         <HeaderComponent open={open} />
 
-        <SiderComponent
-          open={open}
-          handleDrawerOpen={handleDrawerOpen}
-          handleDrawerClose={handleDrawerClose}
-        />
+        {userInfo?.role.roleName == "admin" ? (
+          <SiderComponent
+            open={open}
+            handleDrawerOpen={handleDrawerOpen}
+            handleDrawerClose={handleDrawerClose}
+          />
+        ) : (
+          <SiderAdminComponent
+            open={open}
+            handleDrawerOpen={handleDrawerOpen}
+            handleDrawerClose={handleDrawerClose}
+          />
+        )}
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Container>
