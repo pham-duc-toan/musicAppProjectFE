@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import {
   Box,
+  Typography,
   Table,
   TableBody,
   TableCell,
@@ -10,172 +10,71 @@ import {
   TableRow,
   Paper,
   Avatar,
-  Typography,
-  IconButton,
-  CircularProgress,
-  Tooltip,
-  Chip,
-  Button,
 } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-
-import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { pause, play, setNewSong } from "@/store/playingMusicSlice";
-
-import { useRouter } from "next/navigation";
-
-import { revalidateByTag } from "@/app/action";
-import { TSongDetail } from "@/dataType/song";
-import Link from "next/link";
-import { useAppContext } from "@/context-app";
+import PlayPauseButton from "./components/PlayPauseButton"; // CSR Component
+import StatusChip from "./components/StatusChip"; // CSR Component
+import SongForYouButton from "./components/SongForYouButton"; // CSR Component
+import { apiBasicServer } from "@/app/utils/request";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
+import ButtonRedirect from "@/component/buttonRedirect";
 
 interface Topic {
   _id: string;
   title: string;
-  avatar: string;
-  description: string;
-  status: string;
-  slug: string;
-  deleted: boolean;
+}
+
+interface Singer {
+  fullName: string;
 }
 
 interface Song {
   _id: string;
   title: string;
   avatar: string;
-  singerId: {
-    fullName: string;
-  };
+  singerId: Singer;
   topicId: Topic;
-  like: number;
-  listen: number;
-  audio: string;
   status: string;
-  deleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  slug: string;
 }
 
-const ManagerSong: React.FC = () => {
-  const dispatch = useDispatch();
-  const { showMessage } = useAppContext();
-  const { isPlaying, _id: playingSongId } = useSelector(
-    (state: RootState) => state.playingMusic
-  );
+const fetchSongs = async (): Promise<{
+  songs: Song[];
+  listSongForYou: string[];
+}> => {
+  const access_token = GetAccessTokenFromCookie();
+  try {
+    // Fetch danh sách bài hát
+    const songResponse = await apiBasicServer(
+      "GET",
+      "/songs/full",
+      undefined,
+      undefined,
+      access_token,
+      ["revalidate-tag-songs"]
+    );
 
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [listSongForYou, setListSongForYou] = useState<string[]>([]);
+    // Fetch danh sách "Đề cử"
+    const forYouResponse = await apiBasicServer(
+      "GET",
+      "/song-for-you",
+      undefined,
+      undefined,
+      access_token,
+      ["revalidate-tag-song-for-you"]
+    );
 
-  // Fetch danh sách bài hát "Đề cử"
-  const fetchSongForYou = useCallback(async () => {
-    try {
-      const res = await apiBasicClientPublic("GET", "/song-for-you");
-      if (res?.data) {
-        setListSongForYou(
-          res.data.listSong.map((song: { _id: string }) => song._id)
-        ); // Extract the song IDs
-      }
-    } catch (error) {
-      console.error("Error fetching songs for you", error);
-    }
-  }, []);
+    return {
+      songs: songResponse?.data || [],
+      listSongForYou:
+        forYouResponse?.data?.listSong.map((s: { _id: string }) => s._id) || [],
+    };
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    return { songs: [], listSongForYou: [] };
+  }
+};
 
-  // Fetch danh sách bài hát đầy đủ
-  const fetchSongs = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      const response = await apiBasicClient("GET", "/songs/full");
-      if (response?.data) {
-        setSongs(response.data);
-      }
-      if (response.statusCode >= 300) {
-        showMessage(response.message, "error");
-      }
-    } catch (error) {
-      console.error("Error fetching songs:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleClick = async (song: Song) => {
-    setLoading(true);
-    try {
-      const response = await apiBasicClient(
-        "PATCH",
-        `/songs/changeStatus/${song._id}`
-      );
-      if (response.statusCode >= 300) {
-        showMessage(response.message, "error");
-      }
-      // Update UI after successful API call
-      fetchSongs();
-      revalidateByTag("revalidate-by-songs");
-    } catch (error) {
-      console.error("Failed to change status:", error);
-      setLoading(false);
-    }
-  };
-
-  const handlePlayPauseClick = (song: any) => {
-    if (isPlaying && playingSongId === song._id) {
-      dispatch(pause());
-    } else {
-      dispatch(setNewSong(song)); // Set a new song if it's different from the currently playing one
-      dispatch(play());
-    }
-  };
-
-  // Fetch song data và song-for-you data lần đầu
-  const fetchFirst = async () => {
-    await fetchSongs();
-    await fetchSongForYou();
-  };
-
-  // Gọi API thêm/xóa bài hát khỏi "Đề cử"
-  const handleStarClick = async (songId: string) => {
-    if (listSongForYou.includes(songId)) {
-      // Nếu bài hát đã có trong list, gọi API để xóa
-      try {
-        const response = await apiBasicClient(
-          "DELETE",
-          `/song-for-you/remove/${songId}`
-        );
-        if (response.statusCode >= 300) {
-          showMessage(response.message, "error");
-        }
-        setListSongForYou((prev) => prev.filter((id) => id !== songId)); // Cập nhật lại state listSongForYou
-      } catch (error) {
-        console.error("Failed to remove song from 'For You' list", error);
-      }
-    } else {
-      // Nếu bài hát chưa có trong list, gọi API để thêm
-      try {
-        const response = await apiBasicClient(
-          "POST",
-          `/song-for-you/add/${songId}`
-        );
-        if (response.statusCode >= 300) {
-          showMessage(response.message, "error");
-        }
-        setListSongForYou((prev) => [...prev, songId]); // Cập nhật lại state listSongForYou
-      } catch (error) {
-        console.error("Failed to add song to 'For You' list", error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchFirst();
-  }, []);
+const ManagerSongPage = async () => {
+  const { songs, listSongForYou } = await fetchSongs();
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -187,11 +86,12 @@ const ManagerSong: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Quản lý bài hát
         </Typography>
-        <Button variant="contained" color="primary">
-          <Link href={"/admin/managerSong/songs-for-you"}>
-            Quản lý bài hát đề cử
-          </Link>
-        </Button>
+        <ButtonRedirect
+          link="/admin/managerSong/songs-for-you"
+          content="Quản lý bài hát đề cử"
+          variant="contained"
+          color="primary"
+        />
       </Box>
 
       <TableContainer component={Paper}>
@@ -210,67 +110,33 @@ const ManagerSong: React.FC = () => {
           </TableHead>
 
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={8} sx={{ textAlign: "center" }}>
-                  <CircularProgress />
+            {songs.map((song, index) => (
+              <TableRow key={song._id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  <Avatar
+                    src={song.avatar}
+                    alt={song.title}
+                    variant="rounded"
+                  />
+                </TableCell>
+                <TableCell>{song.title}</TableCell>
+                <TableCell>{song.topicId?.title || "Không rõ"}</TableCell>
+                <TableCell>{song.singerId?.fullName || "Không rõ"}</TableCell>
+                <TableCell>
+                  <PlayPauseButton song={song} />
+                </TableCell>
+                <TableCell>
+                  <StatusChip songId={song._id} status={song.status} />
+                </TableCell>
+                <TableCell>
+                  <SongForYouButton
+                    songId={song._id}
+                    initialForYou={listSongForYou.includes(song._id)}
+                  />
                 </TableCell>
               </TableRow>
-            ) : (
-              songs.map((song, index) => (
-                <TableRow key={song._id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    <Avatar
-                      src={song.avatar}
-                      alt={song.title}
-                      variant="rounded"
-                    />
-                  </TableCell>
-                  <TableCell>{song.title}</TableCell>
-                  <TableCell>
-                    {song.topicId?.title || "Không rõ thể loại"}
-                  </TableCell>
-                  <TableCell>
-                    {song.singerId?.fullName || "Không rõ ca sĩ"}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => handlePlayPauseClick(song)}
-                    >
-                      {isPlaying && playingSongId === song._id ? (
-                        <PauseIcon />
-                      ) : (
-                        <PlayArrowIcon />
-                      )}
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title="Đổi trạng thái" arrow>
-                      <Chip
-                        label={
-                          song.status === "active"
-                            ? "Hoạt động"
-                            : "Không hoạt động"
-                        }
-                        color={song.status === "active" ? "success" : "error"}
-                        onClick={() => handleClick(song)}
-                      />
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleStarClick(song._id)}>
-                      {listSongForYou.includes(song._id) ? (
-                        <StarIcon color="warning" />
-                      ) : (
-                        <StarBorderIcon />
-                      )}
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -278,4 +144,4 @@ const ManagerSong: React.FC = () => {
   );
 };
 
-export default ManagerSong;
+export default ManagerSongPage;
