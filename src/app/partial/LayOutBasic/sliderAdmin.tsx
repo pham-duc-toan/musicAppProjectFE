@@ -139,9 +139,6 @@ export default function SiderAdminComponent({
         >
           <ManageAccountsIcon />
         </ItemSider>
-      </List>
-      <Divider />
-      <List>
         <ItemSider
           theme={theme}
           open={open}
@@ -151,6 +148,29 @@ export default function SiderAdminComponent({
           }}
         >
           <AccessibilityIcon />
+        </ItemSider>
+      </List>
+      <Divider />
+      <List>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Tất cả bài hát",
+            router: "/songs",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Danh sách phát của tôi",
+            router: "/playList",
+          }}
+        >
+          <QueueMusicIcon />
         </ItemSider>
       </List>
     </Sider>
