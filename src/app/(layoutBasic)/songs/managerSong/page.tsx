@@ -144,7 +144,10 @@ const ManagerSong: React.FC = () => {
         <Typography variant="h4" gutterBottom>
           Quản lý bài hát
         </Typography>
-        <ButtonRedirect link="/songs/createSong" content="Thêm mới bài hát" />
+        <ButtonRedirect
+          link="/songs/managerSong/createSong"
+          content="Thêm mới bài hát"
+        />
       </Box>
 
       <TableContainer component={Paper}>
