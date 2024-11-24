@@ -66,7 +66,11 @@ export default function FormLoginComponent() {
     if (data.data) {
       setAccessTokenToLocalStorage(data.data.access_token);
       setIsLoading(false);
-      window.location.href = "/";
+      if (data.data.user.role.roleName == "Admin") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/";
+      }
     } else {
       showMessage(data.message, "error");
       setIsLoading(false);
