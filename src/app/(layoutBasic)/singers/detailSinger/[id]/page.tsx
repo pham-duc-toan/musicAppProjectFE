@@ -1,5 +1,19 @@
-import { Box, Typography, Avatar, Paper, Button } from "@mui/material";
-import { apiBasicClient, apiBasicServer } from "@/app/utils/request";
+import {
+  Box,
+  Typography,
+  Avatar,
+  Paper,
+  Button,
+  Grid,
+  Divider,
+} from "@mui/material";
+import {
+  apiBasicClient,
+  apiBasicServer,
+  getInfoUser,
+} from "@/app/utils/request";
+import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
+import ItemControlCard from "@/component/item-control-card-music";
 
 // Định nghĩa kiểu dữ liệu của ca sĩ
 interface ISingerDetail {
@@ -39,7 +53,25 @@ export default async function SingerDetailPage({
       </Typography>
     );
   }
+  const datall: any = await apiBasicServer(
+    "GET",
+    `/songs/song-of-singer/${params.id}`,
+    undefined,
+    undefined,
+    undefined,
+    ["revalidate-tag-songs"]
+  );
 
+  const datas = datall?.data || undefined;
+
+  let favoriteSongs = [];
+  const access_token = GetPublicAccessTokenFromCookie();
+
+  if (access_token) {
+    const dataFs = await getInfoUser(access_token.value);
+    favoriteSongs =
+      dataFs.data.listFavoriteSong.map((song: any) => song._id) || [];
+  }
   return (
     <Box
       sx={{
@@ -56,6 +88,7 @@ export default async function SingerDetailPage({
           maxWidth: "600px",
           width: "100%",
           textAlign: "center",
+          marginBottom: "30px",
         }}
       >
         <Avatar
@@ -75,6 +108,17 @@ export default async function SingerDetailPage({
           {new Date(singerDetail.createdAt).toLocaleString("vi-VN")}
         </Typography>
       </Paper>
+      <Grid container>
+        {datas.map((data: any, index: number) => {
+          return (
+            <Grid md={4} sm={6} xs={12} key={index}>
+              <Box sx={{ padding: "10px" }}>
+                <ItemControlCard fSongs={favoriteSongs} data={data} />
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
     </Box>
   );
 }
