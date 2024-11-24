@@ -44,14 +44,14 @@ export default function LayoutBasic({
       <Box sx={{ display: "flex" }}>
         <HeaderComponent open={open} />
 
-        {userInfo?.role.roleName == "admin" ? (
-          <SiderComponent
+        {userInfo?.role.roleName == "Admin" ? (
+          <SiderAdminComponent
             open={open}
             handleDrawerOpen={handleDrawerOpen}
             handleDrawerClose={handleDrawerClose}
           />
         ) : (
-          <SiderAdminComponent
+          <SiderComponent
             open={open}
             handleDrawerOpen={handleDrawerOpen}
             handleDrawerClose={handleDrawerClose}

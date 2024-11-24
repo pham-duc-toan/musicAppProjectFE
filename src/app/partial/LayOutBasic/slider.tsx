@@ -79,21 +79,6 @@ export default function SiderComponent({
   handleDrawerClose: () => void;
 }) {
   const theme: Theme = useTheme();
-
-  const listMenu2 = [
-    {
-      name: "All mail",
-      icon: <InboxIcon />,
-    },
-    {
-      name: "Drafts",
-      icon: <MailIcon />,
-    },
-    {
-      name: "Spam",
-      icon: <InboxIcon />,
-    },
-  ];
   return (
     <Sider variant="permanent" open={open}>
       <SideBarHeader>
@@ -124,16 +109,6 @@ export default function SiderComponent({
         >
           <QueueMusicIcon />
         </ItemSider>
-        <ItemSider
-          theme={theme}
-          open={open}
-          data={{
-            name: "Thêm bài hát",
-            router: "/songs/createSong",
-          }}
-        >
-          <FileUploadIcon />
-        </ItemSider>
       </List>
       <Divider />
       <List>
@@ -159,31 +134,6 @@ export default function SiderComponent({
             </ListItemButton>
           </ListItem>
         </Link>
-        {listMenu2.map((item, index) => (
-          <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.name}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
       </List>
     </Sider>
   );
