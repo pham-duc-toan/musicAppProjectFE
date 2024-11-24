@@ -24,6 +24,7 @@ import "./style.css";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
+import { revalidateByTag } from "@/app/action";
 
 function TopicCreateComponent() {
   const { showMessage } = useAppContext();
@@ -84,6 +85,7 @@ function TopicCreateComponent() {
       );
 
       if (response.status === 201) {
+        await revalidateByTag("revalidate-tag-topics");
         showMessage("Tạo mới thành công !", "success");
       } else {
         showMessage(response.data.message || "Something went wrong", "error");

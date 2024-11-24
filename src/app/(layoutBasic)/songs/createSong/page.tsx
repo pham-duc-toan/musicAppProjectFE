@@ -9,7 +9,7 @@ interface UserInfo {
 }
 const createPage = () => {
   const access_token: any = GetAccessTokenFromCookie();
-  const userInfo = decodeToken(access_token.value) as UserInfo;
+  const userInfo = decodeToken(access_token.value) as UserInfo | undefined;
   return (
     <>
       {userInfo?.singerId ? (

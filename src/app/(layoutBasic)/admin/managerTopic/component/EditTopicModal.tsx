@@ -44,14 +44,12 @@ interface EditTopicModalProps {
   open: boolean;
   onClose: () => void;
   topic: Topic;
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
 }
 
 const EditTopicModal: React.FC<EditTopicModalProps> = ({
   open,
   onClose,
   topic,
-  setTopics,
 }) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -125,7 +123,6 @@ const EditTopicModal: React.FC<EditTopicModalProps> = ({
         }
         await revalidateByTag("revalidate-tag-topics");
         if (response?.data) {
-          setTopics(response.data);
           showMessage("Chỉnh sửa thành công!", "success");
         }
 
