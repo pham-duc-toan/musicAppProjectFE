@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ButtonUpdateSingerHeader from "./component/buttonUpdateSinger";
-import { apiBasicClient } from "@/app/utils/request"; // Assuming this is for API calls
+import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request"; // Assuming this is for API calls
 import { TSuggestAvaSlugId } from "@/dataType/suggest"; // Adjust based on your data types
 import BtnLoginLogout from "@/component/btn-login-logout";
 import { SwitchThemeButton } from "@/component/button-dark-mode";
@@ -77,8 +77,8 @@ export default function HeaderComponent({ open }: { open: boolean }) {
       try {
         // Gửi đồng thời hai yêu cầu để tiết kiệm thời gian
         const [response, response2] = await Promise.all([
-          apiBasicClient("GET", "/songs", { query: input }),
-          apiBasicClient("GET", "/singers", { query: input }),
+          apiBasicClientPublic("GET", "/songs", { query: input }),
+          apiBasicClientPublic("GET", "/singers", { query: input }),
         ]);
 
         // Kết hợp dữ liệu từ hai phản hồi
@@ -127,7 +127,12 @@ export default function HeaderComponent({ open }: { open: boolean }) {
       >
         <Toolbar sx={{ flex: "1" }} disableGutters>
           <SearchBox
-            sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+            }}
           >
             <SearchIcon />
             <InputBase
@@ -138,7 +143,75 @@ export default function HeaderComponent({ open }: { open: boolean }) {
               onBlur={handleOnBlur}
               sx={{ color: "inherit", ml: 1, maxWidth: "400px", flexGrow: 1 }}
             />
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <Paper
+                sx={{
+                  position: "absolute",
+                  zIndex: 2,
+                  maxWidth: "400px",
+                  width: "100%",
+                  maxHeight: 200,
+                  overflowY: "auto",
+                  top: "56px",
+                }}
+              >
+                <List>
+                  {filteredSuggestions.map((suggestion, index) => (
+                    <Link
+                      key={index}
+                      href={
+                        suggestion.title
+                          ? `/songs/detail/${suggestion._id}`
+                          : `/singers/detailSinger/${suggestion._id}`
+                      }
+                    >
+                      <ListItem disablePadding>
+                        <ListItemButton
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <ListItemText
+                            primary={suggestion.title || suggestion.fullName}
+                            secondary={
+                              suggestion.title
+                                ? suggestion.singerId?.fullName ||
+                                  "Không rõ tác giả"
+                                : "Nghệ sĩ"
+                            }
+                            primaryTypographyProps={{
+                              style: { fontWeight: "bold" },
+                            }}
+                            secondaryTypographyProps={{}}
+                          />
+                          <ListItemIcon
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row-reverse",
+                            }}
+                          >
+                            <Avatar
+                              src={suggestion.avatar}
+                              alt={suggestion.title || suggestion.fullName}
+                              sx={{
+                                objectFit: "cover",
+                                aspectRatio: "1/1",
+                                height: "40px", // Kích thước avatar
+                                width: "40px",
+                              }}
+                            />
+                          </ListItemIcon>
+                        </ListItemButton>
+                      </ListItem>
+                    </Link>
+                  ))}
+                </List>
+              </Paper>
+            )}
           </SearchBox>
+
           <ButtonUpdateSingerHeader />
         </Toolbar>
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -146,69 +219,6 @@ export default function HeaderComponent({ open }: { open: boolean }) {
           <SwitchThemeButton />
         </Box>
       </Container>
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <Paper
-          sx={{
-            position: "absolute",
-            zIndex: 2,
-            maxWidth: "400px",
-            width: "100%",
-            maxHeight: 200,
-            overflowY: "auto",
-            marginTop: "56px", // Adjust depending on the header height
-          }}
-        >
-          <List>
-            {filteredSuggestions.map((suggestion, index) => (
-              <Link
-                key={index}
-                href={
-                  suggestion.title
-                    ? `/songs/detail/${suggestion._id}`
-                    : `/singers/detailSinger/${suggestion._id}`
-                }
-              >
-                <ListItem disablePadding>
-                  <ListItemButton
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ListItemText
-                      primary={suggestion.title || suggestion.fullName}
-                      secondary={
-                        suggestion.title
-                          ? suggestion.singerId?.fullName || "Không rõ tác giả"
-                          : "Nghệ sĩ"
-                      }
-                      primaryTypographyProps={{
-                        style: { fontWeight: "bold" },
-                      }}
-                      secondaryTypographyProps={{}}
-                    />
-                    <ListItemIcon
-                      sx={{ display: "flex", flexDirection: "row-reverse" }}
-                    >
-                      <Avatar
-                        src={suggestion.avatar}
-                        alt={suggestion.title || suggestion.fullName}
-                        sx={{
-                          objectFit: "cover",
-                          aspectRatio: "1/1",
-                          height: "40px", // Kích thước avatar
-                          width: "40px",
-                        }}
-                      />
-                    </ListItemIcon>
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ))}
-          </List>
-        </Paper>
-      )}
     </Header>
   );
 }

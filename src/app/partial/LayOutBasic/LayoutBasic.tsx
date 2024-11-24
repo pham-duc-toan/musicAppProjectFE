@@ -24,6 +24,14 @@ export default function LayoutBasic({
   const access_token = getAccessTokenFromLocalStorage() || undefined;
   const userInfo: IUserInfo | undefined = decodeToken(access_token);
 
+  // Sử dụng state isClient để đảm bảo rằng code chỉ chạy trên client
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    // Chỉ thay đổi trạng thái sau khi component mount trên client
+    setIsClient(userInfo?.role.roleName === "Admin");
+  }, []);
+
   React.useEffect(() => {
     if (isSmallScreen) {
       setOpen(false);
@@ -44,7 +52,7 @@ export default function LayoutBasic({
       <Box sx={{ display: "flex" }}>
         <HeaderComponent open={open} />
 
-        {userInfo?.role.roleName == "Admin" ? (
+        {isClient ? (
           <SiderAdminComponent
             open={open}
             handleDrawerOpen={handleDrawerOpen}
