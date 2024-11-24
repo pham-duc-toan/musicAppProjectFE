@@ -56,7 +56,8 @@ const SongDetailPage = async ({ params }: { params: { id: string } }) => {
   let favoriteSongs = [];
   if (access_token) {
     const dataFs = await getInfoUser(access_token.value);
-    favoriteSongs = dataFs.data.listFavoriteSong || [];
+    favoriteSongs =
+      dataFs.data.listFavoriteSong.map((song: any) => song._id) || [];
   }
   if (!songDetail) {
     return <Typography>Không tìm thấy bài hát</Typography>;

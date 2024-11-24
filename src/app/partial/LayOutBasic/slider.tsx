@@ -134,6 +134,16 @@ export default function SiderComponent({
             </ListItemButton>
           </ListItem>
         </Link>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Các bài hát đã thích",
+            router: "/songs/my-favorite-song",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
       </List>
     </Sider>
   );

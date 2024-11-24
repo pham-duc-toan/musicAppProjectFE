@@ -172,6 +172,16 @@ export default function SiderAdminComponent({
         >
           <QueueMusicIcon />
         </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Các bài hát đã thích",
+            router: "/songs/my-favorite-song",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
       </List>
     </Sider>
   );
