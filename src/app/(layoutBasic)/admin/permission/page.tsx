@@ -24,6 +24,9 @@ import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
 import VisibilityIcon from "@mui/icons-material/Visibility"; // Import View icon
 import { apiBasicClient } from "@/app/utils/request";
 import { useAppContext } from "@/context-app";
+import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
+import { useRouter } from "next/navigation";
+import { decodeToken } from "@/app/helper/jwt";
 
 // Định nghĩa kiểu cho role
 interface Role {
@@ -54,6 +57,11 @@ export default function Permissions() {
   );
   const [openRoleModal, setOpenRoleModal] = useState(false);
   const { showMessage } = useAppContext();
+  const router = useRouter();
+  const access_token = getAccessTokenFromLocalStorage();
+  if (!access_token) {
+    router.push("/");
+  }
   const fetchRolesAndPermissions = async () => {
     setLoading(true); // Bắt đầu tải
     try {
@@ -61,6 +69,7 @@ export default function Permissions() {
       const rolesRes = await apiBasicClient("GET", "/roles");
       if (rolesRes.statusCode >= 300) {
         showMessage(rolesRes.message, "error");
+        router.push("/");
       }
 
       const rolesData = rolesRes.data.map((role: any) => ({
@@ -73,6 +82,7 @@ export default function Permissions() {
       const permissionsRes = await apiBasicClient("GET", "/permissions");
       if (permissionsRes.statusCode >= 300) {
         showMessage(permissionsRes.message, "error");
+        router.push("/");
       }
       const permissionsData = permissionsRes.data.map((permission: any) => ({
         name: permission.name,

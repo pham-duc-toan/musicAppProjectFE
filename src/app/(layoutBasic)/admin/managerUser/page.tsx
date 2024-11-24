@@ -18,6 +18,7 @@ import { apiBasicServer } from "@/app/utils/request";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import StatusChip from "./component/StatusChip";
 import DeleteUserButton from "./component/DeleteUserButton";
+import EditRoleUserModal from "./component/EditRoleUserModal";
 
 interface User {
   _id: string;
@@ -88,6 +89,7 @@ const ManagerUserPage = async () => {
                 </TableCell>
                 <TableCell>
                   <DeleteUserButton id={user._id} username={user.username} />
+                  <EditRoleUserModal user={user} />
                 </TableCell>
               </TableRow>
             ))}
