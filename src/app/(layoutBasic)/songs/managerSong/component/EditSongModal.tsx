@@ -50,14 +50,12 @@ interface EditSongModalProps {
   open: boolean;
   onClose: () => void;
   song: any;
-  setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
 }
 
 const EditSongModal: React.FC<EditSongModalProps> = ({
   open,
   onClose,
   song,
-  setSongs,
 }) => {
   const [mounted, setMounted] = useState<boolean>(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -140,16 +138,7 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
       );
 
       if (response.status === 200) {
-        const response = await apiBasicClient(
-          "GET",
-          "/songs/managerSong",
-          undefined,
-          undefined
-        );
         await revalidateByTag("revalidate-tag-songs");
-        if (response?.data) {
-          setSongs(response.data);
-        }
 
         showMessage("Chỉnh sửa thành công !", "success");
         onClose(); // Đóng modal khi submit thành công

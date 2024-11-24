@@ -11,7 +11,7 @@ const ChangeStatus = ({ song }: any) => {
   const handleClick = async () => {
     const newStatus = status === "active" ? "inactive" : "active";
     try {
-      setStatus(newStatus);
+      showMessage("Đang thực hiện", "info");
       const response = await apiBasicClient(
         "PATCH",
         `/songs/editSong/${song._id}`,
@@ -24,21 +24,20 @@ const ChangeStatus = ({ song }: any) => {
         showMessage(response.message, "error");
       }
       revalidateByTag("revalidate-by-songs");
-      // Cập nhật lại trạng thái nếu API gọi thành công
+      setStatus(newStatus);
+      showMessage("Thay đổi thành công", "success");
     } catch (error) {
       console.error("Failed to change status:", error);
     }
   };
 
   return (
-    <TableCell onClick={handleClick}>
-      <Tooltip title="Đổi trạng thái" arrow>
-        <Chip
-          label={status === "active" ? "Hoạt động" : "Không hoạt động"}
-          color={status === "active" ? "success" : "error"}
-        />
-      </Tooltip>
-    </TableCell>
+    <Tooltip onClick={handleClick} title="Đổi trạng thái" arrow>
+      <Chip
+        label={status === "active" ? "Hoạt động" : "Không hoạt động"}
+        color={status === "active" ? "success" : "error"}
+      />
+    </Tooltip>
   );
 };
 

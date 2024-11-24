@@ -1,7 +1,7 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Box,
+  Typography,
   Table,
   TableBody,
   TableCell,
@@ -10,129 +10,60 @@ import {
   TableRow,
   Paper,
   Avatar,
-  Typography,
-  IconButton,
-  Chip,
-  Tooltip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
 } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import PauseIcon from "@mui/icons-material/Pause";
-import InfoIcon from "@mui/icons-material/Info";
-import { apiBasicClient } from "@/app/utils/request";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { pause, play, setNewSong } from "@/store/playingMusicSlice";
-import { TSongDetail } from "@/dataType/song";
+
+import { apiBasicServer } from "@/app/utils/request";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import ButtonRedirect from "@/component/buttonRedirect";
-import { useRouter } from "next/navigation";
+import PlayPauseButton from "../../admin/managerSong/components/PlayPauseButton";
+import StatusChip from "../../admin/managerSinger/component/StatusChip";
 import ChangeStatus from "./component/ChangStatus";
-import EditSongModal from "./component/EditSongModal";
-import { revalidateByTag } from "@/app/action";
-import { useAppContext } from "@/context-app";
+import ButtonActionModal from "./component/ButtonActionModal";
 
 interface Topic {
   _id: string;
   title: string;
-  avatar: string;
-  description: string;
-  status: string;
-  slug: string;
-  deleted: boolean;
+}
+
+interface Singer {
+  fullName: string;
 }
 
 interface Song {
   _id: string;
   title: string;
   avatar: string;
-  singerId: string;
+  singerId: Singer;
   topicId: Topic;
-  like: number;
-  listen: number;
-  audio: string;
   status: string;
-  deleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  slug: string;
 }
 
-const ManagerSong: React.FC = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { showMessage } = useAppContext();
-  const { isPlaying, _id: playingSongId } = useSelector(
-    (state: RootState) => state.playingMusic
-  );
-  const [songs, setSongs] = useState<Song[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+const fetchSongs = async (): Promise<{
+  songs: Song[];
+}> => {
+  const access_token = GetAccessTokenFromCookie();
+  try {
+    // Fetch danh sách bài hát
+    const songResponse = await apiBasicServer(
+      "GET",
+      "/songs/managerSong",
+      undefined,
+      undefined,
+      access_token,
+      ["revalidate-tag-songs"]
+    );
 
-  const handlePlayPauseClick = (song: any) => {
-    if (isPlaying && playingSongId === song._id) {
-      dispatch(pause());
-    } else {
-      dispatch(setNewSong(song)); // Cập nhật bài hát mới nếu bài hát khác đang phát
-      dispatch(play());
-    }
-  };
-
-  const handleDeleteClick = (songId: string) => {
-    setSelectedSongId(songId);
-    setOpenDialog(true);
-  };
-
-  const confirmDelete = async () => {
-    if (selectedSongId) {
-      const response = await apiBasicClient(
-        "DELETE",
-        `/songs/deleteSong/${selectedSongId}`
-      );
-      if (response.statusCode >= 300) {
-        showMessage(response.message, "error");
-      } else {
-        setSongs((prevSongs) =>
-          prevSongs.filter((song: any) => song._id !== selectedSongId)
-        );
-      }
-
-      await revalidateByTag("revalidate-tag-songs");
-      setOpenDialog(false);
-      setSelectedSongId(null);
-    }
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedSongId(null);
-  };
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-
-  const handleEditClick = (song: Song) => {
-    setSelectedSong(song);
-    setOpenEditModal(true);
-  };
-
-  useEffect(() => {
-    const fetchSongs = async () => {
-      setLoading(true);
-      const response = await apiBasicClient("GET", "/songs/managerSong");
-      if (response?.data) {
-        setSongs(response.data);
-      }
-      setLoading(false);
+    return {
+      songs: songResponse?.data || [],
     };
-    fetchSongs();
-  }, []);
+  } catch (error) {
+    console.error("Error fetching songs:", error);
+    return { songs: [] };
+  }
+};
+
+const ManagerSongPage = async () => {
+  const { songs } = await fetchSongs();
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -146,7 +77,9 @@ const ManagerSong: React.FC = () => {
         </Typography>
         <ButtonRedirect
           link="/songs/managerSong/createSong"
-          content="Thêm mới bài hát"
+          content="Tạo mới bài hát"
+          variant="contained"
+          color="primary"
         />
       </Box>
 
@@ -163,100 +96,36 @@ const ManagerSong: React.FC = () => {
               <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                  <CircularProgress />
+            {songs.map((song, index) => (
+              <TableRow key={song._id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  <Avatar
+                    src={song.avatar}
+                    alt={song.title}
+                    variant="rounded"
+                  />
+                </TableCell>
+                <TableCell>{song.title}</TableCell>
+                <TableCell>{song.topicId?.title || "Không rõ"}</TableCell>
+                <TableCell>
+                  <PlayPauseButton song={song} />
+                </TableCell>
+                <TableCell>
+                  <ChangeStatus song={song} />
+                </TableCell>
+                <TableCell>
+                  <ButtonActionModal song={song} />
                 </TableCell>
               </TableRow>
-            ) : (
-              songs.map((song, index) => (
-                <TableRow key={song._id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    <Avatar
-                      src={song.avatar}
-                      alt={song.title}
-                      variant="rounded"
-                    />
-                  </TableCell>
-                  <TableCell>{song.title}</TableCell>
-                  <TableCell>
-                    {song.topicId?.title || "Không rõ thể loại"}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => handlePlayPauseClick(song)}
-                    >
-                      {isPlaying && playingSongId === song._id ? (
-                        <PauseIcon />
-                      ) : (
-                        <PlayArrowIcon />
-                      )}
-                    </IconButton>
-                  </TableCell>
-                  <ChangeStatus song={song} />
-                  <TableCell>
-                    <Tooltip title="Xem chi tiết" arrow>
-                      <IconButton
-                        onClick={() => {
-                          router.push(`/songs/detail/${song._id}`);
-                        }}
-                        color="info"
-                      >
-                        <InfoIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Chỉnh sửa" arrow>
-                      <IconButton
-                        color="warning"
-                        onClick={() => handleEditClick(song)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Xóa bài hát" arrow>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDeleteClick(song._id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
+            ))}
           </TableBody>
-          {songs && songs.length > 0 && (
-            <EditSongModal
-              open={openEditModal}
-              onClose={() => setOpenEditModal(false)}
-              song={selectedSong}
-              setSongs={setSongs}
-            />
-          )}
         </Table>
       </TableContainer>
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Xác nhận xóa</DialogTitle>
-        <DialogContent>
-          <Typography>Bạn có chắc muốn xóa bài hát này không?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Hủy
-          </Button>
-          <Button onClick={confirmDelete} color="error" autoFocus>
-            Có
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
 
-export default ManagerSong;
+export default ManagerSongPage;
