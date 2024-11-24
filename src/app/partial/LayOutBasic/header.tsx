@@ -25,6 +25,7 @@ import BtnLoginLogout from "@/component/btn-login-logout";
 import { SwitchThemeButton } from "@/component/button-dark-mode";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import NavigationButtons from "./component/btnHeaderForWardAndBack";
 
 const drawerWidth = 240;
 
@@ -126,6 +127,7 @@ export default function HeaderComponent({ open }: { open: boolean }) {
         }}
       >
         <Toolbar sx={{ flex: "1" }} disableGutters>
+          <NavigationButtons />
           <SearchBox
             sx={{
               flexGrow: 1,

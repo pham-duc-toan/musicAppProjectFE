@@ -4,7 +4,7 @@ import {
   setAccessTokenToLocalStorage,
 } from "@/app/helper/localStorageClient";
 import { login, logout } from "@/app/utils/request";
-import BtnBack from "@/component/btn.back";
+import BtnBack from "@/component/btn.back-home";
 import {
   CustomTextFieldPassword,
   CustomTextFieldUsername,
