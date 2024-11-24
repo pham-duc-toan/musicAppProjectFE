@@ -166,8 +166,10 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({
             undefined,
             { idSong: songId }
           );
-          if (data.statusCode != 201 && data?.message) {
+          if (data.statusCode >= 300 && data?.message) {
             showMessage(`${data.message}`, "error");
+          } else {
+            showMessage(`Thành công!`, "success");
           }
         } else {
           const data = await apiBasicClient(
@@ -176,8 +178,10 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({
             undefined,
             { idSong: songId }
           );
-          if (data.statusCode != 201 && data?.message) {
+          if (data.statusCode >= 300 && data?.message) {
             showMessage(`${data.message}`, "error");
+          } else {
+            showMessage(`Thành công!`, "success");
           }
         }
       }

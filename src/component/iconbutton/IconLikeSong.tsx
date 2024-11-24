@@ -24,22 +24,24 @@ export default function FavoriteButton({
   }, [fSongs, songId]);
 
   const handleFavoriteToggle = async () => {
+    showMessage("Đang thực hiện", "info");
     const accessToken = getAccessTokenFromLocalStorage();
     if (accessToken) {
       try {
         if (isFavorite) {
-          setIsFavorite(false);
           // Nếu bài hát đã yêu thích, gọi API xóa khỏi yêu thích
           await apiBasicClient(
             "DELETE",
             `/songs/favoriteSongs/remove/${songId}`
           );
-          revalidateByTag("revalidate-tag-infoUser");
+          await revalidateByTag("revalidate-tag-infoUser");
+          setIsFavorite(false);
         } else {
-          setIsFavorite(true);
           await apiBasicClient("POST", `/songs/favoriteSongs/add/${songId}`);
-          revalidateByTag("revalidate-tag-infoUser");
+          await revalidateByTag("revalidate-tag-infoUser");
+          setIsFavorite(true);
         }
+        showMessage("Thành công", "success");
       } catch (error) {
         console.error("Lỗi khi cập nhật yêu thích:", error);
       }

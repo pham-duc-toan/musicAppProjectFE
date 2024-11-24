@@ -1,9 +1,10 @@
+"use client";
 import { Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import parseLrc from "@/app/helper/parseLrc";
 import { useEffect, useRef } from "react";
-
+import "./style.css";
 const Lyric = ({ songId, lyrics }: { songId: string; lyrics: string }) => {
   const currentSongId = useSelector(
     (state: RootState) => state.playingMusic._id

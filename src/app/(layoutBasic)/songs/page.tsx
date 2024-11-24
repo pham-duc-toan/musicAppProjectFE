@@ -18,9 +18,7 @@ const Songs = async () => {
   );
 
   const datas = datall?.data.data || undefined;
-  if (!datas && datall.redirect) {
-    redirect("/login");
-  }
+
   let favoriteSongs = [];
   const access_token = GetPublicAccessTokenFromCookie();
 

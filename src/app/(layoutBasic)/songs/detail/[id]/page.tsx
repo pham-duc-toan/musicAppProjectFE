@@ -1,23 +1,18 @@
-"use client";
-import "./style.css";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/store/store";
-import { play, pause, setNewSong } from "@/store/playingMusicSlice";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import {
-  Box,
-  Typography,
-  Avatar,
-  CircularProgress,
-  IconButton,
-} from "@mui/material";
-import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
-import Lyric from "./lyric";
+import { Metadata } from "next";
+import { apiBasicServer, getInfoUser } from "@/app/utils/request";
+import { Box, Typography, Avatar, CircularProgress } from "@mui/material";
+import PlayerControls from "./components/PlayerControls";
+import Lyric from "./components/lyric";
+import FavoriteButton from "@/component/iconbutton/IconLikeSong";
+import IconAddToPlayList from "@/component/iconbutton/IconAddToPlayList";
+import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
 
-interface TSongDetail {
+export const metadata: Metadata = {
+  title: "Chi tiết bài hát",
+  description: "Thông tin chi tiết về bài hát",
+};
+
+interface SongDetail {
   listen: number;
   _id: string;
   title: string;
@@ -35,53 +30,34 @@ interface TSongDetail {
   lyrics: string;
 }
 
-const SongDetailPage = () => {
-  const { id } = useParams();
-  const [songDetail, setSongDetail] = useState<TSongDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-  const songCurrent = useSelector((state: RootState) => state.playingMusic);
-  const isPlaying = useSelector(
-    (state: RootState) => state.playingMusic.isPlaying
-  );
-
-  useEffect(() => {
-    const fetchSongDetail = async () => {
-      try {
-        const res = await apiBasicClientPublic("GET", `/songs/detail/${id}`);
-        setSongDetail(res.data);
-      } catch (error) {
-        console.error("Error fetching song detail:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSongDetail();
-  }, [id]);
-  const handlePlayPauseClick = () => {
-    if (isPlaying && songCurrent?._id === songDetail?._id) {
-      dispatch(pause());
-    } else {
-      dispatch(setNewSong(songDetail as any)); // Set bài hát hiện tại nếu chưa phát
-      dispatch(play());
-    }
-  };
-  if (loading) {
-    return (
-      <Box
-        position={"fixed"}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="80vh"
-        width="80vw"
-      >
-        <CircularProgress />
-      </Box>
+// Fetch data server-side (SSR)
+async function fetchSongDetail(id: string): Promise<SongDetail | null> {
+  try {
+    const response = await apiBasicServer(
+      "GET",
+      `/songs/detail/${id}`,
+      undefined,
+      undefined,
+      undefined,
+      ["revalidate-tag-songs"]
     );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching song detail:", error);
+    return null;
   }
+}
 
+// Page component
+const SongDetailPage = async ({ params }: { params: { id: string } }) => {
+  const { id } = params;
+  const songDetail = await fetchSongDetail(id);
+  const access_token = GetPublicAccessTokenFromCookie();
+  let favoriteSongs = [];
+  if (access_token) {
+    const dataFs = await getInfoUser(access_token.value);
+    favoriteSongs = dataFs.data.listFavoriteSong || [];
+  }
   if (!songDetail) {
     return <Typography>Không tìm thấy bài hát</Typography>;
   }
@@ -96,7 +72,7 @@ const SongDetailPage = () => {
         boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
         marginBottom={"20px"}
       >
-        <Box display="flex" alignItems="center" mb={4}>
+        <Box display="flex" alignItems="center">
           <Avatar
             src={songDetail.avatar}
             alt={songDetail.title}
@@ -113,16 +89,12 @@ const SongDetailPage = () => {
               Chủ đề: {songDetail.topicId?.title || "Không rõ thể loại"}
             </Typography>
           </Box>
-
-          {/* Icon phát/dừng */}
         </Box>
-        <IconButton color="primary" onClick={handlePlayPauseClick}>
-          {isPlaying && songCurrent?._id === songDetail._id ? (
-            <PauseIcon fontSize="large" />
-          ) : (
-            <PlayArrowIcon fontSize="large" />
-          )}
-        </IconButton>
+        <Box>
+          <FavoriteButton fSongs={favoriteSongs} songId={songDetail._id} />
+          <IconAddToPlayList fSongs={favoriteSongs} songId={songDetail._id} />
+          <PlayerControls songDetail={songDetail} />
+        </Box>
       </Box>
 
       {/* Lượt nghe và lượt thích */}
@@ -146,8 +118,8 @@ const SongDetailPage = () => {
           maxHeight: "300px",
           overflowY: songDetail.lyrics ? "auto" : "hidden",
           display: "flex",
-          justifyContent: songDetail.lyrics ? "flex-start" : "center", // Center when no lyrics
-          alignItems: songDetail.lyrics ? "flex-start" : "center", // Center vertically when no lyrics
+          justifyContent: songDetail.lyrics ? "flex-start" : "center",
+          alignItems: songDetail.lyrics ? "flex-start" : "center",
           textAlign: "center",
           color: "text.secondary",
         }}
