@@ -167,9 +167,32 @@ const EditSongModal: React.FC<EditSongModalProps> = ({
   };
   if (!mounted) return null;
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: "100px", // khoảng cách trên
+        paddingBottom: "100px", // khoảng cách dưới
+      }}
+    >
       <DialogTitle>Edit Song</DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          maxHeight: "calc(100vh - 200px)", // Đảm bảo modal không quá lớn
+          overflowY: "auto", // Kích hoạt thanh cuộn nếu cần
+          scrollbarWidth: "thin", // Đảm bảo thanh cuộn nhỏ trên Firefox
+          "&::-webkit-scrollbar": { width: "6px" }, // Đảm bảo thanh cuộn nhỏ trên Chrome
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#888",
+            borderRadius: "10px",
+          },
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} marginTop={"10px"}>

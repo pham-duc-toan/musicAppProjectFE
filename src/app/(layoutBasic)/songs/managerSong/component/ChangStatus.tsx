@@ -3,11 +3,14 @@ import { revalidateByTag } from "@/app/action";
 import { apiBasicClient } from "@/app/utils/request";
 import { useAppContext } from "@/context-app";
 import { TableCell, Tooltip, Chip } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ChangeStatus = ({ song }: any) => {
   const [status, setStatus] = useState(song.status);
   const { showMessage } = useAppContext();
+  useEffect(() => {
+    setStatus(song.status);
+  }, [song]);
   const handleClick = async () => {
     const newStatus = status === "active" ? "inactive" : "active";
     try {

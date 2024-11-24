@@ -16,7 +16,6 @@ import { apiBasicServer } from "@/app/utils/request";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import ButtonRedirect from "@/component/buttonRedirect";
 import PlayPauseButton from "../../admin/managerSong/components/PlayPauseButton";
-import StatusChip from "../../admin/managerSinger/component/StatusChip";
 import ChangeStatus from "./component/ChangStatus";
 import ButtonActionModal from "./component/ButtonActionModal";
 

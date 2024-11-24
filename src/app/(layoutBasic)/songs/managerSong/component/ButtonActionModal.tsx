@@ -46,8 +46,10 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
   const { showMessage } = useAppContext();
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Trạng thái loading khi gọi API
 
   const handleDelete = async () => {
+    setIsLoading(true); // Bắt đầu gọi API, set loading = true
     try {
       const response = await apiBasicClient(
         "DELETE",
@@ -57,11 +59,13 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
         showMessage(response.message, "error");
       } else {
         await revalidateByTag("revalidate-tag-songs");
-        showMessage("Xóa chủ đề thành công!", "success");
+        showMessage("Xóa bài hát thành công!", "success");
         setOpenDialog(false);
       }
     } catch (error) {
       console.error("Error deleting song:", error);
+    } finally {
+      setIsLoading(false); // Kết thúc gọi API, set loading = false
     }
   };
 
@@ -69,37 +73,57 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
     <>
       <Tooltip title="Xem chi tiết" arrow>
         <Link href={`/songs/detail/${song._id}`}>
-          <IconButton color="primary">
+          <IconButton color="primary" disabled={isLoading}>
             <VisibilityIcon />
           </IconButton>
         </Link>
       </Tooltip>
       <Tooltip title="Chỉnh sửa" arrow>
-        <IconButton color="warning" onClick={() => setOpenEditModal(true)}>
+        <IconButton
+          color="warning"
+          onClick={() => setOpenEditModal(true)}
+          disabled={isLoading}
+        >
           <EditIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Xóa bài hát" arrow>
-        <IconButton color="error" onClick={() => setOpenDialog(true)}>
+        <IconButton
+          color="error"
+          onClick={() => setOpenDialog(true)}
+          disabled={isLoading}
+        >
           <DeleteIcon />
         </IconButton>
       </Tooltip>
 
+      {/* Edit Song Modal */}
       <EditSongModal
         open={openEditModal}
         onClose={() => setOpenEditModal(false)}
         song={song}
       />
+
+      {/* Dialog xác nhận xóa */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>Xác nhận xóa</DialogTitle>
         <DialogContent>
           <Typography>Bạn có chắc muốn xóa bài hát này không?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="primary">
+          <Button
+            onClick={() => setOpenDialog(false)}
+            color="primary"
+            disabled={isLoading}
+          >
             Hủy
           </Button>
-          <Button onClick={handleDelete} color="error" autoFocus>
+          <Button
+            onClick={handleDelete}
+            color="error"
+            autoFocus
+            disabled={isLoading}
+          >
             Có
           </Button>
         </DialogActions>
