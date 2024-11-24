@@ -19,9 +19,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import { apiBasicClient } from "@/app/utils/request";
 import { useAppContext } from "@/context-app";
 import { useRouter } from "next/navigation";
-
+import { revalidateByTag } from "@/app/action";
+interface User {
+  _id: string;
+  username: string;
+  avatar: string;
+  status: string;
+  role: {
+    roleName: string;
+    _id: string;
+  };
+}
 interface EditRoleUserModalProps {
-  user: any;
+  user: User;
 }
 
 const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
@@ -40,7 +50,9 @@ const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
     const res = await apiBasicClient("GET", "/roles");
     if (res?.data) {
       setRoles(res.data);
-      const defaultRole = res.data.find((role: any) => role._id === user.role);
+      const defaultRole = res.data.find(
+        (role: any) => role._id === user.role._id
+      );
       if (defaultRole) {
         setSelectedRoleId(defaultRole._id);
       }
@@ -64,6 +76,7 @@ const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
       );
 
       if (res?.data) {
+        await revalidateByTag("revalidate-tag-users");
         showMessage("Role updated successfully", "success");
         handleClose();
       } else {

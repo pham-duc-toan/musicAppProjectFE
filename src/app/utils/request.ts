@@ -62,6 +62,8 @@ export const apiBasicServer = async (
       }),
     }
   );
+  console.log(process.env.NEXT_PUBLIC_BACK_END_URL + path + `?${queryParams}`);
+
   const result = await response.json(); // Giải mã JSON
   return result; // Trả về kết quả
 };

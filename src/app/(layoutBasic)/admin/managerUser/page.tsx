@@ -25,6 +25,10 @@ interface User {
   username: string;
   avatar: string;
   status: string;
+  role: {
+    roleName: string;
+    _id: string;
+  };
 }
 
 const fetchUsers = async () => {
@@ -33,11 +37,12 @@ const fetchUsers = async () => {
     const response = await apiBasicServer(
       "GET",
       "/users",
-      undefined,
+      { populate: "role" },
       undefined,
       access_token,
       ["revalidate-tag-users"]
     );
+
     return response?.data || [];
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -67,6 +72,7 @@ const ManagerUserPage = async () => {
               <TableCell>STT</TableCell>
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tên người dùng</TableCell>
+              <TableCell>Vai trò</TableCell>
               <TableCell>Trạng thái</TableCell>
               <TableCell>Hành động</TableCell>
             </TableRow>
@@ -84,6 +90,9 @@ const ManagerUserPage = async () => {
                   />
                 </TableCell>
                 <TableCell>{user.username}</TableCell>
+                <TableCell>
+                  {user?.role?.roleName || "Không có vai trò"}
+                </TableCell>
                 <TableCell>
                   <StatusChip id={user._id} status={user.status} />
                 </TableCell>
