@@ -24,6 +24,7 @@ async function getTopicDetail(id: string): Promise<Topic | null> {
     return null;
   }
 }
+
 export default async function TopicDetailPage({
   params,
 }: {
@@ -47,11 +48,11 @@ export default async function TopicDetailPage({
     undefined,
     undefined,
     undefined,
-    ["revalidate-tag-songs"]
+    ["revalidate-tag-songs", "revalidate-tag-topics"]
   );
 
-  const datas = datall?.data || undefined;
-  let favoriteSongs = [];
+  const datas = datall?.data || [];
+  let favoriteSongs: string[] = [];
   const access_token = GetPublicAccessTokenFromCookie();
 
   if (access_token) {
@@ -59,6 +60,7 @@ export default async function TopicDetailPage({
     favoriteSongs =
       dataFs.data.listFavoriteSong.map((song: any) => song._id) || [];
   }
+
   return (
     <Box
       sx={{
@@ -97,16 +99,31 @@ export default async function TopicDetailPage({
       </Paper>
 
       {/* Hiển thị danh sách bài hát liên quan đến topic */}
-      <Grid container>
-        {datas?.map((data: any, index: number) => {
-          return (
-            <Grid md={4} sm={6} xs={12} key={index}>
-              <Box sx={{ padding: "10px" }}>
-                <ItemControlCard fSongs={favoriteSongs} data={data} />
-              </Box>
-            </Grid>
-          );
-        })}
+      <Grid container spacing={2}>
+        {datas.length > 0 ? (
+          datas.map((data: any, index: number) => {
+            return (
+              <Grid item md={4} sm={6} xs={12} key={index}>
+                <Box sx={{ padding: "10px" }}>
+                  <ItemControlCard fSongs={favoriteSongs} data={data} />
+                </Box>
+              </Grid>
+            );
+          })
+        ) : (
+          <Grid item xs={12}>
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                marginTop: "20px",
+                fontStyle: "italic",
+              }}
+            >
+              Không có bài hát.
+            </Typography>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

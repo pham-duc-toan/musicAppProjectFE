@@ -182,6 +182,26 @@ export default function SiderAdminComponent({
         >
           <QueueMusicIcon />
         </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Tất cả ca sĩ",
+            router: "/singers",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Tất cả chủ đề",
+            router: "/topics",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
       </List>
     </Sider>
   );

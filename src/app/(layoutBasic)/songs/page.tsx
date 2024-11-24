@@ -28,7 +28,7 @@ const Songs = async () => {
 
   return (
     <>
-      <h1>Tat ca cac bai hat</h1>
+      <h1>Tất cả bài hát</h1>
       <TestRevalidate />
       <Grid container>
         {datas.map((data: any, index: number) => {

@@ -59,7 +59,7 @@ export default async function SingerDetailPage({
     undefined,
     undefined,
     undefined,
-    ["revalidate-tag-songs"]
+    ["revalidate-tag-songs", "revalidate-tag-singers"]
   );
 
   const datas = datall?.data || undefined;
@@ -108,16 +108,31 @@ export default async function SingerDetailPage({
           {new Date(singerDetail.createdAt).toLocaleString("vi-VN")}
         </Typography>
       </Paper>
-      <Grid container>
-        {datas.map((data: any, index: number) => {
-          return (
-            <Grid md={4} sm={6} xs={12} key={index}>
-              <Box sx={{ padding: "10px" }}>
-                <ItemControlCard fSongs={favoriteSongs} data={data} />
-              </Box>
-            </Grid>
-          );
-        })}
+      <Grid container spacing={2}>
+        {datas.length > 0 ? (
+          datas.map((data: any, index: number) => {
+            return (
+              <Grid item md={4} sm={6} xs={12} key={index}>
+                <Box sx={{ padding: "10px" }}>
+                  <ItemControlCard fSongs={favoriteSongs} data={data} />
+                </Box>
+              </Grid>
+            );
+          })
+        ) : (
+          <Grid item xs={12}>
+            <Typography
+              variant="h6"
+              sx={{
+                textAlign: "center",
+                marginTop: "20px",
+                fontStyle: "italic",
+              }}
+            >
+              Không có bài hát.
+            </Typography>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
