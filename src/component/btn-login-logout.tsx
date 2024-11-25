@@ -92,7 +92,14 @@ export default function BtnLoginLogout() {
                 </MenuItem>
               ) : null
             }
-
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                router.push("/profile/change-password");
+              }}
+            >
+              Đổi mật khẩu
+            </MenuItem>
             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
           </Menu>
         </>
