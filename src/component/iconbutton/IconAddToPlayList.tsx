@@ -196,7 +196,6 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({
         `/playlists/findOne/${currentPlaylist._id}`
       );
       updateNewPlaylist(res.data, dispatch);
-      // console.log(res.data);
     }
 
     setLoading(false); // Kết thúc loading sau khi hoàn tất gọi API

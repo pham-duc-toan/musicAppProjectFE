@@ -148,6 +148,7 @@ export default function FormLoginComponent() {
         Đăng nhập
       </Button>
       <ButtonRedirect content="Đăng ký" link="/register" />
+      <ButtonRedirect content="Quên mật khẩu" link="/forgot-password" />
       <BtnBack />
       <ListProvider />
     </Box>
