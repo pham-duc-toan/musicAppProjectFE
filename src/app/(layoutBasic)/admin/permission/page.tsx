@@ -191,7 +191,7 @@ export default function Permissions() {
           })
         )
       );
-      console.log("Permissions updated successfully for all roles.");
+      showMessage("Cập nhật thành công", "success");
     } catch (error) {
       console.error("Failed to update permissions for roles:", error);
     }

@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
         },
         ...(body && { body }), // Chỉ thêm body nếu có
       }).then((res) => res.json());
-      // console.log(data);
 
       return NextResponse.json(data);
     } catch (error) {

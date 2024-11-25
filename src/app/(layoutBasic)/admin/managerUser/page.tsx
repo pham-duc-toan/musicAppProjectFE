@@ -52,7 +52,6 @@ const fetchUsers = async () => {
 
 const ManagerUserPage = async () => {
   const users = await fetchUsers();
-  console.log(users);
 
   return (
     <Box sx={{ padding: 3 }}>

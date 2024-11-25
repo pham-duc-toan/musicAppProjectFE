@@ -31,11 +31,6 @@ const DragAndDrop: React.FC = () => {
     setBoxes(updatedBoxes);
   };
 
-  // Hàm xử lý sự kiện click
-  const handleClick = () => {
-    console.log("toandeptrai");
-  };
-
   return (
     <Box
       sx={{
@@ -72,17 +67,6 @@ const DragAndDrop: React.FC = () => {
           }}
         >
           <Typography variant="h6">{box.text}</Typography>
-          <Button
-            variant="contained"
-            onClick={handleClick}
-            sx={{
-              marginTop: "10px",
-              backgroundColor: "white",
-              color: box.color,
-            }}
-          >
-            Click Me
-          </Button>
         </Box>
       ))}
     </Box>
