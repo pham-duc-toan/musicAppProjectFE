@@ -52,6 +52,7 @@ const fetchUsers = async () => {
 
 const ManagerUserPage = async () => {
   const users = await fetchUsers();
+  console.log(users);
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -97,8 +98,8 @@ const ManagerUserPage = async () => {
                   <StatusChip id={user._id} status={user.status} />
                 </TableCell>
                 <TableCell>
-                  <DeleteUserButton id={user._id} username={user.username} />
                   <EditRoleUserModal user={user} />
+                  <DeleteUserButton id={user._id} username={user.username} />
                 </TableCell>
               </TableRow>
             ))}

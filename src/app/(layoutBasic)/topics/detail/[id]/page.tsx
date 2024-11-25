@@ -17,7 +17,14 @@ interface Topic {
 // Hàm server-side để lấy dữ liệu
 async function getTopicDetail(id: string): Promise<Topic | null> {
   try {
-    const response = await apiBasicServer("GET", `/topics/detail/${id}`);
+    const response = await apiBasicServer(
+      "GET",
+      `/topics/detail/${id}`,
+      undefined,
+      undefined,
+      undefined,
+      ["revalidate-tag-songs"]
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch topic details:", error);

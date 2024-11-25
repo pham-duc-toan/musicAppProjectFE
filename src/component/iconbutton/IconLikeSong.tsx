@@ -35,10 +35,12 @@ export default function FavoriteButton({
             `/songs/favoriteSongs/remove/${songId}`
           );
           await revalidateByTag("revalidate-tag-infoUser");
+          await revalidateByTag("revalidate-tag-songs");
           setIsFavorite(false);
         } else {
           await apiBasicClient("POST", `/songs/favoriteSongs/add/${songId}`);
           await revalidateByTag("revalidate-tag-infoUser");
+          await revalidateByTag("revalidate-tag-songs");
           setIsFavorite(true);
         }
         showMessage("Thành công", "success");

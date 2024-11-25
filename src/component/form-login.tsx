@@ -23,6 +23,7 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
+import ButtonRedirect from "./buttonRedirect";
 
 export default function FormLoginComponent() {
   const { showMessage } = useAppContext();
@@ -65,12 +66,13 @@ export default function FormLoginComponent() {
     });
     if (data.data) {
       setAccessTokenToLocalStorage(data.data.access_token);
-      setIsLoading(false);
+
       if (data.data.user.role.roleName == "Admin") {
         window.location.href = "/admin";
       } else {
         window.location.href = "/";
       }
+      setIsLoading(false);
     } else {
       showMessage(data.message, "error");
       setIsLoading(false);
@@ -145,6 +147,7 @@ export default function FormLoginComponent() {
       >
         Đăng nhập
       </Button>
+      <ButtonRedirect content="Đăng ký" link="/register" />
       <BtnBack />
       <ListProvider />
     </Box>

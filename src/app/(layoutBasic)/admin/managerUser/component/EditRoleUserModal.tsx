@@ -51,7 +51,7 @@ const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
     if (res?.data) {
       setRoles(res.data);
       const defaultRole = res.data.find(
-        (role: any) => role._id === user.role._id
+        (role: any) => role._id === user?.role?._id
       );
       if (defaultRole) {
         setSelectedRoleId(defaultRole._id);
