@@ -135,20 +135,45 @@ export default function FormLoginComponent() {
           ),
         }}
       />
-
+      <Box
+        width={"100%"}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        marginTop={"-10px"}
+      >
+        <ButtonRedirect
+          content="Đăng ký"
+          link="/register"
+          sx={{
+            marginLeft: "10px",
+            fontSize: "12px",
+            padding: "4px 8px",
+            minWidth: "unset",
+          }}
+        />
+        <ButtonRedirect
+          content="Quên mật khẩu"
+          link="/forgot-password"
+          sx={{
+            marginRight: "10px",
+            fontSize: "12px",
+            padding: "4px 8px",
+            minWidth: "unset",
+          }}
+        />
+      </Box>
       <Button
         type="submit"
         variant="contained"
         color="primary"
-        sx={{ marginTop: "20px" }}
         fullWidth
         disabled={isLoading}
         endIcon={isLoading ? <CircularProgress size={24} /> : null}
       >
         Đăng nhập
       </Button>
-      <ButtonRedirect content="Đăng ký" link="/register" />
-      <ButtonRedirect content="Quên mật khẩu" link="/forgot-password" />
+
       <BtnBack />
       <ListProvider />
     </Box>
