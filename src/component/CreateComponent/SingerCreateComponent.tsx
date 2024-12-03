@@ -25,6 +25,7 @@ import "./style.css";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
+import { revalidateByTag } from "@/app/action";
 
 function SingerCreateComponent() {
   const { showMessage } = useAppContext();
@@ -83,7 +84,12 @@ function SingerCreateComponent() {
       );
 
       if (response.status === 201) {
+        await revalidateByTag("revalidate-tag-singers");
         showMessage("Tạo mới thành công !", "success");
+        setAvatarPreview(null);
+        setAvatarFile(null);
+        setStatus("active");
+        form.reset();
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
       }

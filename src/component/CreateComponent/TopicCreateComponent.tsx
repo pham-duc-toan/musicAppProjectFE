@@ -86,6 +86,10 @@ function TopicCreateComponent() {
 
       if (response.status === 201) {
         await revalidateByTag("revalidate-tag-topics");
+        setAvatarPreview(null);
+        setAvatarFile(null);
+        setStatus("active");
+        form.reset();
         showMessage("Tạo mới thành công !", "success");
       } else {
         showMessage(response.data.message || "Something went wrong", "error");

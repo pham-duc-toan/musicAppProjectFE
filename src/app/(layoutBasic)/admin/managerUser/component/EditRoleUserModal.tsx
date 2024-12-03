@@ -44,7 +44,10 @@ const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
   const route = useRouter();
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedRoleId(user?.role?._id || "");
+  };
 
   const fetchApi = async () => {
     const res = await apiBasicClient("GET", "/roles");
