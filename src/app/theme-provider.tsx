@@ -59,7 +59,7 @@ const theme = extendTheme({
     dark: {
       palette: {
         primary: {
-          main: "#655BD3",
+          main: "#9b4de0",
 
           contrastText: "#fff",
         },
@@ -67,12 +67,13 @@ const theme = extendTheme({
           primary: "#fff",
         },
         secondary: {
-          main: "#414140",
-          A100: "#B2B4B8",
+          main: "#090018",
+          A100: "#1b0c35",
           A200: "#E7C97E",
         },
         background: {
-          default: "#6a0dad",
+          default: "#0e0025",
+          paper: "#1c002b",
         },
       },
     },
@@ -106,7 +107,23 @@ const theme = extendTheme({
         },
       },
     },
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          padding: "10px",
+        },
+      },
+    },
 
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "& .MuiChip-label": {
+            color: "#ffffff",
+          },
+        },
+      },
+    },
     MuiCardActions: {
       styleOverrides: {
         root: {
@@ -152,6 +169,28 @@ const theme = extendTheme({
           flexDirection: "column",
           minHeight: "100%",
           width: "100%",
+          "&::-webkit-scrollbar": {
+            width: "3px",
+            height: "8px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(0, 0, 0, 0.4)", // Màu mặc định
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "rgba(0, 0, 0, 0.6)", // Màu khi hover
+          },
+        },
+        "[data-mui-color-scheme='dark'] body": {
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(255, 255, 255, 0.4)", // Màu scrollbar trong dark mode
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "rgba(255, 255, 255, 0.6)", // Hover trong dark mode
+          },
         },
 
         "#__next": {

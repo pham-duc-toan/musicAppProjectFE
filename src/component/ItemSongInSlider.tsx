@@ -106,10 +106,14 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
           song._id === songCurrent._id
             ? //@ts-ignore
               theme.palette.secondary.A200
-            : "inherit", // So sánh điều kiện đúng
-        boxShadow: 2, // Thêm box shadow cho mỗi ListItem
-        marginBottom: "10px", // Khoảng cách giữa các ListItem
-        borderRadius: "4px", // Bo góc cho ListItem
+            : "inherit",
+        boxShadow:
+          //@ts-ignore
+          theme.palette.mode === "dark"
+            ? "0px 4px 15px rgba(255, 255, 255, 0.1)"
+            : "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        marginBottom: "10px",
+        borderRadius: "4px",
       }}
     >
       <ListItemAvatar>

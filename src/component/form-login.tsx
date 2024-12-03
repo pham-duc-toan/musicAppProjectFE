@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 import ButtonRedirect from "./buttonRedirect";
+import { useTheme } from "@emotion/react";
 
 export default function FormLoginComponent() {
   const { showMessage } = useAppContext();
@@ -78,7 +79,7 @@ export default function FormLoginComponent() {
       setIsLoading(false);
     }
   };
-
+  const theme = useTheme();
   return (
     <Box
       component="form"
@@ -91,8 +92,16 @@ export default function FormLoginComponent() {
         margin: "0 auto",
         padding: "20px",
         borderRadius: "8px",
-        background: "theme.palette.background.default",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        background:
+          //@ts-ignore
+          theme.palette.mode === "dark"
+            ? "#17002b"
+            : "theme.pallete.background.default",
+        boxShadow:
+          //@ts-ignore
+          theme.palette.mode === "dark"
+            ? "0px 4px 15px rgba(255, 255, 255, 0.05)"
+            : "0px 4px 10px rgba(0, 0, 0, 0.1)",
       }}
     >
       <Typography

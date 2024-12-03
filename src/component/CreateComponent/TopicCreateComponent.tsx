@@ -109,12 +109,11 @@ function TopicCreateComponent() {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={6}>
           <TextField
             sx={{
               width: {
                 xs: "100%",
-                sm: "auto",
               },
             }}
             size="small"
@@ -123,7 +122,7 @@ function TopicCreateComponent() {
             required
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <InputLabel>Status</InputLabel>
             <Select
@@ -138,7 +137,7 @@ function TopicCreateComponent() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <TextField
             size="small"
             fullWidth

@@ -109,7 +109,9 @@ const RightSlider = () => {
 
       {/* Slider nằm bên phải */}
       <Drawer
-        sx={{ zIndex: 1001 }}
+        sx={{
+          zIndex: 1001,
+        }}
         anchor="right"
         open={isOpen}
         onClose={toggleDrawer(false)} // Đóng drawer khi nhấn bên ngoài
@@ -119,8 +121,10 @@ const RightSlider = () => {
             display: "flex",
             flexDirection: "column",
             width: 300,
-            height: "calc(100vh - 88px)",
+            height: "calc(100vh - 60px)",
             overflowY: "auto",
+            //@ts-ignore
+            bgcolor: theme.palette.secondary.A100,
           }}
           role="presentation"
           onClick={(e) => e.stopPropagation()} // Ngăn chặn sự kiện click từ việc đóng drawer
@@ -138,7 +142,7 @@ const RightSlider = () => {
           >
             {currentPlaylist._id ? (
               <>
-                <Box sx={{ display: "flex" }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Box
                     component={"h3"}
                     sx={{
@@ -192,7 +196,9 @@ const RightSlider = () => {
                 </List>
               </>
             ) : (
-              <h4>Hiện đang không có danh sách nhạc nào được phát.</h4>
+              <h4 style={{ marginTop: "20px" }}>
+                Hiện đang không có danh sách nhạc nào được phát.
+              </h4>
             )}
           </Box>
         </Box>

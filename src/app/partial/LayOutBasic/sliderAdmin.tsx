@@ -58,6 +58,9 @@ const Sider = styled(MuiDrawer, {
   "& .MuiPaper-root": {
     boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
   },
+  "[data-mui-color-scheme='dark'] & .MuiPaper-root": {
+    background: "#1b0c35",
+  },
 }));
 
 const SideBarHeader = styled("div")(({ theme }) => ({

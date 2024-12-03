@@ -89,7 +89,7 @@ const ManagerSongPage = async () => {
         <ButtonRedirect
           link="/admin/managerSong/songs-for-you"
           content="Quản lý bài hát đề cử"
-          variant="contained"
+          variant="outlined"
           color="primary"
         />
       </Box>

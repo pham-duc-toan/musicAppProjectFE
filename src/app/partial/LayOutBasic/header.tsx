@@ -54,6 +54,9 @@ const Header = styled(MuiAppBar, {
       width: `calc(100% - calc(${theme.spacing(8)} + 1px))`,
     },
   }),
+  "[data-mui-color-scheme='dark'] &": {
+    background: "#090018",
+  },
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
@@ -78,8 +81,8 @@ export default function HeaderComponent({ open }: { open: boolean }) {
       try {
         // Gửi đồng thời hai yêu cầu để tiết kiệm thời gian
         const [response, response2] = await Promise.all([
-          apiBasicClientPublic("GET", "/songs", { query: input }),
-          apiBasicClientPublic("GET", "/singers", { query: input }),
+          apiBasicClientPublic("GET", "/songs", { query: input, limit: 2 }),
+          apiBasicClientPublic("GET", "/singers", { query: input, limit: 2 }),
         ]);
 
         // Kết hợp dữ liệu từ hai phản hồi
@@ -105,9 +108,9 @@ export default function HeaderComponent({ open }: { open: boolean }) {
     }
   };
 
-  // const handleSelectSuggestion = () => {
-  //   setShowSuggestions(false);
-  // };
+  const handleSelectSuggestion = () => {
+    setShowSuggestions(false);
+  };
   const handleOnFocus = async (e: React.FocusEvent<HTMLInputElement>) => {
     setShowSuggestions(true);
   };
@@ -152,14 +155,15 @@ export default function HeaderComponent({ open }: { open: boolean }) {
                   zIndex: 2,
                   maxWidth: "400px",
                   width: "100%",
-                  maxHeight: 200,
-                  overflowY: "auto",
+
+                  overflowY: "hidden",
                   top: "56px",
                 }}
               >
                 <List>
                   {filteredSuggestions.map((suggestion, index) => (
                     <Link
+                      onClick={handleSelectSuggestion}
                       key={index}
                       href={
                         suggestion.title

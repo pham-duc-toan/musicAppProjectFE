@@ -142,12 +142,12 @@ function SongCreateComponent() {
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={4}>
           <TextField
             sx={{
               width: {
                 xs: "100%",
-                sm: "auto",
+                sm: "100%",
               },
             }}
             size="small"

@@ -25,6 +25,7 @@ const createPage = () => {
             <ButtonRedirect
               content="Quản lý bài hát"
               link="/songs/managerSong"
+              variant="outlined"
             />
           </Box>
           <SongCreateComponent />

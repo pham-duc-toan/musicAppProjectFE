@@ -57,6 +57,7 @@ const ManagerTopic = async () => {
           Quản lý chủ đề
         </Typography>
         <ButtonRedirect
+          variant="outlined"
           link="/admin/managerTopic/createTopic"
           content="Thêm mới chủ đề"
         />

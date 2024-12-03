@@ -2,13 +2,13 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-const bcolorInputDark = "#333";
+const bcolorInputDark = "#0e0025";
 const bcolorInputLight = "#fff";
 const TextFieldStyledPassword = styled(TextField)<TextFieldProps>(
   ({ theme }) => {
     return {
       "& .MuiFormLabel-root": {
-        fontWeight: 700,
+        fontWeight: 500,
       },
       //styled cho input
       "& .MuiInputBase-input.MuiOutlinedInput-input": {
@@ -44,7 +44,7 @@ const TextFieldStyledUsername = styled(TextField)<TextFieldProps>(
   ({ theme }) => {
     return {
       "& .MuiFormLabel-root": {
-        fontWeight: 700,
+        fontWeight: 500,
       },
       //styled cho input
       "[data-mui-color-scheme='dark'] & .MuiInputBase-input.MuiOutlinedInput-input":

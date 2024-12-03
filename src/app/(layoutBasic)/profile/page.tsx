@@ -55,7 +55,7 @@ export default async function ProfilePage() {
           <ButtonRedirect
             link="/profile/editProfile"
             content="Chỉnh sửa"
-            variant="contained"
+            variant="outlined"
             color="secondary"
           />
         </Box>

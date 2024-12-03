@@ -7,7 +7,7 @@ import { Box, Button } from "@mui/material";
 
 // Màu sắc cho chế độ sáng và tối
 const bcolorLight = "#ffffff"; // Thay đổi màu sắc theo yêu cầu
-const bcolorDark = "#6a0dad"; // Thay đổi màu sắc theo yêu cầu
+const bcolorDark = "#1b0c35"; // Thay đổi màu sắc theo yêu cầu
 const textLight = "#9A52A0";
 const textDark = "#fff";
 const bcolorFocus = "#655BD3";
