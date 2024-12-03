@@ -17,6 +17,7 @@ import SongForYouButton from "./components/SongForYouButton"; // CSR Component
 import { apiBasicServer } from "@/app/utils/request";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import ButtonRedirect from "@/component/buttonRedirect";
+import PaginationComponent from "@/component/PaginationComponent";
 
 interface Topic {
   _id: string;
@@ -35,46 +36,54 @@ interface Song {
   topicId: Topic;
   status: string;
 }
+interface SongsProps {
+  searchParams: { page?: string }; // Lấy query `page` từ URL
+}
 
-const fetchSongs = async (): Promise<{
-  songs: Song[];
-  listSongForYou: string[];
-}> => {
-  const access_token = GetAccessTokenFromCookie();
-  try {
-    // Fetch danh sách bài hát
-    const songResponse = await apiBasicServer(
-      "GET",
-      "/songs/full",
-      undefined,
-      undefined,
-      access_token,
-      ["revalidate-tag-songs"]
-    );
+const ManagerSongPage = async ({ searchParams }: SongsProps) => {
+  const limitItem = 12;
+  const currentPage = parseInt(searchParams?.page || "1", 10);
+  const fetchSongs = async (): Promise<{
+    songs: Song[];
+    listSongForYou: string[];
+    totalPages: number;
+  }> => {
+    const access_token = GetAccessTokenFromCookie();
+    try {
+      // Fetch danh sách bài hát
+      let songResponse = await apiBasicServer(
+        "GET",
+        "/songs/full",
+        { limit: limitItem, skip: (currentPage - 1) * limitItem },
+        undefined,
+        access_token,
+        ["revalidate-tag-songs"]
+      );
+      songResponse = songResponse?.data || undefined;
+      // Fetch danh sách "Đề cử"
+      const forYouResponse = await apiBasicServer(
+        "GET",
+        "/song-for-you",
+        undefined,
+        undefined,
+        access_token,
+        ["revalidate-tag-song-for-you"]
+      );
 
-    // Fetch danh sách "Đề cử"
-    const forYouResponse = await apiBasicServer(
-      "GET",
-      "/song-for-you",
-      undefined,
-      undefined,
-      access_token,
-      ["revalidate-tag-song-for-you"]
-    );
+      return {
+        songs: songResponse?.data || [],
+        listSongForYou:
+          forYouResponse?.data?.listSong.map((s: { _id: string }) => s._id) ||
+          [],
+        totalPages: Math.ceil(songResponse?.total / limitItem),
+      };
+    } catch (error) {
+      console.error("Error fetching songs:", error);
+      return { songs: [], listSongForYou: [], totalPages: 1 };
+    }
+  };
 
-    return {
-      songs: songResponse?.data || [],
-      listSongForYou:
-        forYouResponse?.data?.listSong.map((s: { _id: string }) => s._id) || [],
-    };
-  } catch (error) {
-    console.error("Error fetching songs:", error);
-    return { songs: [], listSongForYou: [] };
-  }
-};
-
-const ManagerSongPage = async () => {
-  const { songs, listSongForYou } = await fetchSongs();
+  const { songs, listSongForYou, totalPages } = await fetchSongs();
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -140,6 +149,7 @@ const ManagerSongPage = async () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <PaginationComponent totalPages={totalPages} />
     </Box>
   );
 };

@@ -48,7 +48,10 @@ export default async function SingerDetailPage({
 
   if (!singerDetail) {
     return (
-      <Typography color="error" sx={{ textAlign: "center", marginTop: "20px" }}>
+      <Typography
+        color="primary"
+        sx={{ textAlign: "center", marginTop: "20px" }}
+      >
         Không thể tải thông tin ca sĩ.
       </Typography>
     );

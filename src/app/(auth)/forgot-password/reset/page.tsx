@@ -94,7 +94,7 @@ const ResetPasswordPage = () => {
       {/* Form nhập OTP và mật khẩu mới */}
       <form onSubmit={handleSubmit}>
         {error && (
-          <Typography variant="body2" color="error" sx={{ marginBottom: 2 }}>
+          <Typography variant="body2" color="primary" sx={{ marginBottom: 2 }}>
             {error}
           </Typography>
         )}

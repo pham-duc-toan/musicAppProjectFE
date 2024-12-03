@@ -51,7 +51,7 @@ const DeleteUserButton: React.FC<DeleteUserButtonProps> = ({
 
   return (
     <>
-      <IconButton onClick={handleOpen} color="error">
+      <IconButton onClick={handleOpen} color="primary">
         <DeleteIcon />
       </IconButton>
 
@@ -66,7 +66,7 @@ const DeleteUserButton: React.FC<DeleteUserButtonProps> = ({
           </Button>
           <Button
             onClick={handleDelete}
-            color="error"
+            color="primary"
             variant="contained"
             disabled={loading}
           >

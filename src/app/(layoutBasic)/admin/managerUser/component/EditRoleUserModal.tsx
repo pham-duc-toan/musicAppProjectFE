@@ -91,7 +91,7 @@ const EditRoleUserModal: React.FC<EditRoleUserModalProps> = ({ user }) => {
 
   return (
     <>
-      <IconButton onClick={handleOpen} color="error">
+      <IconButton onClick={handleOpen} color="primary">
         <EditIcon />
       </IconButton>
 

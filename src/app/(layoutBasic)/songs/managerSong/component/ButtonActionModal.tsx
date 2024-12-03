@@ -80,7 +80,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
       </Tooltip>
       <Tooltip title="Chỉnh sửa" arrow>
         <IconButton
-          color="warning"
+          color="primary"
           onClick={() => setOpenEditModal(true)}
           disabled={isLoading}
         >
@@ -89,7 +89,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
       </Tooltip>
       <Tooltip title="Xóa bài hát" arrow>
         <IconButton
-          color="error"
+          color="primary"
           onClick={() => setOpenDialog(true)}
           disabled={isLoading}
         >
@@ -120,7 +120,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
           </Button>
           <Button
             onClick={handleDelete}
-            color="error"
+            color="primary"
             autoFocus
             disabled={isLoading}
           >

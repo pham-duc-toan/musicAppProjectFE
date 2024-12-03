@@ -63,12 +63,12 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ topic }) => {
         </IconButton>
       </Tooltip>
       <Tooltip title="Chỉnh sửa" arrow>
-        <IconButton color="warning" onClick={() => setOpenEditModal(true)}>
+        <IconButton color="primary" onClick={() => setOpenEditModal(true)}>
           <EditIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Xóa chủ đề" arrow>
-        <IconButton color="error" onClick={() => setOpenDialog(true)}>
+        <IconButton color="primary" onClick={() => setOpenDialog(true)}>
           <DeleteIcon />
         </IconButton>
       </Tooltip>
@@ -93,7 +93,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ topic }) => {
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDelete} color="error" autoFocus>
+          <Button onClick={handleDelete} color="primary" autoFocus>
             Có
           </Button>
         </DialogActions>

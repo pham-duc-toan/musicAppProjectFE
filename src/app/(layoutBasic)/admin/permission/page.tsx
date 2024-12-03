@@ -268,8 +268,8 @@ export default function Permissions() {
           Thêm quyền mới
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
+          variant="outlined"
+          color="primary"
           sx={{ mt: 2 }}
           onClick={() => setOpenRoleModal(true)}
         >
@@ -315,7 +315,7 @@ export default function Permissions() {
                           {role.roleName}
                           <IconButton
                             onClick={() => handleDeleteRole(role.roleId)}
-                            color="error"
+                            color="primary"
                             size="small"
                           >
                             <DeleteIcon />
@@ -363,7 +363,7 @@ export default function Permissions() {
                         </IconButton>
                         <IconButton
                           onClick={() => handleDelete(permission)}
-                          color="error"
+                          color="primary"
                           size="small"
                         >
                           <DeleteIcon />
@@ -511,7 +511,7 @@ export default function Permissions() {
               <Button onClick={() => setOpenDeleteModal(false)}>Hủy</Button>
               <Button
                 disabled={loading ? true : false}
-                color="error"
+                color="primary"
                 onClick={async () => {
                   if (currentPermission) {
                     await apiBasicClient(

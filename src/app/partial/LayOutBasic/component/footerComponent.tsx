@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface DivNavigationProps {
   content: string;
@@ -7,19 +7,18 @@ interface DivNavigationProps {
 }
 
 const DivNavigation: React.FC<DivNavigationProps> = ({ content, link }) => {
-  const router = useRouter();
-
   return (
-    <div
-      style={{
-        fontSize: "18px",
-        fontWeight: "700",
-        cursor: "pointer",
-      }}
-      onClick={() => router.push(`${link}`)}
-    >
-      {content}
-    </div>
+    <Link href={link}>
+      <div
+        style={{
+          fontSize: "18px",
+          fontWeight: "700",
+          cursor: "pointer",
+        }}
+      >
+        {content}
+      </div>
+    </Link>
   );
 };
 

@@ -311,7 +311,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({ playlist }) => {
 
             <Button
               variant="outlined"
-              color="secondary"
+              color="primary"
               onClick={() => setIsEditModalOpen(false)}
             >
               Hủy

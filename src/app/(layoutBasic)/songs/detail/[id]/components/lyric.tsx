@@ -63,7 +63,7 @@ const Lyric = ({ songId, lyrics }: { songId: string; lyrics: string }) => {
               color:
                 index === currentLyricIndex && songId === currentSongId
                   ? "primary.main"
-                  : "#000",
+                  : "#1b0c35",
               transition: "font-weight 0.3s ease, color 0.3s ease",
             }}
           >

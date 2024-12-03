@@ -110,7 +110,7 @@ const CreatePlaylistButton = () => {
                 "Thêm"
               )}
             </Button>
-            <Button variant="outlined" color="secondary" onClick={handleClose}>
+            <Button variant="outlined" color="primary" onClick={handleClose}>
               Hủy
             </Button>
           </Box>

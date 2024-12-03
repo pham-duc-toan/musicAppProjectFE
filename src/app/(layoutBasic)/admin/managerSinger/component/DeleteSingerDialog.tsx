@@ -47,7 +47,7 @@ const DeleteSingerDialog: React.FC<DeleteSingerDialogProps> = ({
 
   return (
     <>
-      <IconButton onClick={() => setOpen(true)} color="error">
+      <IconButton onClick={() => setOpen(true)} color="primary">
         <DeleteIcon />
       </IconButton>
 
@@ -64,7 +64,7 @@ const DeleteSingerDialog: React.FC<DeleteSingerDialogProps> = ({
           </Button>
           <Button
             onClick={handleDelete}
-            color="error"
+            color="primary"
             disabled={loading}
             variant="contained"
           >

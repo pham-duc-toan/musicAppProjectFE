@@ -42,7 +42,10 @@ export default async function TopicDetailPage({
 
   if (!topicDetail) {
     return (
-      <Typography color="error" sx={{ textAlign: "center", marginTop: "20px" }}>
+      <Typography
+        color="primary"
+        sx={{ textAlign: "center", marginTop: "20px" }}
+      >
         Không thể tải thông tin topic.
       </Typography>
     );

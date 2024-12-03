@@ -56,7 +56,6 @@ export default async function ProfilePage() {
             link="/profile/editProfile"
             content="Chỉnh sửa"
             variant="outlined"
-            color="secondary"
           />
         </Box>
         <Typography variant="h5">{profileData.fullName}</Typography>
@@ -108,14 +107,15 @@ export default async function ProfilePage() {
                   ? `/singers/detailSinger/${profileData.singerId._id}`
                   : "#"
               }
+              variant="outlined"
               content=" Xem chi tiết"
             />
 
             <ButtonRedirect
               content="Chỉnh sửa"
               link="/profile/editSinger"
-              variant="contained"
-              color="secondary"
+              variant="outlined"
+              color="primary"
             />
           </Stack>
         </Paper>

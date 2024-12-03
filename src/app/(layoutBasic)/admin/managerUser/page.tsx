@@ -19,6 +19,7 @@ import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import StatusChip from "./component/StatusChip";
 import DeleteUserButton from "./component/DeleteUserButton";
 import EditRoleUserModal from "./component/EditRoleUserModal";
+import PaginationComponent from "@/component/PaginationComponent";
 
 interface User {
   _id: string;
@@ -31,27 +32,35 @@ interface User {
   };
 }
 
-const fetchUsers = async () => {
+const limitItem = 2; // Số lượng người dùng hiển thị trên mỗi trang
+
+const fetchUsers = async (page: number) => {
   const access_token = GetAccessTokenFromCookie();
+  const skip = (page - 1) * limitItem; // Tính toán vị trí bắt đầu
   try {
     const response = await apiBasicServer(
       "GET",
       "/users",
-      { populate: "role" },
+      { populate: "role", skip, limit: limitItem },
       undefined,
       access_token,
       ["revalidate-tag-users"]
     );
-
-    return response?.data || [];
+    return {
+      users: response?.data.data || [],
+      total: response?.data.total || 0,
+    };
   } catch (error) {
     console.error("Error fetching users:", error);
-    return [];
+    return { users: [], total: 0 };
   }
 };
 
-const ManagerUserPage = async () => {
-  const users = await fetchUsers();
+const ManagerUserPage = async ({ searchParams }: { searchParams: any }) => {
+  const currentPage = parseInt(searchParams?.page || "1", 10); // Lấy trang hiện tại từ URL
+  const { users, total } = await fetchUsers(currentPage);
+
+  const totalPages = Math.ceil(total / limitItem); // Tính tổng số trang
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -105,6 +114,7 @@ const ManagerUserPage = async () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <PaginationComponent totalPages={totalPages} />
     </Box>
   );
 };

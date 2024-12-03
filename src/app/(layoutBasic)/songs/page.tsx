@@ -4,18 +4,30 @@ import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
 import TestRevalidate from "./managerSong/component/TestRevalidate";
 import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
+import PaginationComponent from "@/component/PaginationComponent";
 
-const Songs = async () => {
+interface SongsProps {
+  searchParams: { page?: string }; // Lấy query `page` từ URL
+}
+
+const Songs = async ({ searchParams }: SongsProps) => {
+  const limitItem = 12;
+
+  // Lấy giá trị `currentPage` từ query string (mặc định là 1 nếu không có)
+  const currentPage = parseInt(searchParams?.page || "1", 10);
+
+  // Gọi API để lấy danh sách bài hát
   const datall: any = await apiBasicServer(
     "GET",
     "/songs/",
-    undefined,
+    { limit: limitItem, skip: (currentPage - 1) * limitItem },
     undefined,
     undefined,
     ["revalidate-tag-songs"]
   );
 
-  const datas = datall?.data.data || undefined;
+  const datas = datall?.data.data || [];
+  const totalPages = Math.ceil(datall?.data.total / limitItem);
 
   let favoriteSongs = [];
   const access_token = GetPublicAccessTokenFromCookie();
@@ -31,17 +43,20 @@ const Songs = async () => {
       <h1>Tất cả bài hát</h1>
       <TestRevalidate />
       <Grid container>
-        {datas.map((data: any, index: number) => {
-          return (
-            <Grid md={4} sm={6} xs={12} key={index}>
-              <Box sx={{ padding: "10px" }}>
-                <ItemControlCard fSongs={favoriteSongs} data={data} />
-              </Box>
-            </Grid>
-          );
-        })}
+        {datas.map((data: any, index: number) => (
+          <Grid md={4} sm={6} xs={12} key={index}>
+            <Box sx={{ padding: "10px" }}>
+              <ItemControlCard fSongs={favoriteSongs} data={data} />
+            </Box>
+          </Grid>
+        ))}
       </Grid>
+      {/* Thêm component phân trang */}
+      <Box mt={4}>
+        <PaginationComponent totalPages={totalPages} />
+      </Box>
     </>
   );
 };
+
 export default Songs;

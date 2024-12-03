@@ -10,6 +10,7 @@ import { logout } from "@/app/utils/request";
 import { decodeToken } from "@/app/helper/jwt";
 import { JwtPayload } from "jsonwebtoken";
 import { Box } from "@mui/system";
+import Link from "next/link";
 
 export default function BtnLoginLogout() {
   const [isLogin, setIsLogin] = useState<
@@ -70,36 +71,40 @@ export default function BtnLoginLogout() {
               horizontal: "right",
             }}
           >
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                router.push("/profile");
-              }}
-            >
-              Thông tin cá nhân
-            </MenuItem>
+            <Link href={"/profile"}>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Thông tin cá nhân
+              </MenuItem>
+            </Link>
 
             {
               //@ts-ignore
               isLogin.singerId ? (
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    router.push("/songs/managerSong");
-                  }}
-                >
-                  Quản lý bài hát
-                </MenuItem>
+                <Link href={"/songs/managerSong"}>
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    Quản lý bài hát
+                  </MenuItem>
+                </Link>
               ) : null
             }
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                router.push("/profile/change-password");
-              }}
-            >
-              Đổi mật khẩu
-            </MenuItem>
+            <Link href={"/profile/change-password"}>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                Đổi mật khẩu
+              </MenuItem>
+            </Link>
+
             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
           </Menu>
         </>

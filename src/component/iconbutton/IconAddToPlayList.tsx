@@ -296,7 +296,7 @@ const IconAddToPlayList: React.FC<IconAddToPlayListProps> = ({
                   </Button>
                   <Button
                     variant="outlined"
-                    color="secondary"
+                    color="primary"
                     onClick={handleCancelCreate}
                     sx={{ ml: 1 }}
                   >
