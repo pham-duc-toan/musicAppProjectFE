@@ -70,6 +70,8 @@ export default function BtnLoginLogout() {
               vertical: "top",
               horizontal: "right",
             }}
+            disablePortal
+            disableEnforceFocus
           >
             <Link href={"/profile"}>
               <MenuItem

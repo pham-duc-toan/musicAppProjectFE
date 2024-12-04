@@ -71,23 +71,17 @@ const SideBarHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-export default function SiderAdminComponent({
-  open,
-  handleDrawerOpen,
-  handleDrawerClose,
-}: {
-  open: boolean;
-  handleDrawerOpen: () => void;
-  handleDrawerClose: () => void;
-}) {
+export default function SiderAdminComponent({ open }: { open: boolean }) {
   const theme: Theme = useTheme();
 
   return (
     <Sider variant="permanent" open={open}>
       <SideBarHeader>
-        <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
+        <Link href={"/"}>
+          <IconButton>
+            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </Link>
       </SideBarHeader>
       <Divider />
       <List>

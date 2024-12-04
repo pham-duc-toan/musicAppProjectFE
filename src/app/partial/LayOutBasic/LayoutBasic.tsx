@@ -55,17 +55,9 @@ export default function LayoutBasic({
         <HeaderComponent open={open} />
 
         {isClient ? (
-          <SiderAdminComponent
-            open={open}
-            handleDrawerOpen={handleDrawerOpen}
-            handleDrawerClose={handleDrawerClose}
-          />
+          <SiderAdminComponent open={open} />
         ) : (
-          <SiderComponent
-            open={open}
-            handleDrawerOpen={handleDrawerOpen}
-            handleDrawerClose={handleDrawerClose}
-          />
+          <SiderComponent open={open} />
         )}
 
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
