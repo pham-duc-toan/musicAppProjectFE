@@ -18,6 +18,8 @@ import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ItemSider from "@/component/item-of-list-button-sider";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
+import Image from "next/image";
+import { Skeleton } from "@mui/material";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -67,20 +69,43 @@ const Sider = styled(MuiDrawer, {
 const SideBarHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
-  padding: theme.spacing(0, 1),
+  justifyContent: "center",
   ...theme.mixins.toolbar,
 }));
 
 export default function SiderComponent({ open }: { open: boolean }) {
   const theme: Theme = useTheme();
+  const [linkImg, setLinkImg] = React.useState("");
+  React.useEffect(() => {
+    const logoSrc = open
+      ? theme.palette.mode === "dark"
+        ? "https://res.cloudinary.com/dsi9ercdo/image/upload/v1733298068/pyokmt6ltmcq3w97dihh.png" // Hình ảnh cho dark mode khi mở
+        : "https://res.cloudinary.com/dsi9ercdo/image/upload/v1733298357/nfzbp6jdilxcnivcphoh.png" // Hình ảnh cho light mode khi mở
+      : "https://res.cloudinary.com/dsi9ercdo/image/upload/v1733296299/xnwsxfhvkgsy3njpsyat.png"; // Hình ảnh khi không mở
+    setLinkImg(logoSrc);
+  }, [open, theme]);
   return (
     <Sider variant="permanent" open={open}>
       <SideBarHeader>
         <Link href={"/"}>
-          <IconButton>
-            {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
+          {linkImg !== "" ? (
+            <Image
+              src={linkImg || ""}
+              width={open ? 100 : 56}
+              height={56}
+              alt="SideBar Header"
+              objectFit="cover" // Đảm bảo ảnh phủ toàn bộ diện tích của vùng chứa
+              objectPosition="center"
+              loading="lazy" // Lazy load ảnh
+            />
+          ) : (
+            // Skeleton là hiệu ứng loading thay thế cho ảnh đang tải
+            <Skeleton
+              variant="rectangular"
+              width={open ? 100 : 56}
+              height={56}
+            />
+          )}
         </Link>
       </SideBarHeader>
       <Divider />

@@ -50,7 +50,7 @@ const ManagetopSong: React.FC = async () => {
         justifyContent={"space-between"}
         marginBottom={"15px"}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
           BẢNG XẾP HẠNG BÀI HÁT
         </Typography>
         <Button variant="outlined" color="primary">
@@ -62,7 +62,7 @@ const ManagetopSong: React.FC = async () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Top</TableCell>
+              <TableCell>Thứ hạng</TableCell>
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tiêu đề</TableCell>
               <TableCell>Lượt nghe</TableCell>

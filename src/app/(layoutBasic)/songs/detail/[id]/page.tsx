@@ -122,7 +122,7 @@ const SongDetailPage = async ({ params }: { params: { id: string } }) => {
           justifyContent: songDetail.lyrics ? "flex-start" : "center",
           alignItems: songDetail.lyrics ? "flex-start" : "center",
           textAlign: "center",
-          color: "text.secondary",
+          color: "#1b0c35",
         }}
       >
         {songDetail.lyrics ? (
@@ -146,11 +146,11 @@ const SongDetailPage = async ({ params }: { params: { id: string } }) => {
           <strong>Mô tả:</strong>
         </Typography>
         {songDetail.description ? (
-          <Typography variant="body1" color="text.secondary">
+          <Typography variant="body1" color="#1b0c35">
             {songDetail.description}
           </Typography>
         ) : (
-          <Typography variant="body2" color="text.secondary" fontStyle="italic">
+          <Typography variant="body2" color="#1b0c35" fontStyle="italic">
             Chưa cập nhật mô tả cho bài hát
           </Typography>
         )}

@@ -71,7 +71,7 @@ const Lyric = ({ songId, lyrics }: { songId: string; lyrics: string }) => {
           </Typography>
         ))
       ) : (
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="#1b0c35">
           {lyrics}
         </Typography>
       )}

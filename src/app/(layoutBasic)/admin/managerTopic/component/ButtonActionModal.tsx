@@ -39,8 +39,9 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ topic }) => {
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const handleDelete = async () => {
+    setLoading(true);
     try {
       const response = await apiBasicClient("DELETE", `/topics/${topic._id}`);
       if (response.statusCode >= 300) {
@@ -53,6 +54,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ topic }) => {
     } catch (error) {
       console.error("Error deleting topic:", error);
     }
+    setLoading(false);
   };
 
   return (
@@ -93,8 +95,13 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ topic }) => {
           <Button onClick={() => setOpenDialog(false)} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDelete} color="primary" autoFocus>
-            Có
+          <Button
+            onClick={handleDelete}
+            color="primary"
+            autoFocus
+            disabled={loading}
+          >
+            {loading ? "Đang xóa" : "Có"}
           </Button>
         </DialogActions>
       </Dialog>
