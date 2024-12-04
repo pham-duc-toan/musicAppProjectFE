@@ -11,8 +11,10 @@ import { decodeToken } from "@/app/helper/jwt";
 import { JwtPayload } from "jsonwebtoken";
 import { Box } from "@mui/system";
 import Link from "next/link";
+import { useAppContext } from "@/context-app";
 
 export default function BtnLoginLogout() {
+  const { showMessage } = useAppContext();
   const [isLogin, setIsLogin] = useState<
     string | JwtPayload | null | undefined
   >(null);
@@ -37,11 +39,13 @@ export default function BtnLoginLogout() {
   };
 
   const handleLogout = async () => {
+    showMessage("Đang đăng xuất ...", "info");
     await logout();
     setIsLogin(null);
     removeTokensFromLocalStorage();
     router.push("/login");
     handleClose();
+    showMessage("Đã đăng xuất!", "success");
   };
 
   return (

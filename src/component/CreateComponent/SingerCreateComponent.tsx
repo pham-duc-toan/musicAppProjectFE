@@ -27,9 +27,14 @@ import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient"
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
 import { revalidateByTag } from "@/app/action";
 import { refreshtoken } from "@/app/utils/request";
+import { useRouter } from "next/navigation";
 
-function SingerCreateComponent() {
+interface SingerCreateComponentProps {
+  orderId: string; // Thêm kiểu cho orderId
+}
+function SingerCreateComponent({ orderId }: SingerCreateComponentProps) {
   const { showMessage } = useAppContext();
+  const router = useRouter();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -53,6 +58,7 @@ function SingerCreateComponent() {
     //@ts-ignore
     const title = form.title.value || "";
     const formData = new FormData();
+    formData.append("orderId", orderId);
     formData.append("fullName", title);
     formData.append("status", status);
 
@@ -92,6 +98,7 @@ function SingerCreateComponent() {
         setStatus("active");
         await refreshtoken();
         form.reset();
+        router.push("/");
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
       }

@@ -1,5 +1,5 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Link from "next/link";
+import RegisterNow from "./components/RegisterNow";
 
 export const metadata = {
   title: "Nâng cấp tài khoản",
@@ -85,18 +85,7 @@ export default function HomePage() {
                 <Typography variant="h5" gutterBottom>
                   Với 289,000đ
                 </Typography>
-                <Link href={"/singers/createSinger"}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      backgroundColor: "#9457ff",
-                      ":hover": { backgroundColor: "#9457ff" },
-                    }}
-                  >
-                    Đăng ký ngay
-                  </Button>
-                </Link>
+                <RegisterNow />
               </Box>
             </Grid>
           </Grid>
