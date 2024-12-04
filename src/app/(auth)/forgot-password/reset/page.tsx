@@ -13,6 +13,10 @@ import { apiBasicClientPublic } from "@/app/utils/request"; // API client để 
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/context-app";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {
+  CustomTextFieldPassword,
+  CustomTextFieldUsername,
+} from "@/component/customComponentMui/text-field-customize";
 
 const ResetPasswordPage = () => {
   const router = useRouter();
@@ -99,15 +103,16 @@ const ResetPasswordPage = () => {
           </Typography>
         )}
 
-        <TextField
+        <CustomTextFieldUsername
           fullWidth
           type="text"
           name="otp"
           label="Mã OTP"
           variant="outlined"
           margin="normal"
+          autoFocus
         />
-        <TextField
+        <CustomTextFieldPassword
           fullWidth
           type="password"
           name="newPassword"
@@ -115,7 +120,7 @@ const ResetPasswordPage = () => {
           variant="outlined"
           margin="normal"
         />
-        <TextField
+        <CustomTextFieldPassword
           fullWidth
           type="password"
           name="confirmNewPassword"

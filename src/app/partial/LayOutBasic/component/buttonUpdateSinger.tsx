@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { decodeToken } from "@/app/helper/jwt";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { Button } from "@mui/material";
+import IUserInfo from "@/dataType/infoUser";
+import Link from "next/link";
 
 interface UserInfo {
   singerId?: string; // Định nghĩa kiểu cho infoUser, với singerId là tùy chọn
@@ -10,22 +12,24 @@ interface UserInfo {
 }
 
 const ButtonUpdateSingerHeader = () => {
-  const [infoUser, setInfoUser] = useState<UserInfo | null>(null);
+  const [infoUser, setInfoUser] = useState<IUserInfo | null>(null);
 
   useEffect(() => {
     const accessToken = getAccessTokenFromLocalStorage();
     if (accessToken) {
       const decodedInfo = decodeToken(accessToken);
-      setInfoUser(decodedInfo as UserInfo | null);
+      setInfoUser(decodedInfo || null);
     }
   }, []);
 
   return (
     <>
       {!infoUser?.singerId && (
-        <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
-          Đăng ký ca sĩ
-        </Button>
+        <Link href={"/upgrade"}>
+          <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+            Đăng ký ca sĩ
+          </Button>
+        </Link>
       )}
     </>
   );

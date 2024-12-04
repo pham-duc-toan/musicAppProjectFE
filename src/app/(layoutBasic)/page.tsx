@@ -48,7 +48,6 @@ export default async function Dashboard() {
     <Box
       sx={{
         padding: "20px",
-        color: "#FFFFFF",
         minHeight: "100vh",
       }}
     >

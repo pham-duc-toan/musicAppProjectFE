@@ -26,6 +26,7 @@ import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import DropzoneComponent from "../customDropzone/dropzoneComponent";
 import { revalidateByTag } from "@/app/action";
+import { refreshtoken } from "@/app/utils/request";
 
 function SingerCreateComponent() {
   const { showMessage } = useAppContext();
@@ -89,6 +90,7 @@ function SingerCreateComponent() {
         setAvatarPreview(null);
         setAvatarFile(null);
         setStatus("active");
+        await refreshtoken();
         form.reset();
       } else {
         showMessage(response.data.message || "Something went wrong", "error");

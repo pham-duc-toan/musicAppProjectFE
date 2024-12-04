@@ -13,6 +13,7 @@ import { useAppContext } from "@/context-app"; // Context để hiển thị th�
 import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
 import { useRouter } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { CustomTextFieldUsername } from "@/component/customComponentMui/text-field-customize";
 
 const ForgotPasswordPage = () => {
   const { showMessage } = useAppContext();
@@ -69,7 +70,7 @@ const ForgotPasswordPage = () => {
         Quên mật khẩu
       </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField
+        <CustomTextFieldUsername
           fullWidth
           type="email"
           name="email"

@@ -18,6 +18,10 @@ import {
 import { useAppContext } from "@/context-app";
 import { useRouter } from "next/navigation";
 import { setAccessTokenToLocalStorage } from "@/app/helper/localStorageClient";
+import {
+  CustomTextFieldPassword,
+  CustomTextFieldUsername,
+} from "@/component/customComponentMui/text-field-customize";
 
 const RegisterPage = () => {
   const { showMessage } = useAppContext();
@@ -116,28 +120,33 @@ const RegisterPage = () => {
         Đăng ký tài khoản
       </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField
+        <CustomTextFieldUsername
           fullWidth
           name="username"
           label="Tên đăng nhập"
           variant="outlined"
           margin="normal"
+          autoFocus
         />
         <TextField
+          size="small"
           fullWidth
           name="fullName"
           label="Họ và tên"
           variant="outlined"
           margin="normal"
+          autoFocus
         />
         <TextField
+          size="small"
           fullWidth
           name="userId"
           label="ID người dùng"
           variant="outlined"
           margin="normal"
+          autoFocus
         />
-        <TextField
+        <CustomTextFieldPassword
           fullWidth
           name="password"
           label="Mật khẩu"
@@ -146,6 +155,7 @@ const RegisterPage = () => {
           margin="normal"
         />
         <TextField
+          size="small"
           fullWidth
           name="confirmPassword"
           label="Xác nhận mật khẩu"
