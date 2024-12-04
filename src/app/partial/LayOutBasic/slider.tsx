@@ -101,13 +101,23 @@ export default function SiderComponent({
         >
           <HomeIcon />
         </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Danh sách phát của tôi",
+            router: "/playList",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
 
         <ItemSider
           theme={theme}
           open={open}
           data={{
-            name: "Tất cả bài hát",
-            router: "/songs",
+            name: "Các bài hát đã thích",
+            router: "/songs/my-favorite-song",
           }}
         >
           <QueueMusicIcon />
@@ -115,34 +125,12 @@ export default function SiderComponent({
       </List>
       <Divider />
       <List>
-        <Link href={"/playList"}>
-          <ListItem key="a" disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
-              >
-                <QueueMusicIcon />
-              </ListItemIcon>
-              <ListItemText primary="Playlist" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
         <ItemSider
           theme={theme}
           open={open}
           data={{
-            name: "Các bài hát đã thích",
-            router: "/songs/my-favorite-song",
+            name: "Tất cả bài hát",
+            router: "/songs",
           }}
         >
           <QueueMusicIcon />

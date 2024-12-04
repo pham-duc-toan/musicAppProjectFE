@@ -5,6 +5,7 @@ import {
   ListItemIcon,
   ListItemText,
   Theme,
+  Tooltip,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,27 +26,29 @@ const ItemSider = (props: I) => {
     <>
       <ListItem disablePadding sx={{ display: "block" }}>
         <Link href={`${data.router}`}>
-          <ListItemButton
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? "initial" : "center",
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
+          <Tooltip title={!open ? data.name : ""} placement="right" arrow>
+            <ListItemButton
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : "auto",
-                justifyContent: "center",
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
               }}
             >
-              {children}
-            </ListItemIcon>
-            <ListItemText
-              primary={`${data.name}`}
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItemButton>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                {children}
+              </ListItemIcon>
+              <ListItemText
+                primary={`${data.name}`}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+            </ListItemButton>
+          </Tooltip>
         </Link>
       </ListItem>
     </>

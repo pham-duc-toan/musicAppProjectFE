@@ -35,6 +35,8 @@ export default function LayoutBasic({
   React.useEffect(() => {
     if (isSmallScreen) {
       setOpen(false);
+    } else {
+      setOpen(true);
     }
   }, [isSmallScreen]);
 
