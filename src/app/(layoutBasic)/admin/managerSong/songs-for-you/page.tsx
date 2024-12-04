@@ -144,20 +144,6 @@ const ManageFeaturedSongs: React.FC = () => {
     fetchFeaturedSongs();
   }, [fetchFeaturedSongs]);
 
-  // Hàm để xác định màu nền cho thứ tự ưu tiên
-  const getPriorityBackgroundColor = (index: number) => {
-    switch (index) {
-      case 0:
-        return "gold"; // Top 1
-      case 1:
-        return "silver"; // Top 2
-      case 2:
-        return "#cd7f32"; // Top 3 (Màu đồng)
-      default:
-        return "transparent"; // Không có màu nền cho các vị trí khác
-    }
-  };
-
   return (
     <Box sx={{ padding: 3 }}>
       <Box
@@ -210,11 +196,21 @@ const ManageFeaturedSongs: React.FC = () => {
                   onDragStart={(event) => handleDragStart(event, index)}
                   onDrop={(event) => handleDrop(event, index)}
                   onDragOver={(event) => event.preventDefault()}
-                  sx={{
-                    backgroundColor: getPriorityBackgroundColor(index), // Áp dụng màu nền cho dòng
-                  }}
                 >
-                  <TableCell>{index + 1}</TableCell>
+                  <TableCell
+                    sx={{
+                      color:
+                        index === 0
+                          ? "yellow"
+                          : index === 1
+                          ? "blue"
+                          : index === 2
+                          ? "brown"
+                          : "inherit",
+                    }}
+                  >
+                    <h1>{index + 1}</h1>
+                  </TableCell>
                   <TableCell>
                     <Avatar
                       src={song.avatar}

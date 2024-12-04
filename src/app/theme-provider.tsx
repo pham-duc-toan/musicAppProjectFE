@@ -73,7 +73,7 @@ const theme = extendTheme({
         },
         background: {
           default: "#0e0025",
-          paper: "#1c002b",
+          paper: "#2A2A40",
         },
       },
     },

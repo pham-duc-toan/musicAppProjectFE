@@ -35,29 +35,23 @@ export default async function ProfilePage() {
       <Paper
         elevation={3}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+
+          marginBottom: "30px",
           padding: "20px",
           maxWidth: "400px",
           width: "100%",
           textAlign: "center",
-          marginBottom: "20px",
         }}
       >
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-        >
-          <Avatar
-            src={`${profileData.avatar}`}
-            alt={profileData.fullName}
-            sx={{ width: 100, height: 100, marginBottom: "10px" }}
-          />
-          <ButtonRedirect
-            link="/profile/editProfile"
-            content="Chỉnh sửa"
-            variant="outlined"
-          />
-        </Box>
+        <Avatar
+          src={`${profileData.avatar}`}
+          alt={profileData.fullName}
+          sx={{ width: 100, height: 100, marginBottom: "10px" }}
+        />
+
         <Typography variant="h5">{profileData.fullName}</Typography>
         <Typography color="textSecondary" sx={{ marginBottom: "10px" }}>
           {profileData.username}
@@ -65,9 +59,14 @@ export default async function ProfilePage() {
         <Typography variant="body1">
           <strong>Vai trò:</strong> {profileData.role.roleName}
         </Typography>
-        <Typography variant="body2" color="textSecondary">
+        <Typography variant="body2" color="textSecondary" marginBottom={"20px"}>
           <strong>Loại người dùng:</strong> {profileData.type}
         </Typography>
+        <ButtonRedirect
+          link="/profile/editProfile"
+          content="Chỉnh sửa"
+          variant="outlined"
+        />
       </Paper>
 
       {profileData.singerId && (
@@ -78,6 +77,12 @@ export default async function ProfilePage() {
             maxWidth: "400px",
             width: "100%",
             textAlign: "center",
+
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+
+            marginBottom: "30px",
           }}
         >
           <Typography variant="h6" sx={{ marginBottom: "10px" }}>

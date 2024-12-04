@@ -159,16 +159,6 @@ export default function SiderAdminComponent({
           theme={theme}
           open={open}
           data={{
-            name: "Tất cả bài hát",
-            router: "/songs",
-          }}
-        >
-          <QueueMusicIcon />
-        </ItemSider>
-        <ItemSider
-          theme={theme}
-          open={open}
-          data={{
             name: "Danh sách phát của tôi",
             router: "/playList",
           }}
@@ -181,6 +171,16 @@ export default function SiderAdminComponent({
           data={{
             name: "Các bài hát đã thích",
             router: "/songs/my-favorite-song",
+          }}
+        >
+          <QueueMusicIcon />
+        </ItemSider>
+        <ItemSider
+          theme={theme}
+          open={open}
+          data={{
+            name: "Tất cả bài hát",
+            router: "/songs",
           }}
         >
           <QueueMusicIcon />

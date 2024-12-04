@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Box,
   Grid,
@@ -8,126 +6,324 @@ import {
   CardMedia,
   CardContent,
   Button,
-  Tabs,
-  Tab,
 } from "@mui/material";
-import { useState } from "react";
+import { apiBasicServer } from "../utils/request";
+import { TSongDetail } from "@/dataType/song";
+import Link from "next/link";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+export default async function Dashboard() {
+  const resSFY = await apiBasicServer(
+    "GET",
+    "/song-for-you/client",
+    { limit: 6 },
+    undefined,
+    undefined,
+    ["revalidate-tag-song-for-you"]
+  );
+  const resNs = await apiBasicServer(
+    "GET",
+    "/songs",
+    { limit: 6 },
+    undefined,
+    undefined,
+    ["revalidate-tag-songs"]
+  );
+  const resTop = await apiBasicServer(
+    "GET",
+    "/songs",
+    {
+      limit: 6,
+      sort: "-listen",
+    },
+    undefined,
+    undefined,
+    ["revalidate-tag-songs"]
+  );
+  const topSong = resTop?.data?.data || [];
 
-export default function Dashboard() {
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue);
-  };
-
-  const mockCards = [
-    {
-      title: "Những Bài Hát Hay Nhất Về Mưa",
-      description: "Charmy Phạm, Trung Quân, JSOL...",
-      image:
-        "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg…over/6/2/a/1/62a18e8a05e3b9821050a672a00540b1.jpg",
-    },
-    {
-      title: "Nghệ Sĩ Trẻ Hát Trịnh",
-      description: "Mỹ Anh, Ngô Lan Hương, Hoàng Dũng...",
-      image:
-        "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/b/c/5/8/bc58f24cc102659381ab2f4638bb594d.jpg",
-    },
-    {
-      title: "V-Pop Hay Nhất Thập Niên 2010s",
-      description: "Noo Phước Thịnh, ERIK, Trung Quân...",
-      image:
-        "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/b/c/5/8/bc58f24cc102659381ab2f4638bb594d.jpg", // Thay bằng URL hình ảnh thật
-    },
-    {
-      title: "California Sunset",
-      description: "PREP, Mỹ Anh, Surfaces...",
-      image:
-        "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/5/5/b/7/55b70283079e6f000758602b737d3180.jpg", // Thay bằng URL hình ảnh thật
-    },
-  ];
+  const newSong = resNs?.data?.data || [];
+  const songsForYou = resSFY?.data?.listSong || [];
 
   return (
     <Box
       sx={{
         padding: "20px",
-
         color: "#FFFFFF",
         minHeight: "100vh",
       }}
     >
-      {/* Title */}
-      <Typography variant="h4" sx={{ marginBottom: "20px" }}>
-        Có Thể Bạn Muốn Nghe
-      </Typography>
+      {/* "Có Thể Bạn Muốn Nghe" Section */}
+      <Box
+        sx={{
+          marginBottom: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4">BẢNG XẾP HẠNG</Typography>
+        <Link href={"/songs/bxh"}>
+          <Button variant="outlined">Xem Top 100 bài hát</Button>
+        </Link>
+      </Box>
 
-      {/* Cards */}
       <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
-        {mockCards.map((card, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card sx={{ backgroundColor: "#2A2A40", color: "#FFFFFF" }}>
-              <CardMedia
-                component="img"
-                height="140"
-                image={card.image}
-                alt={card.title}
-                sx={{ borderRadius: "4px" }}
-              />
-              <CardContent>
-                <Typography variant="h6">{card.title}</Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ color: "#A0A0A0" }}
+        {topSong.map((song: TSongDetail, index: number) => (
+          <Grid item xs={12} md={6} key={index}>
+            <Link href={`songs/detail/${song._id}`}>
+              <Card
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {/* Avatar on the left */}
+                <CardMedia
+                  component="img"
+                  image={song.avatar}
+                  alt={song.title}
+                  sx={{
+                    margin: "10px",
+                    width: "120px",
+                    height: "120px",
+                    borderRadius: "8px",
+                    marginRight: "20px",
+                  }}
+                />
+
+                {/* Text content on the right */}
+                <Box
+                  sx={{
+                    height: "120px",
+                    padding: "5px",
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  {card.description}
-                </Typography>
-              </CardContent>
-            </Card>
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 500 }}>
+                      {song.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Ca sĩ: {song.singerId?.fullName || "Không rõ"}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="h4">#{index + 1}</Typography>
+                    <Typography variant="body2" sx={{ marginTop: "10px" }}>
+                      {new Date(song.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>
 
-      {/* Tabs for New Releases */}
-      <Typography variant="h5" sx={{ marginBottom: "20px" }}>
-        Mới Phát Hành
-      </Typography>
-      <Tabs
-        value={tabIndex}
-        onChange={handleTabChange}
-        textColor="inherit"
-        indicatorColor="primary"
-        aria-label="new releases tabs"
-        sx={{ marginBottom: "20px" }}
+      {/* "Mới Phát Hành" Section */}
+      <Box
+        sx={{
+          marginBottom: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        <Tab label="Tất Cả" />
-        <Tab label="Việt Nam" />
-        <Tab label="Quốc Tế" />
-      </Tabs>
+        <Typography variant="h5">Có thể bạn muốn nghe</Typography>
+        <Link href="/songs">
+          <Typography
+            display="flex"
+            alignItems="center"
+            variant="body1"
+            color="GrayText"
+            fontWeight={"700"}
+            sx={{
+              "&:hover": {
+                color: "primary.main", // Màu khi hover
+                cursor: "pointer", // Thêm hiệu ứng con trỏ tay khi hover
+              },
+            }}
+          >
+            <KeyboardArrowLeftIcon />
+            Xem thêm
+          </Typography>
+        </Link>
+      </Box>
 
-      {/* New Release Items */}
+      <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
+        {songsForYou.map((song: TSongDetail, index: number) => (
+          <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
+            <Link href={`songs/detail/${song._id}`}>
+              <Card sx={{ height: "400px" }}>
+                <CardMedia
+                  component="img"
+                  image={song.avatar}
+                  alt={song.title}
+                  sx={{
+                    borderRadius: "4px",
+                    objectFit: "cover",
+                    // width: "200px",
+                    height: "200px",
+                  }}
+                />
+                <Box height={"200px"} padding={"20px"}>
+                  <Box
+                    display={"flex"}
+                    sx={{
+                      height: "100%",
+                      justifyContent: "space-between",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          //combo hien thi 3 cham
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 2,
+                          overflow: "hidden",
+                          wordWrap: "break-word",
+                        }}
+                      >
+                        {song.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          //combo hien thi 3 cham
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 1,
+                          overflow: "hidden",
+                          wordWrap: "break-word",
+                        }}
+                      >
+                        Ca sĩ: {song.singerId?.fullName || "Không rõ"}
+                      </Typography>
+                    </Box>
+
+                    <Button
+                      sx={{ marginTop: "10px" }}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Nghe Ngay
+                    </Button>
+                  </Box>
+                </Box>
+              </Card>
+            </Link>
+          </Grid>
+        ))}
+      </Grid>
+      <Box
+        sx={{
+          marginBottom: "20px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h5">Mới phát hành</Typography>
+        <Link href="/songs">
+          <Typography
+            display="flex"
+            alignItems="center"
+            variant="body1"
+            color="GrayText"
+            fontWeight={"700"}
+            sx={{
+              "&:hover": {
+                color: "primary.main", // Màu khi hover
+                cursor: "pointer", // Thêm hiệu ứng con trỏ tay khi hover
+              },
+            }}
+          >
+            <KeyboardArrowLeftIcon />
+            Xem thêm
+          </Typography>
+        </Link>
+      </Box>
+
       <Grid container spacing={2}>
-        {[...Array(6)].map((_, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ backgroundColor: "#2A2A40", color: "#FFFFFF" }}>
-              <CardContent>
-                <Typography variant="h6">Bài hát {index + 1}</Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ color: "#A0A0A0" }}
-                >
-                  Mô tả ngắn gọn bài hát {index + 1}.
-                </Typography>
-                <Button
-                  sx={{ marginTop: "10px" }}
-                  variant="outlined"
-                  color="primary"
-                >
-                  Nghe Ngay
-                </Button>
-              </CardContent>
-            </Card>
+        {newSong.map((song: TSongDetail, index: number) => (
+          <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
+            <Link href={`songs/detail/${song._id}`}>
+              <Card sx={{ height: "400px" }}>
+                <CardMedia
+                  component="img"
+                  image={song.avatar}
+                  alt={song.title}
+                  sx={{
+                    borderRadius: "4px",
+                    objectFit: "cover",
+                    // width: "200px",
+                    height: "200px",
+                  }}
+                />
+                <Box height={"200px"} padding={"20px"}>
+                  <Box
+                    display={"flex"}
+                    sx={{
+                      height: "100%",
+                      justifyContent: "space-between",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 500,
+                          //combo hien thi 3 cham
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 2,
+                          overflow: "hidden",
+                          wordWrap: "break-word",
+                        }}
+                      >
+                        {song.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          //combo hien thi 3 cham
+                          display: "-webkit-box",
+                          WebkitBoxOrient: "vertical",
+                          WebkitLineClamp: 1,
+                          overflow: "hidden",
+                          wordWrap: "break-word",
+                        }}
+                      >
+                        Ca sĩ: {song.singerId?.fullName || "Không rõ"}
+                      </Typography>
+                    </Box>
+                    <Button
+                      sx={{ marginTop: "10px" }}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Nghe Ngay
+                    </Button>
+                  </Box>
+                </Box>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

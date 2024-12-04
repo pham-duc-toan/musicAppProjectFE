@@ -87,6 +87,9 @@ export default async function SingerDetailPage({
       <Paper
         elevation={3}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           padding: "20px",
           maxWidth: "600px",
           width: "100%",
@@ -101,9 +104,6 @@ export default async function SingerDetailPage({
         />
         <Typography variant="h4" sx={{ marginBottom: "10px" }}>
           {singerDetail.fullName}
-        </Typography>
-        <Typography variant="body1" sx={{ marginBottom: "10px" }}>
-          <strong>Trạng thái:</strong> {singerDetail.status}
         </Typography>
 
         <Typography variant="body2" sx={{ marginBottom: "10px" }}>

@@ -84,6 +84,9 @@ export default async function TopicDetailPage({
       <Paper
         elevation={3}
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           padding: "20px",
           maxWidth: "600px",
           width: "100%",
@@ -98,9 +101,6 @@ export default async function TopicDetailPage({
         />
         <Typography variant="h4" sx={{ marginBottom: "10px" }}>
           {topicDetail.title}
-        </Typography>
-        <Typography variant="body1" sx={{ marginBottom: "10px" }}>
-          <strong>Trạng thái:</strong> {topicDetail.status}
         </Typography>
 
         <Typography variant="body2" sx={{ marginBottom: "10px" }}>

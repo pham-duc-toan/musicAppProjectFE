@@ -1,3 +1,13 @@
+interface Topic {
+  _id: string;
+  title: string;
+  avatar: string;
+  description: string;
+  status: string;
+  slug: string;
+  deleted: boolean;
+}
+
 export interface TSongDetail {
   listen: number;
   _id: string;
@@ -9,7 +19,7 @@ export interface TSongDetail {
     fullName: string;
     [key: string]: any;
   };
-  topicId: string;
+  topicId: Topic;
   like: number;
   lyrics: string;
   audio: string;
@@ -17,6 +27,7 @@ export interface TSongDetail {
   slug: string;
   isPlaying?: boolean;
   deleted: boolean;
+  createdAt: Date;
 }
 export interface TSongFooter {
   _id: string;
