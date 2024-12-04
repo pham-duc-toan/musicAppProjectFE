@@ -18,6 +18,7 @@ import {
   TextField,
   CircularProgress,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit"; // Import Edit icon
 import DeleteIcon from "@mui/icons-material/Delete"; // Import Delete icon
@@ -300,8 +301,45 @@ export default function Permissions() {
       <form onSubmit={handleSaveChanges}>
         <TableContainer>
           {loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-              <CircularProgress />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                py: 4,
+                flexDirection: "column",
+              }}
+            >
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={60}
+                sx={{ marginBottom: 2 }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={60}
+                sx={{ marginBottom: 2 }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={60}
+                sx={{ marginBottom: 2 }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={60}
+                sx={{ marginBottom: 2 }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={60}
+                sx={{ marginBottom: 2 }}
+              />
+              <Skeleton variant="rectangular" width="100%" height={60} />
             </Box>
           ) : (
             <Table>

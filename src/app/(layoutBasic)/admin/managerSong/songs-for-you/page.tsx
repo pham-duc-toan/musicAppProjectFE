@@ -15,6 +15,7 @@ import {
   CircularProgress,
   Tooltip,
   Button,
+  Skeleton,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { apiBasicClient } from "@/app/utils/request";
@@ -183,11 +184,46 @@ const ManageFeaturedSongs: React.FC = () => {
 
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} sx={{ textAlign: "center" }}>
-                  <CircularProgress />
-                </TableCell>
-              </TableRow>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  py: 4,
+                  flexDirection: "column",
+                }}
+              >
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={60}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={60}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={60}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={60}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  width="100%"
+                  height={60}
+                  sx={{ marginBottom: 2 }}
+                />
+                <Skeleton variant="rectangular" width="100%" height={60} />
+              </Box>
             ) : featuredSongs && featuredSongs.length > 0 ? (
               featuredSongs.map((song, index) => (
                 <TableRow
