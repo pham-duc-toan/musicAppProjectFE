@@ -170,121 +170,123 @@ const ManageFeaturedSongs: React.FC = () => {
       </Button>
 
       <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Thứ tự ưu tiên</TableCell>
-              <TableCell>Hình ảnh</TableCell>
-              <TableCell>Tiêu đề</TableCell>
-              <TableCell>Chủ đề</TableCell>
-              <TableCell>Ca sĩ</TableCell>
-              <TableCell>Đề cử</TableCell>
-            </TableRow>
-          </TableHead>
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              py: 4,
+              flexDirection: "column",
+            }}
+          >
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={60}
+              sx={{ marginBottom: 2 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={60}
+              sx={{ marginBottom: 2 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={60}
+              sx={{ marginBottom: 2 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={60}
+              sx={{ marginBottom: 2 }}
+            />
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              height={60}
+              sx={{ marginBottom: 2 }}
+            />
+            <Skeleton variant="rectangular" width="100%" height={60} />
+          </Box>
+        ) : (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Thứ tự ưu tiên</TableCell>
+                <TableCell>Hình ảnh</TableCell>
+                <TableCell>Tiêu đề</TableCell>
+                <TableCell>Chủ đề</TableCell>
+                <TableCell>Ca sĩ</TableCell>
+                <TableCell>Đề cử</TableCell>
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
-            {loading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  py: 4,
-                  flexDirection: "column",
-                }}
-              >
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height={60}
-                  sx={{ marginBottom: 2 }}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height={60}
-                  sx={{ marginBottom: 2 }}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height={60}
-                  sx={{ marginBottom: 2 }}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height={60}
-                  sx={{ marginBottom: 2 }}
-                />
-                <Skeleton
-                  variant="rectangular"
-                  width="100%"
-                  height={60}
-                  sx={{ marginBottom: 2 }}
-                />
-                <Skeleton variant="rectangular" width="100%" height={60} />
-              </Box>
-            ) : featuredSongs && featuredSongs.length > 0 ? (
-              featuredSongs.map((song, index) => (
-                <TableRow
-                  key={song._id}
-                  draggable
-                  onDragStart={(event) => handleDragStart(event, index)}
-                  onDrop={(event) => handleDrop(event, index)}
-                  onDragOver={(event) => event.preventDefault()}
-                >
-                  <TableCell
-                    sx={{
-                      color:
-                        index === 0
-                          ? "yellow"
-                          : index === 1
-                          ? "blue"
-                          : index === 2
-                          ? "brown"
-                          : "inherit",
-                    }}
+            <TableBody>
+              {featuredSongs && featuredSongs.length > 0 ? (
+                featuredSongs.map((song, index) => (
+                  <TableRow
+                    key={song._id}
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, index)}
+                    onDrop={(event) => handleDrop(event, index)}
+                    onDragOver={(event) => event.preventDefault()}
                   >
-                    <h1>{index + 1}</h1>
-                  </TableCell>
-                  <TableCell>
-                    <Avatar
-                      src={song.avatar}
-                      alt={song.title}
-                      variant="rounded"
-                    />
-                  </TableCell>
-                  <TableCell>{song.title}</TableCell>
-                  <TableCell>
-                    {song.topicId?.title || "Không rõ thể loại"}
-                  </TableCell>
-                  <TableCell>
-                    {song.singerId?.fullName || "Không rõ ca sĩ"}
-                  </TableCell>
-                  <TableCell>
-                    <Tooltip title="Xóa khỏi đề cử" arrow>
-                      <IconButton
-                        color="secondary"
-                        onClick={() => handleRemoveFromFeatured(song._id)}
-                      >
-                        <StarIcon color="warning" />
-                      </IconButton>
-                    </Tooltip>
+                    <TableCell
+                      sx={{
+                        color:
+                          index === 0
+                            ? "yellow"
+                            : index === 1
+                            ? "blue"
+                            : index === 2
+                            ? "brown"
+                            : "inherit",
+                      }}
+                    >
+                      <h1>{index + 1}</h1>
+                    </TableCell>
+                    <TableCell>
+                      <Avatar
+                        src={song.avatar}
+                        alt={song.title}
+                        variant="rounded"
+                      />
+                    </TableCell>
+                    <TableCell>{song.title}</TableCell>
+                    <TableCell>
+                      {song.topicId?.title || "Không rõ thể loại"}
+                    </TableCell>
+                    <TableCell>
+                      {song.singerId?.fullName || "Không rõ ca sĩ"}
+                    </TableCell>
+                    <TableCell>
+                      <Tooltip title="Xóa khỏi đề cử" arrow>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => handleRemoveFromFeatured(song._id)}
+                        >
+                          <StarIcon color="warning" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    sx={{ textAlign: "center", color: "gray" }}
+                  >
+                    Hiện không có bài hát đề cử nào
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  sx={{ textAlign: "center", color: "gray" }}
-                >
-                  Hiện không có bài hát đề cử nào
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        )}
       </TableContainer>
     </Box>
   );
