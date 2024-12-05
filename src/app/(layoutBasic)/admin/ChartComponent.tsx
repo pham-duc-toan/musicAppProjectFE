@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import { Box } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 // Đăng ký các module của Chart.js
 ChartJS.register(
@@ -24,37 +25,51 @@ ChartJS.register(
 );
 
 const ChartComponent = ({ data }: { data: any }) => {
-  // Dữ liệu mặc định nếu không có dữ liệu từ server
-  const defaultData = {
-    labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6"],
-    datasets: [
-      {
-        label: "Doanh thu (Triệu VND)",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
-
-  const chartData = data || defaultData;
-
-  // Tùy chọn hiển thị biểu đồ
+  const theme = useTheme();
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: "top" as const,
+        labels: {
+          //@ts-ignore
+          color: theme.palette.text.primary, // Màu chữ của legend
+        },
       },
       title: {
         display: true,
         text: "Biểu đồ doanh thu theo tháng",
+        //@ts-ignore
+        color: theme.palette.text.primary, // Màu chữ của title
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          //@ts-ignore
+          color: theme.palette.text.primary, // Màu chữ của các nhãn trên trục x
+        },
+        grid: {
+          //@ts-ignore
+          color: theme.palette.text.primary, // Màu các đường kẻ của trục x
+        },
+      },
+      y: {
+        ticks: {
+          //@ts-ignore
+          color: theme.palette.text.primary, // Màu chữ của các nhãn trên trục y
+        },
+        grid: {
+          //@ts-ignore
+          color: theme.palette.text.primary, // Màu các đường kẻ của trục y
+        },
       },
     },
   };
 
   return (
     <Box sx={{ height: 400 }}>
-      <Bar data={chartData} options={options} />
+      <Bar data={data} options={options} />
     </Box>
   );
 };
