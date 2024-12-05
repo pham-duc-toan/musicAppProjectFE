@@ -44,7 +44,7 @@ const fetchUsers = async (page: number) => {
       { populate: "role", skip, limit: limitItem },
       undefined,
       access_token,
-      ["revalidate-tag-users"]
+      ["revalidate-tag-users", "revalidate-tag-roles"]
     );
     return {
       users: response?.data.data || [],

@@ -28,6 +28,7 @@ import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { useRouter } from "next/navigation";
 import { decodeToken } from "@/app/helper/jwt";
+import { revalidateByTag } from "@/app/action";
 
 // Định nghĩa kiểu cho role
 interface Role {
@@ -229,7 +230,9 @@ export default function Permissions() {
         showMessage(res.message, "error");
       } else {
         showMessage("Tạo mới vai trò thành công!", "success");
+        await revalidateByTag("revalidate-tag-roles");
         setOpenRoleModal(false);
+
         await fetchRolesAndPermissions();
       }
     } catch (error: any) {
@@ -243,6 +246,7 @@ export default function Permissions() {
         showMessage(res.message, "error");
       } else {
         showMessage("Vai trò đã được xóa thành công!", "success");
+        await revalidateByTag("revalidate-tag-roles");
         await fetchRolesAndPermissions(); // Cập nhật lại danh sách vai trò
       }
     } catch (error: any) {

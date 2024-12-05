@@ -6,11 +6,6 @@ import { Button } from "@mui/material";
 import IUserInfo from "@/dataType/infoUser";
 import Link from "next/link";
 
-interface UserInfo {
-  singerId?: string; // Định nghĩa kiểu cho infoUser, với singerId là tùy chọn
-  // Thêm các trường khác nếu có
-}
-
 const ButtonUpdateSingerHeader = () => {
   const [infoUser, setInfoUser] = useState<IUserInfo | null>(null);
 

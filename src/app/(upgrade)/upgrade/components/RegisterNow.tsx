@@ -33,10 +33,29 @@ const RegisterNow = () => {
     try {
       const res = await apiBasicClient("POST", "/payment");
       if (res?.statusCode == 201) {
-        //tao order
-        await apiBasicClient("POST", "/orders/create", undefined, {
-          orderId: res.data.orderId,
-        });
+        try {
+          //tao order
+          const response = await apiBasicClient(
+            "POST",
+            "/orders/create",
+            undefined,
+            {
+              orderId: res.data.orderId,
+            }
+          );
+          if (response?.data?.orderId) {
+            await apiBasicClient(
+              "POST",
+              "/payment/transaction-status",
+              undefined,
+              { orderId: response.data.orderId }
+            );
+          }
+        } catch (error) {
+          showMessage("Lỗi kết nối với server", "error");
+          return;
+        }
+
         router.push(res.data.shortLink);
       } else {
         showMessage("Không thể thực hiện !", "error");
