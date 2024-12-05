@@ -29,10 +29,7 @@ import { revalidateByTag } from "@/app/action";
 import { refreshtoken } from "@/app/utils/request";
 import { useRouter } from "next/navigation";
 
-interface SingerCreateComponentProps {
-  orderId: string; // Thêm kiểu cho orderId
-}
-function SingerCreateComponent({ orderId }: SingerCreateComponentProps) {
+function SingerCreateComponent() {
   const { showMessage } = useAppContext();
   const router = useRouter();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -58,7 +55,6 @@ function SingerCreateComponent({ orderId }: SingerCreateComponentProps) {
     //@ts-ignore
     const title = form.title.value || "";
     const formData = new FormData();
-    formData.append("orderId", orderId);
     formData.append("fullName", title);
     formData.append("status", status);
 
@@ -98,7 +94,7 @@ function SingerCreateComponent({ orderId }: SingerCreateComponentProps) {
         setStatus("active");
         await refreshtoken();
         form.reset();
-        router.push("/");
+        window.location.href = "/";
       } else {
         showMessage(response.data.message || "Something went wrong", "error");
       }

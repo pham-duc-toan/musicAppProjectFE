@@ -1,16 +1,29 @@
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import { apiBasicServer } from "@/app/utils/request";
 import SingerCreateComponent from "@/component/CreateComponent/SingerCreateComponent";
 import { redirect } from "next/navigation";
 
-const createPage = async ({ searchParams }: any) => {
-  if (!searchParams?.orderId || searchParams?.resultCode != "0") {
-    redirect(`/`);
+const createPage = async () => {
+  try {
+    const accessToken = GetAccessTokenFromCookie();
+    const res = await apiBasicServer(
+      "GET",
+      "/orders/checkUser/payment",
+      undefined,
+      undefined,
+      accessToken
+    );
+    if (!res.data) {
+      redirect("/");
+    }
+  } catch (error) {
+    redirect("/");
   }
 
   return (
     <>
-      <h1>Tạo ca sĩ</h1>
-      <SingerCreateComponent orderId={searchParams.orderId} />
+      <h1 style={{ marginBottom: "30px" }}>Tạo ca sĩ</h1>
+      <SingerCreateComponent />
     </>
   );
 };
