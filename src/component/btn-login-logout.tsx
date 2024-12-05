@@ -1,7 +1,14 @@
 "use client";
 import { useState, useEffect, MouseEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Avatar, Button, Menu, MenuItem } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Menu,
+  MenuItem,
+  Typography,
+  Divider,
+} from "@mui/material";
 import {
   getAccessTokenFromLocalStorage,
   removeTokensFromLocalStorage,
@@ -12,6 +19,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { Box } from "@mui/system";
 import Link from "next/link";
 import { useAppContext } from "@/context-app";
+import IUserInfo from "@/dataType/infoUser";
 
 export default function BtnLoginLogout() {
   const { showMessage } = useAppContext();
@@ -20,13 +28,16 @@ export default function BtnLoginLogout() {
   >(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const router = useRouter();
+  const [infoUser, setInfoUser] = useState<IUserInfo | undefined>(undefined);
 
   useEffect(() => {
     const accessToken = getAccessTokenFromLocalStorage();
     if (!accessToken) {
       setIsLogin(null);
     } else {
-      setIsLogin(decodeToken(accessToken));
+      const info = decodeToken(accessToken);
+      setInfoUser(info || undefined);
+      setIsLogin(info);
     }
   }, []);
 
@@ -77,38 +88,32 @@ export default function BtnLoginLogout() {
             disablePortal
             disableEnforceFocus
           >
+            {infoUser && [
+              <MenuItem key="fullName" sx={{ pointerEvents: "none" }}>
+                <Typography variant="body1" fontWeight="bold">
+                  {infoUser.fullName || "Unknown Name"}
+                </Typography>
+              </MenuItem>,
+              <MenuItem key="username" sx={{ pointerEvents: "none" }}>
+                <Typography variant="body2" color="text.secondary">
+                  {infoUser.username || "unknown_username"}
+                </Typography>
+              </MenuItem>,
+              <Divider key="divider" />,
+            ]}
             <Link href={"/profile"}>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Thông tin cá nhân
-              </MenuItem>
+              <MenuItem onClick={handleClose}>Thông tin cá nhân</MenuItem>
             </Link>
-
-            {
-              //@ts-ignore
-              isLogin.singerId ? (
-                <Link href={"/songs/managerSong"}>
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                    }}
-                  >
-                    Quản lý bài hát
-                  </MenuItem>
-                </Link>
-              ) : null
-            }
+            <Link href={"/payment/history"}>
+              <MenuItem onClick={handleClose}>Lịch sử giao dịch</MenuItem>
+            </Link>
+            {infoUser?.singerId && (
+              <Link href={"/songs/managerSong"}>
+                <MenuItem onClick={handleClose}>Quản lý bài hát</MenuItem>
+              </Link>
+            )}
             <Link href={"/profile/change-password"}>
-              <MenuItem
-                onClick={() => {
-                  handleClose();
-                }}
-              >
-                Đổi mật khẩu
-              </MenuItem>
+              <MenuItem onClick={handleClose}>Đổi mật khẩu</MenuItem>
             </Link>
 
             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>

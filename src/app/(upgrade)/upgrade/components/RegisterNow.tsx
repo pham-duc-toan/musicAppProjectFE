@@ -1,5 +1,6 @@
 "use client";
 
+import { revalidateByTag } from "@/app/action";
 import { decodeToken } from "@/app/helper/jwt";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBasicClient } from "@/app/utils/request";
@@ -51,6 +52,7 @@ const RegisterNow = () => {
               { orderId: response.data.orderId }
             );
           }
+          await revalidateByTag("revalidate-tag-orders");
         } catch (error) {
           showMessage("Lỗi kết nối với server", "error");
           return;
