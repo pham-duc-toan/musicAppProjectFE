@@ -68,7 +68,7 @@ const theme = extendTheme({
         },
         text: {
           primary: "#fff",
-          secondary: "#fff",
+          secondary: "#d7d7d7",
         },
         secondary: {
           main: "#090018",

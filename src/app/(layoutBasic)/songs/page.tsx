@@ -2,7 +2,6 @@ import { apiBasicServer, getInfoUser } from "@/app/utils/request";
 import ItemControlCard from "@/component/item-control-card-music";
 import { Grid } from "@mui/material";
 import { Box } from "@mui/system";
-import TestRevalidate from "./managerSong/component/TestRevalidate";
 import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
 import PaginationComponent from "@/component/PaginationComponent";
 
@@ -40,8 +39,7 @@ const Songs = async ({ searchParams }: SongsProps) => {
 
   return (
     <>
-      <h1>Tất cả bài hát</h1>
-      <TestRevalidate />
+      <h1 style={{ marginBottom: "40px" }}>Tất cả bài hát</h1>
       <Grid container>
         {datas.map((data: any, index: number) => (
           <Grid md={4} sm={6} xs={12} key={index}>

@@ -103,8 +103,14 @@ export default async function TopicDetailPage({
           {topicDetail.title}
         </Typography>
 
-        <Typography variant="body2" sx={{ marginBottom: "10px" }}>
-          <strong>Mô tả:</strong> {topicDetail.description}
+        <Typography
+          sx={{
+            marginBottom: "10px",
+            fontSize: "18px",
+            color: "text.secondary",
+          }}
+        >
+          {topicDetail.description}
         </Typography>
       </Paper>
 

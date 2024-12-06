@@ -1,11 +1,13 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import RegisterNow from "./components/RegisterNow";
+import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 
 export const metadata = {
   title: "Nâng cấp tài khoản",
 };
 
 export default function HomePage() {
+  GetAccessTokenFromCookie();
   return (
     <>
       <Box
