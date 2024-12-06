@@ -7,13 +7,18 @@ import {
   TableRow,
   Paper,
   Typography,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import { apiBasicServer } from "@/app/utils/request";
 import { decodeToken } from "@/app/helper/jwt";
 import { redirect } from "next/navigation";
 import RefreshIcon from "./components/RefreshIcon";
-
+import Link from "next/link";
+import PaymentIcon from "@mui/icons-material/Payment";
+import { revalidateByTag } from "@/app/action";
+import { Box } from "@mui/system";
 // Định nghĩa giao diện cho order
 interface Order {
   _id: string;
@@ -22,6 +27,8 @@ interface Order {
   createdAt: string;
   updatedAt: string;
   status: string;
+  shortLink: string;
+  resultCode: string;
 }
 
 const HistoryTable = async () => {
@@ -29,6 +36,7 @@ const HistoryTable = async () => {
   const accessToken = GetAccessTokenFromCookie();
   const info = decodeToken(accessToken.value || undefined);
   try {
+    await revalidateByTag("revalidate-tag-orders");
     const res = await apiBasicServer(
       "GET",
       `/orders/${info?._id}`,
@@ -90,7 +98,24 @@ const HistoryTable = async () => {
                     })}
                   </TableCell>
                   <TableCell>
-                    <RefreshIcon orderId={order?.orderId || ""} />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <RefreshIcon orderId={order?.orderId || ""} />
+                      {order.resultCode === "1000" ? (
+                        <Link href={order?.shortLink || "/"} passHref>
+                          <Tooltip title="Thanh toán ngay">
+                            <IconButton>
+                              <PaymentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      ) : null}
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))

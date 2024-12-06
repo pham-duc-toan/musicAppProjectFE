@@ -23,7 +23,6 @@ const ItemSider = (props: I) => {
   const pathname = usePathname(); // Lấy đường dẫn hiện tại
 
   const isActive = pathname === data.router;
-  console.log(isActive);
 
   return (
     <ListItem

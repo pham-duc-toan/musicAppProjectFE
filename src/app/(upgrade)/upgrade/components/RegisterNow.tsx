@@ -42,6 +42,7 @@ const RegisterNow = () => {
             undefined,
             {
               orderId: res.data.orderId,
+              shortLink: res.data.shortLink,
             }
           );
           if (response?.data?.orderId) {
