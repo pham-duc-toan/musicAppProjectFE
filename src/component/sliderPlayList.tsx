@@ -123,8 +123,8 @@ const RightSlider = () => {
             width: 300,
             height: "calc(100vh - 60px)",
             overflowY: "auto",
-            //@ts-ignore
-            bgcolor: theme.palette.secondary.A100,
+
+            bgcolor: "secondary.A100",
           }}
           role="presentation"
           onClick={(e) => e.stopPropagation()} // Ngăn chặn sự kiện click từ việc đóng drawer
@@ -136,8 +136,8 @@ const RightSlider = () => {
             sx={{
               padding: "10px",
               flex: 1,
-              //@ts-ignore
-              bgcolor: theme.palette.secondary.A100,
+
+              bgcolor: "secondary.A100",
             }}
           >
             {currentPlaylist._id ? (

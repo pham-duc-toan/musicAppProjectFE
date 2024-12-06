@@ -95,7 +95,7 @@ export default function BtnLoginLogout() {
                 </Typography>
               </MenuItem>,
               <MenuItem key="username" sx={{ pointerEvents: "none" }}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2">
                   {infoUser.username || "unknown_username"}
                 </Typography>
               </MenuItem>,

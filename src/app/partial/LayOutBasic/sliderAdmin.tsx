@@ -2,9 +2,6 @@
 import * as React from "react";
 import { styled, Theme, CSSObject, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
@@ -12,7 +9,6 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LyricsIcon from "@mui/icons-material/Lyrics";
 import InterpreterModeIcon from "@mui/icons-material/InterpreterMode";
 import TopicIcon from "@mui/icons-material/Topic";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ItemSider from "@/component/item-of-list-button-sider";
 import HomeIcon from "@mui/icons-material/Home";
@@ -63,6 +59,9 @@ const Sider = styled(MuiDrawer, {
   "[data-mui-color-scheme='dark'] & .MuiPaper-root": {
     background: "#1b0c35",
   },
+  "[data-mui-color-scheme='light'] & .MuiPaper-root": {
+    background: "#f2f2f2",
+  },
 }));
 
 const SideBarHeader = styled("div")(({ theme }) => ({
@@ -111,7 +110,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
       <Divider />
       <List>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Trang chủ",
@@ -122,7 +120,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
         </ItemSider>
 
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Quản lý bài hát",
@@ -132,7 +129,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <LyricsIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Quản lý chủ đề",
@@ -142,7 +138,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <TopicIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Quản lý ca sĩ",
@@ -152,7 +147,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <InterpreterModeIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Quản lý người dùng",
@@ -162,7 +156,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <ManageAccountsIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Quản lý các quyền",
@@ -175,7 +168,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
       <Divider />
       <List>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Danh sách phát của tôi",
@@ -185,7 +177,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <QueueMusicIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Các bài hát đã thích",
@@ -195,7 +186,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <QueueMusicIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Tất cả bài hát",
@@ -205,7 +195,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <QueueMusicIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Tất cả ca sĩ",
@@ -215,7 +204,6 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
           <QueueMusicIcon />
         </ItemSider>
         <ItemSider
-          theme={theme}
           open={open}
           data={{
             name: "Tất cả chủ đề",

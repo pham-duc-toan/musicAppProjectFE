@@ -23,7 +23,6 @@ import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request"; // A
 import { TSuggestAvaSlugId } from "@/dataType/suggest"; // Adjust based on your data types
 import BtnLoginLogout from "@/component/btn-login-logout";
 import { SwitchThemeButton } from "@/component/button-dark-mode";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import NavigationButtons from "./component/btnHeaderForWardAndBack";
 
@@ -57,6 +56,9 @@ const Header = styled(MuiAppBar, {
   "[data-mui-color-scheme='dark'] &": {
     background: "#090018",
   },
+  "&.MuiPaper-root": {
+    boxShadow: "none",
+  },
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
@@ -65,7 +67,6 @@ const SearchBox = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   padding: "4px 8px",
   marginRight: theme.spacing(2),
-  color: "white",
 }));
 
 export default function HeaderComponent({ open }: { open: boolean }) {

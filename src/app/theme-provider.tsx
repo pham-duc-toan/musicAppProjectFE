@@ -45,11 +45,14 @@ const theme = extendTheme({
         },
         text: {
           primary: "#9A52A0",
+          secondary: "#7e3f83",
         },
         secondary: {
-          main: "#B2B4B8",
+          main: "#F6F6F3",
           A100: "#F6F6F3",
           A200: "#F8EEC5",
+          A400: "#807e81",
+          A700: "#9A52A0",
         },
         background: {
           default: "#ffffff",
@@ -65,11 +68,14 @@ const theme = extendTheme({
         },
         text: {
           primary: "#fff",
+          secondary: "#fff",
         },
         secondary: {
           main: "#090018",
           A100: "#1b0c35",
           A200: "#E7C97E",
+          A400: "#fff",
+          A700: "#9A52A0",
         },
         background: {
           default: "#0e0025",

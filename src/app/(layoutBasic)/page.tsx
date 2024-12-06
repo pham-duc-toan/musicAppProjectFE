@@ -60,7 +60,9 @@ export default async function Dashboard() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4">BẢNG XẾP HẠNG</Typography>
+        <Typography sx={{ fontWeight: 700 }} variant="h4">
+          BẢNG XẾP HẠNG
+        </Typography>
         <Link href={"/songs/bxh"}>
           <Button variant="outlined">Xem Top 100 bài hát</Button>
         </Link>
@@ -137,7 +139,9 @@ export default async function Dashboard() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5">Có thể bạn muốn nghe</Typography>
+        <Typography sx={{ fontWeight: 600 }} variant="h5">
+          Có thể bạn muốn nghe
+        </Typography>
         <Link href="/songs">
           <Typography
             display="flex"
@@ -236,7 +240,9 @@ export default async function Dashboard() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h5">Mới phát hành</Typography>
+        <Typography sx={{ fontWeight: 600 }} variant="h5">
+          Mới phát hành
+        </Typography>
         <Link href="/songs">
           <Typography
             display="flex"
