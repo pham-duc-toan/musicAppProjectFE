@@ -1,7 +1,7 @@
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import { apiBasicServer } from "@/app/utils/request";
-import CreatePlaylistButton from "@/component/createPlayListButton";
-import PlaylistItem from "@/component/PlaylistItem";
+import CreatePlaylistButton from "@/app/(layoutBasic)/playList/components/createPlayListButton";
+import PlaylistItem from "@/app/(layoutBasic)/playList/components/PlaylistItem";
 import { Grid, Typography } from "@mui/material";
 import { Container } from "@mui/system";
 
@@ -42,12 +42,26 @@ const Playlists = async () => {
     [key: string]: any;
   }
   return (
-    <>
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          Playlists
-        </Typography>
-        <CreatePlaylistButton />
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        Playlists
+      </Typography>
+      <CreatePlaylistButton />
+      {datas.length === 0 ? (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          style={{ height: "50vh" }} // Đặt chiều cao để căn giữa theo chiều dọc
+        >
+          <Typography
+            variant="h6"
+            style={{ fontStyle: "italic", color: "text.primary" }}
+          >
+            Hiện không có danh sách phát nào
+          </Typography>
+        </Grid>
+      ) : (
         <Grid container spacing={2}>
           {datas.map((playlist: Playlist, index: any) => (
             <Grid item md={4} sm={6} xs={12} key={index}>
@@ -55,8 +69,8 @@ const Playlists = async () => {
             </Grid>
           ))}
         </Grid>
-      </Container>
-    </>
+      )}
+    </Container>
   );
 };
 export default Playlists;

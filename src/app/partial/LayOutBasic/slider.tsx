@@ -5,7 +5,7 @@ import MuiDrawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import ItemSider from "@/component/item-of-list-button-sider";
+import ItemSider from "@/app/partial/LayOutBasic/component/item-of-list-button-sider";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import Image from "next/image";

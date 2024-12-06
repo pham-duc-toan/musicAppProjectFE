@@ -1,7 +1,5 @@
-import FormLoginComponent from "@/component/form-login";
-import { bgcolor, Box } from "@mui/system";
-
-import { redirect } from "next/navigation";
+import FormLoginComponent from "@/app/(auth)/login/components/form-login";
+import { Box } from "@mui/system";
 
 export default async function Login() {
   return (

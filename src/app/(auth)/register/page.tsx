@@ -21,7 +21,7 @@ import { setAccessTokenToLocalStorage } from "@/app/helper/localStorageClient";
 import {
   CustomTextFieldPassword,
   CustomTextFieldUsername,
-} from "@/component/customComponentMui/text-field-customize";
+} from "@/app/(auth)/login/components/text-field-customize";
 
 const RegisterPage = () => {
   const { showMessage } = useAppContext();

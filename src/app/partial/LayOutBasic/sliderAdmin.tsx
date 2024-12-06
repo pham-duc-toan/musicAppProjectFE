@@ -10,7 +10,7 @@ import LyricsIcon from "@mui/icons-material/Lyrics";
 import InterpreterModeIcon from "@mui/icons-material/InterpreterMode";
 import TopicIcon from "@mui/icons-material/Topic";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import ItemSider from "@/component/item-of-list-button-sider";
+import ItemSider from "@/app/partial/LayOutBasic/component/item-of-list-button-sider";
 import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import Image from "next/image";

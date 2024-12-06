@@ -16,7 +16,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   CustomTextFieldPassword,
   CustomTextFieldUsername,
-} from "@/component/customComponentMui/text-field-customize";
+} from "@/app/(auth)/login/components/text-field-customize";
 
 const ResetPasswordPage = () => {
   const router = useRouter();

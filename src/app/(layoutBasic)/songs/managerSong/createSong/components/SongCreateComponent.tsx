@@ -20,11 +20,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import SelectorSuggest from "../selectorSuggest";
+import SelectorSuggest from "../../../../../../component/selectorSuggest";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { apiBackEndCreateWithFile } from "@/app/utils/request";
-import DropzoneComponent from "../customDropzone/dropzoneComponent";
+import DropzoneComponent from "../../../../../../component/customDropzone/dropzoneComponent";
 import { revalidateByTag } from "@/app/action";
 
 function SongCreateComponent() {

@@ -1,5 +1,5 @@
 import { useHasMounted } from "@/app/utils/customHook";
-import RightSlider from "@/component/sliderPlayList";
+import RightSlider from "@/app/partial/LayOutBasic/component/sliderPlayList";
 import { TSongDetail } from "@/dataType/song";
 import {
   pause,

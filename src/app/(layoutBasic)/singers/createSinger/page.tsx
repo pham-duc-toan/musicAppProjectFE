@@ -1,6 +1,6 @@
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import { apiBasicServer } from "@/app/utils/request";
-import SingerCreateComponent from "@/component/CreateComponent/SingerCreateComponent";
+import SingerCreateComponent from "@/app/(layoutBasic)/singers/createSinger/components/SingerCreateComponent";
 import { redirect } from "next/navigation";
 
 const createPage = async () => {

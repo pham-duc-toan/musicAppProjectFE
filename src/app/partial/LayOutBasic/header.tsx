@@ -21,8 +21,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import ButtonUpdateSingerHeader from "./component/buttonUpdateSinger";
 import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request"; // Assuming this is for API calls
 import { TSuggestAvaSlugId } from "@/dataType/suggest"; // Adjust based on your data types
-import BtnLoginLogout from "@/component/btn-login-logout";
-import { SwitchThemeButton } from "@/component/button-dark-mode";
+import BtnLoginLogout from "@/app/partial/LayOutBasic/component/btn-login-logout";
+import { SwitchThemeButton } from "@/app/partial/LayOutBasic/component/button-dark-mode";
 import Link from "next/link";
 import NavigationButtons from "./component/btnHeaderForWardAndBack";
 

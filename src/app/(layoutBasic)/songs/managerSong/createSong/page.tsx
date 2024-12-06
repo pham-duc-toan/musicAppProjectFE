@@ -1,7 +1,7 @@
 import { decodeToken } from "@/app/helper/jwt";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
 import ButtonRedirect from "@/component/buttonRedirect";
-import SongCreateComponent from "@/component/CreateComponent/SongCreateComponent";
+import SongCreateComponent from "@/app/(layoutBasic)/songs/managerSong/createSong/components/SongCreateComponent";
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
 interface UserInfo {

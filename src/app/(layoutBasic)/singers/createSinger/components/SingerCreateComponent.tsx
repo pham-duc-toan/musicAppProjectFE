@@ -24,7 +24,7 @@ import "./style.css";
 
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
-import DropzoneComponent from "../customDropzone/dropzoneComponent";
+import DropzoneComponent from "../../../../../component/customDropzone/dropzoneComponent";
 import { revalidateByTag } from "@/app/action";
 import { refreshtoken } from "@/app/utils/request";
 import { useRouter } from "next/navigation";

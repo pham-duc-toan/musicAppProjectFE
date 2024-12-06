@@ -1,6 +1,6 @@
 import { getInfoUser } from "@/app/utils/request";
 import ItemControlCard from "@/component/item-control-card-music";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 import { GetPublicAccessTokenFromCookie } from "@/app/utils/checkRole";
@@ -20,17 +20,31 @@ const MyFavoriteSong = async () => {
   return (
     <>
       <h1>Các bài hát đã thích</h1>
-      <Grid container>
-        {fullInfoFavoriteSongs.map((data: any, index: number) => {
-          return (
-            <Grid md={4} sm={6} xs={12} key={index}>
+      {fullInfoFavoriteSongs.length === 0 ? (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          style={{ height: "50vh" }} // Căn giữa theo chiều dọc
+        >
+          <Typography
+            variant="h6"
+            style={{ fontStyle: "italic", color: "text.primary" }}
+          >
+            Hiện không có bài hát yêu thích nào
+          </Typography>
+        </Grid>
+      ) : (
+        <Grid container>
+          {fullInfoFavoriteSongs.map((data: any, index: number) => (
+            <Grid item md={4} sm={6} xs={12} key={index}>
               <Box sx={{ padding: "10px" }}>
                 <ItemControlCard fSongs={favoriteSongs} data={data} />
               </Box>
             </Grid>
-          );
-        })}
-      </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 };

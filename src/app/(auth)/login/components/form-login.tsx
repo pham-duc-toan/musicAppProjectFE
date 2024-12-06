@@ -4,12 +4,11 @@ import {
   setAccessTokenToLocalStorage,
 } from "@/app/helper/localStorageClient";
 import { login, logout } from "@/app/utils/request";
-import BtnBack from "@/component/btn.back-home";
 import {
   CustomTextFieldPassword,
   CustomTextFieldUsername,
-} from "@/component/customComponentMui/text-field-customize";
-import ListProvider from "@/component/list-btn-login-provider";
+} from "@/app/(auth)/login/components/text-field-customize";
+import ListProvider from "@/app/(auth)/login/components/list-btn-login-provider";
 import { useAppContext } from "@/context-app";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
@@ -23,7 +22,7 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
-import ButtonRedirect from "./buttonRedirect";
+import ButtonRedirect from "../../../../component/buttonRedirect";
 import { useTheme } from "@emotion/react";
 
 export default function FormLoginComponent() {
@@ -118,6 +117,7 @@ export default function FormLoginComponent() {
         label="Tài khoản"
         variant="outlined"
         name="username"
+        defaultValue={"a@a.com"}
         fullWidth
         margin="normal"
         autoFocus
@@ -127,6 +127,7 @@ export default function FormLoginComponent() {
 
       <CustomTextFieldPassword
         label="Mật khẩu"
+        defaultValue={"aaa"}
         type={showPassword ? "text" : "password"}
         variant="outlined"
         fullWidth
@@ -183,7 +184,7 @@ export default function FormLoginComponent() {
         Đăng nhập
       </Button>
 
-      <BtnBack />
+      <Button onClick={() => router.push("/")}>Back to HomePage</Button>
       <ListProvider />
     </Box>
   );
