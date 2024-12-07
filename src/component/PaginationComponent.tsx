@@ -35,7 +35,6 @@ const PaginationComponent: React.FC<PaginationComponentProps> = ({
         padding: 2,
         backgroundColor: "background.default",
         borderRadius: 2,
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
       }}
     >
       <Typography
