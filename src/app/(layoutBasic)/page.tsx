@@ -103,7 +103,23 @@ export default async function Dashboard() {
             BẢNG XẾP HẠNG
           </Typography>
           <Link href={"/songs/bxh"}>
-            <Button variant="outlined">Xem Top 100 bài hát</Button>
+            <Button
+              sx={{
+                transition: "all 0.3s ease-in-out",
+                backgroundColor: "transparent",
+                borderColor: "primary.main",
+                color: "primary.main",
+                "&:hover": {
+                  cursor: "pointer",
+                  backgroundColor: "primary.main",
+                  color: "white",
+                  borderColor: "primary.main",
+                },
+              }}
+              variant="outlined"
+            >
+              Xem Top 100 bài hát
+            </Button>
           </Link>
         </Box>
       )}
@@ -259,7 +275,18 @@ export default async function Dashboard() {
                     </Box>
 
                     <Button
-                      sx={{ marginTop: "10px" }}
+                      sx={{
+                        transition: "all 0.3s ease-in-out",
+                        backgroundColor: "transparent",
+                        borderColor: "primary.main",
+                        color: "primary.main", // Màu chữ
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "primary.main", // Màu nền khi hover
+                          color: "white", // Màu chữ khi hover
+                          borderColor: "primary.main", // Giữ nguyên màu viền khi hover
+                        },
+                      }}
                       variant="outlined"
                       color="primary"
                     >
@@ -361,7 +388,18 @@ export default async function Dashboard() {
                       </Typography>
                     </Box>
                     <Button
-                      sx={{ marginTop: "10px" }}
+                      sx={{
+                        transition: "all 0.3s ease-in-out",
+                        backgroundColor: "transparent",
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                        "&:hover": {
+                          cursor: "pointer",
+                          backgroundColor: "primary.main",
+                          color: "white",
+                          borderColor: "primary.main",
+                        },
+                      }}
                       variant="outlined"
                       color="primary"
                     >
@@ -471,79 +509,88 @@ export default async function Dashboard() {
           </Grid>
         ))}
       </Grid>
-      <Box sx={{ marginBottom: "20px" }}>
-        <Typography sx={{ fontWeight: 600, marginBottom: "20px" }} variant="h5">
-          Nghệ Sĩ Nổi Bật
-        </Typography>
+      {singers.length > 0 && (
+        <Box sx={{ marginBottom: "20px" }}>
+          <Typography
+            sx={{ fontWeight: 600, marginBottom: "20px" }}
+            variant="h5"
+          >
+            Nghệ Sĩ Nổi Bật
+          </Typography>
 
-        <Grid container spacing={4}>
-          {singers.map((singer: ISingerDetail, index: number) => (
-            <Grid item xs={6} sm={4} md={2} key={index}>
-              <Link href={`singers/detailSinger/${singer._id}`}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                    backgroundColor: "background.default",
-                    padding: "20px",
-                    borderRadius: "12px",
-
-                    transition: "transform 0.3s ease-in-out",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                >
-                  {/* Ảnh tròn */}
+          <Grid container spacing={4}>
+            {singers.map((singer: ISingerDetail, index: number) => (
+              <Grid item xs={6} sm={4} md={2} key={index}>
+                <Link href={`singers/detailSinger/${singer._id}`}>
                   <Box
                     sx={{
-                      width: "120px",
-                      height: "120px",
-                      borderRadius: "50%",
-                      overflow: "hidden",
-                      marginBottom: "10px",
-                      border: "3px solid white",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      textAlign: "center",
+                      backgroundColor: "background.default",
+                      padding: "20px",
+                      borderRadius: "12px",
+
+                      transition: "transform 0.3s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                      },
                     }}
                   >
-                    <CardMedia
-                      component="img"
-                      image={singer.avatar}
-                      alt={singer.fullName}
-                      sx={{ width: "100%", height: "100%", objectFit: "cover" }}
-                    />
+                    {/* Ảnh tròn */}
+                    <Box
+                      sx={{
+                        width: "120px",
+                        height: "120px",
+                        borderRadius: "50%",
+                        overflow: "hidden",
+                        marginBottom: "10px",
+                        border: "3px solid white",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={singer.avatar}
+                        alt={singer.fullName}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Box>
+
+                    {/* Tên nghệ sĩ */}
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {singer.fullName}
+                    </Typography>
+
+                    {/* Vai trò hoặc mô tả */}
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        marginTop: "5px",
+                      }}
+                    >
+                      {"Nghệ sĩ"}
+                    </Typography>
                   </Box>
-
-                  {/* Tên nghệ sĩ */}
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {singer.fullName}
-                  </Typography>
-
-                  {/* Vai trò hoặc mô tả */}
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      marginTop: "5px",
-                    }}
-                  >
-                    {"Nghệ sĩ"}
-                  </Typography>
-                </Box>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
     </Box>
   );
 }
