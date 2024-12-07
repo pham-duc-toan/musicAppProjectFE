@@ -42,7 +42,7 @@ export default function ItemControlCardTopic({
               wordWrap: "break-word",
             }}
           >
-            <Link href={`/topics/detail/${data._id}`}>{data.title}</Link>
+            <Link href={`/topics/detail/${data.slug}`}>{data.title}</Link>
           </Typography>
 
           {/* Hiển thị số lượng bài hát trong topic */}

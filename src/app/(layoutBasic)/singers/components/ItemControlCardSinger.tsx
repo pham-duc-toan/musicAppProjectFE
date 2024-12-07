@@ -7,7 +7,13 @@ import Image from "next/image";
 export default function ItemControlCardSinger({
   data,
 }: {
-  data: { _id: string; fullName: string; avatar: string; songsCount: number };
+  data: {
+    _id: string;
+    fullName: string;
+    avatar: string;
+    songsCount: number;
+    slug: string;
+  };
 }) {
   return (
     <Card sx={{ display: "flex" }}>
@@ -30,7 +36,7 @@ export default function ItemControlCardSinger({
               wordWrap: "break-word",
             }}
           >
-            <Link href={`/singers/detailSinger/${data._id}`}>
+            <Link href={`/singers/detailSinger/${data.slug}`}>
               {data.fullName}
             </Link>
           </Typography>

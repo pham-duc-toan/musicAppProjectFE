@@ -31,6 +31,7 @@ interface IUserInfo {
     fullName: string;
     avatar: string;
     status: string;
+    slug: string;
   };
   listFavoriteSong: string[];
 }

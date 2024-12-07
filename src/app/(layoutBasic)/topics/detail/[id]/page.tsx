@@ -54,7 +54,7 @@ export default async function TopicDetailPage({
   // Lấy danh sách bài hát của topic (có thể thay đổi endpoint nếu cần)
   const datall: any = await apiBasicServer(
     "GET",
-    `/songs/song-of-topic/${params.id}`,
+    `/songs/song-of-topic/${topicDetail._id}`,
     undefined,
     undefined,
     undefined,

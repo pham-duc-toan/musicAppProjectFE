@@ -1,14 +1,11 @@
 "use client";
 import * as React from "react";
-import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import PauseIcon from "@mui/icons-material/Pause";
@@ -61,7 +58,7 @@ export default function ItemControlCard({
               wordWrap: "break-word",
             }}
           >
-            <Link href={`/songs/detail/${data._id}`}>{data.title}</Link>
+            <Link href={`/songs/detail/${data.slug}`}>{data.title}</Link>
           </Typography>
           <Typography
             variant="subtitle1"

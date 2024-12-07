@@ -34,6 +34,7 @@ interface Song {
   title: string;
   avatar: string;
   singerId: Singer;
+  slug: string;
   topicId: Topic;
   status: string;
 }
@@ -72,7 +73,7 @@ const ButtonActionModal: React.FC<ButtonActionModalProps> = ({ song }) => {
   return (
     <>
       <Tooltip title="Xem chi tiết" arrow>
-        <Link href={`/songs/detail/${song._id}`}>
+        <Link href={`/songs/detail/${song.slug}`}>
           <IconButton color="primary" disabled={isLoading}>
             <VisibilityIcon />
           </IconButton>

@@ -109,7 +109,7 @@ export default async function ProfilePage() {
             <ButtonRedirect
               link={
                 profileData.singerId?._id
-                  ? `/singers/detailSinger/${profileData.singerId._id}`
+                  ? `/singers/detailSinger/${profileData.singerId.slug}`
                   : "#"
               }
               variant="outlined"

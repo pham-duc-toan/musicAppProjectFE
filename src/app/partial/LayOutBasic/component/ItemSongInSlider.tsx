@@ -31,6 +31,7 @@ interface Song {
   _id: string;
   title: string;
   avatar: string;
+  slug: string;
   singerId: {
     _id: string;
     fullName: string;
@@ -85,7 +86,7 @@ const ItemSongInSlider: React.FC<ItemSongInSliderProps> = ({ song }) => {
     // Đóng modal sau khi lưu
   };
   const handleDetail = async () => {
-    router.push(`/songs/detail/${song._id}`);
+    router.push(`/songs/detail/${song.slug}`);
   };
   //xu ly su kien song
   const handleChangeNewSongPlaying = () => {

@@ -173,8 +173,8 @@ export default function HeaderComponent({ open }: { open: boolean }) {
                       key={index}
                       href={
                         suggestion.title
-                          ? `/songs/detail/${suggestion._id}`
-                          : `/singers/detailSinger/${suggestion._id}`
+                          ? `/songs/detail/${suggestion.slug}`
+                          : `/singers/detailSinger/${suggestion.slug}`
                       }
                     >
                       <ListItem disablePadding>

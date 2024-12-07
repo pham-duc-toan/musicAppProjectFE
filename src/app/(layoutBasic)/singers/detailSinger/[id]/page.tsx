@@ -58,7 +58,7 @@ export default async function SingerDetailPage({
   }
   const datall: any = await apiBasicServer(
     "GET",
-    `/songs/song-of-singer/${params.id}`,
+    `/songs/song-of-singer/${singerDetail?._id}`,
     undefined,
     undefined,
     undefined,
@@ -112,7 +112,7 @@ export default async function SingerDetailPage({
         </Typography>
       </Paper>
       <Grid container spacing={2}>
-        {datas.length > 0 ? (
+        {datas && datas.length > 0 ? (
           datas.map((data: any, index: number) => {
             return (
               <Grid item md={4} sm={6} xs={12} key={index}>

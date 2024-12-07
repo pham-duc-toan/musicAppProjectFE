@@ -40,14 +40,6 @@ export default function LayoutBasic({
     }
   }, [isSmallScreen]);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
   return (
     <>
       <CssBaseline />

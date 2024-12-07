@@ -11,6 +11,7 @@ import { apiBasicServer } from "../utils/request";
 import { TSongDetail } from "@/dataType/song";
 import Link from "next/link";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import TopicSwiper from "./topicSwiper";
 interface Topic {
   _id: string;
   title: string;
@@ -126,7 +127,7 @@ export default async function Dashboard() {
       <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
         {topSong.map((song: TSongDetail, index: number) => (
           <Grid item xs={12} md={6} key={index}>
-            <Link href={`songs/detail/${song._id}`}>
+            <Link href={`songs/detail/${song.slug}`}>
               <Card
                 sx={{
                   display: "flex",
@@ -221,7 +222,7 @@ export default async function Dashboard() {
       <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
         {songsForYou.map((song: TSongDetail, index: number) => (
           <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-            <Link href={`songs/detail/${song._id}`}>
+            <Link href={`songs/detail/${song.slug}`}>
               <Card sx={{ height: "400px" }}>
                 <CardMedia
                   component="img"
@@ -335,7 +336,7 @@ export default async function Dashboard() {
       <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
         {newSong.map((song: TSongDetail, index: number) => (
           <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-            <Link href={`songs/detail/${song._id}`}>
+            <Link href={`songs/detail/${song.slug}`}>
               <Card sx={{ height: "400px" }}>
                 <CardMedia
                   component="img"
@@ -449,7 +450,7 @@ export default async function Dashboard() {
       <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
         {topics.map((topic: Topic, index: number) => (
           <Grid item xs={6} sm={4} md={3} key={index}>
-            <Link href={`topics/detail/${topic._id}`}>
+            <Link href={`topics/detail/${topic.slug}`}>
               <Box
                 sx={{
                   position: "relative",
@@ -509,6 +510,7 @@ export default async function Dashboard() {
           </Grid>
         ))}
       </Grid>
+      {/* <TopicSwiper topics={topics} /> */}
       {singers.length > 0 && (
         <Box sx={{ marginBottom: "20px" }}>
           <Typography
@@ -521,7 +523,7 @@ export default async function Dashboard() {
           <Grid container spacing={4}>
             {singers.map((singer: ISingerDetail, index: number) => (
               <Grid item xs={6} sm={4} md={2} key={index}>
-                <Link href={`singers/detailSinger/${singer._id}`}>
+                <Link href={`singers/detailSinger/${singer.slug}`}>
                   <Box
                     sx={{
                       display: "flex",

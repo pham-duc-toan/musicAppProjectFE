@@ -218,7 +218,7 @@ const FooterComponent = () => {
             {songCurrent.singerFullName}
           </div>
           <DivNavigation
-            link={"/songs/detail/" + songCurrent._id}
+            link={"/songs/detail/" + songCurrent.slug}
             content={songCurrent.title}
           />
         </Box>

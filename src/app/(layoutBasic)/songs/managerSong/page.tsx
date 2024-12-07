@@ -82,47 +82,58 @@ const ManagerSongPage = async () => {
         />
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>STT</TableCell>
-              <TableCell>Hình ảnh</TableCell>
-              <TableCell>Tiêu đề</TableCell>
-              <TableCell>Chủ đề</TableCell>
-              <TableCell>Phát</TableCell>
-              <TableCell>Trạng thái</TableCell>
-              <TableCell>Hành động</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {songs.map((song, index) => (
-              <TableRow key={song._id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>
-                  <Avatar
-                    src={song.avatar}
-                    alt={song.title}
-                    variant="rounded"
-                  />
-                </TableCell>
-                <TableCell>{song.title}</TableCell>
-                <TableCell>{song.topicId?.title || "Không rõ"}</TableCell>
-                <TableCell>
-                  <PlayPauseButton song={song} />
-                </TableCell>
-                <TableCell>
-                  <ChangeStatus song={song} />
-                </TableCell>
-                <TableCell>
-                  <ButtonActionModal song={song} />
-                </TableCell>
+      {songs.length === 0 ? (
+        <Typography
+          variant="h6"
+          color="textSecondary"
+          textAlign="center"
+          fontStyle={"italic"}
+        >
+          Hiện chưa có bài hát nào.
+        </Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>STT</TableCell>
+                <TableCell>Hình ảnh</TableCell>
+                <TableCell>Tiêu đề</TableCell>
+                <TableCell>Chủ đề</TableCell>
+                <TableCell>Phát</TableCell>
+                <TableCell>Trạng thái</TableCell>
+                <TableCell>Hành động</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+
+            <TableBody>
+              {songs.map((song, index) => (
+                <TableRow key={song._id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    <Avatar
+                      src={song.avatar}
+                      alt={song.title}
+                      variant="rounded"
+                    />
+                  </TableCell>
+                  <TableCell>{song.title}</TableCell>
+                  <TableCell>{song.topicId?.title || "Không rõ"}</TableCell>
+                  <TableCell>
+                    <PlayPauseButton song={song} />
+                  </TableCell>
+                  <TableCell>
+                    <ChangeStatus song={song} />
+                  </TableCell>
+                  <TableCell>
+                    <ButtonActionModal song={song} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };
