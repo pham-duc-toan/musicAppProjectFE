@@ -6,11 +6,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import { useMediaQuery } from "@mui/system";
 import HeaderComponent from "./header";
-import SiderComponent from "./slider";
+import SiderComponent from "./sider";
 import FooterComponent from "./footer";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
 import { decodeToken } from "@/app/helper/jwt";
-import SiderAdminComponent from "./sliderAdmin";
+import SiderAdminComponent from "./siderAdmin";
 import IUserInfo from "@/dataType/infoUser";
 
 export default function LayoutBasic({
