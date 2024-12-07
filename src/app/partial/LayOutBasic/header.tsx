@@ -147,7 +147,12 @@ export default function HeaderComponent({ open }: { open: boolean }) {
               onChange={handleSearchChange}
               onFocus={handleOnFocus}
               onBlur={handleOnBlur}
-              sx={{ color: "inherit", ml: 1, maxWidth: "400px", flexGrow: 1 }}
+              sx={{
+                color: "inherit",
+                ml: 1,
+                maxWidth: "400px",
+                flexGrow: 1,
+              }}
             />
             {showSuggestions && filteredSuggestions.length > 0 && (
               <Paper
@@ -156,9 +161,9 @@ export default function HeaderComponent({ open }: { open: boolean }) {
                   zIndex: 2,
                   maxWidth: "400px",
                   width: "100%",
-
+                  borderRadius: "0 0 10px 10px",
                   overflowY: "hidden",
-                  top: "56px",
+                  top: "52px",
                 }}
               >
                 <List>

@@ -32,7 +32,7 @@ interface User {
   };
 }
 
-const limitItem = 2; // Số lượng người dùng hiển thị trên mỗi trang
+const limitItem = 4; // Số lượng người dùng hiển thị trên mỗi trang
 
 const fetchUsers = async (page: number) => {
   const access_token = GetAccessTokenFromCookie();

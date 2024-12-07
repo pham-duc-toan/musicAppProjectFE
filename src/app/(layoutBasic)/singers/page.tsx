@@ -8,7 +8,7 @@ const AllSingers = async () => {
   const datall: any = await apiBasicServer(
     "GET",
     "/singers/client", // Endpoint lấy danh sách ca sĩ
-    undefined,
+    { sort: "-createdAt" },
     undefined,
     undefined,
     ["revalidate-tag-singers", "revalidate-tag-songs"]

@@ -64,6 +64,8 @@ export default function FormLoginComponent() {
       username: user,
       password: password,
     });
+    console.log(data);
+
     if (data.data) {
       setAccessTokenToLocalStorage(data.data.access_token);
 

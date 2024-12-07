@@ -47,10 +47,7 @@ export async function POST(request: NextRequest) {
       });
       return response;
     } else {
-      return NextResponse.json(
-        { message: "Sai tài khoản hoặc mật khẩu" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: data.message }, { status: 400 });
     }
   } catch (error) {
     return NextResponse.json(

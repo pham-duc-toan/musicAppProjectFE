@@ -18,7 +18,7 @@ const AllTopics = async () => {
   const datall: any = await apiBasicServer(
     "GET",
     "/topics/client", // Endpoint lấy danh sách topic
-    undefined,
+    { sort: "-createdAt" },
     undefined,
     undefined,
     ["revalidate-tag-topics", "revalidate-tag-songs"]
@@ -33,7 +33,6 @@ const AllTopics = async () => {
         {datas.map((data: Topic, index: number) => (
           <Grid md={4} sm={6} xs={12} key={index}>
             <Box sx={{ padding: "10px" }}>
-              {/* Hiển thị thông tin topic */}
               <ItemControlCardTopic data={data} />
             </Box>
           </Grid>
