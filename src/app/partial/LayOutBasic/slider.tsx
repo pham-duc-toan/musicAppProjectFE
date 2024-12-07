@@ -10,6 +10,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import Image from "next/image";
 import { Skeleton } from "@mui/material";
+import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import MicIcon from "@mui/icons-material/Mic";
+import TopicIcon from "@mui/icons-material/Topic";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -119,7 +123,7 @@ export default function SiderComponent({ open }: { open: boolean }) {
             router: "/playList",
           }}
         >
-          <QueueMusicIcon />
+          <PlaylistPlayIcon />
         </ItemSider>
 
         <ItemSider
@@ -129,7 +133,7 @@ export default function SiderComponent({ open }: { open: boolean }) {
             router: "/songs/my-favorite-song",
           }}
         >
-          <QueueMusicIcon />
+          <FavoriteIcon />
         </ItemSider>
       </List>
       <Divider />
@@ -137,7 +141,7 @@ export default function SiderComponent({ open }: { open: boolean }) {
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả bài hát",
+            name: "Bài hát",
             router: "/songs",
           }}
         >
@@ -146,20 +150,20 @@ export default function SiderComponent({ open }: { open: boolean }) {
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả ca sĩ",
+            name: "Ca sĩ",
             router: "/singers",
           }}
         >
-          <QueueMusicIcon />
+          <MicIcon />
         </ItemSider>
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả chủ đề",
+            name: "Chủ đề",
             router: "/topics",
           }}
         >
-          <QueueMusicIcon />
+          <TopicIcon />
         </ItemSider>
       </List>
     </Sider>

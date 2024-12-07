@@ -15,6 +15,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import Link from "next/link";
 import Image from "next/image";
 import { Skeleton } from "@mui/material";
+import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import MicIcon from "@mui/icons-material/Mic";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -135,7 +139,7 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
             router: "/admin/managerTopic",
           }}
         >
-          <TopicIcon />
+          <LibraryBooksIcon />
         </ItemSider>
         <ItemSider
           open={open}
@@ -174,7 +178,7 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
             router: "/playList",
           }}
         >
-          <QueueMusicIcon />
+          <PlaylistPlayIcon />
         </ItemSider>
         <ItemSider
           open={open}
@@ -183,12 +187,12 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
             router: "/songs/my-favorite-song",
           }}
         >
-          <QueueMusicIcon />
+          <FavoriteIcon />
         </ItemSider>
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả bài hát",
+            name: "Bài hát",
             router: "/songs",
           }}
         >
@@ -197,20 +201,20 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả ca sĩ",
+            name: "Ca sĩ",
             router: "/singers",
           }}
         >
-          <QueueMusicIcon />
+          <MicIcon />
         </ItemSider>
         <ItemSider
           open={open}
           data={{
-            name: "Tất cả chủ đề",
+            name: "Chủ đề",
             router: "/topics",
           }}
         >
-          <QueueMusicIcon />
+          <TopicIcon />
         </ItemSider>
       </List>
     </Sider>
