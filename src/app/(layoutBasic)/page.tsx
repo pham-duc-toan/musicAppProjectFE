@@ -11,7 +11,6 @@ import { apiBasicServer } from "../utils/request";
 import { TSongDetail } from "@/dataType/song";
 import Link from "next/link";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import TopicSwiper from "./topicSwiper";
 interface Topic {
   _id: string;
   title: string;
@@ -510,7 +509,6 @@ export default async function Dashboard() {
           </Grid>
         ))}
       </Grid>
-      {/* <TopicSwiper topics={topics} /> */}
       {singers.length > 0 && (
         <Box sx={{ marginBottom: "20px" }}>
           <Typography
