@@ -121,15 +121,15 @@ const Slider: React.FC<SliderProps> = ({ topSong }) => {
                     alt={song.title}
                     sx={{
                       margin: "10px",
+                      marginLeft: "15px",
                       width: "120px",
-                      height: "120px",
+                      aspectRatio: 1 / 1,
                       borderRadius: "8px",
                       marginRight: "20px",
                     }}
                   />
                   <Box
                     sx={{
-                      height: "120px",
                       padding: "5px",
                       flexGrow: 1,
                       display: "flex",
