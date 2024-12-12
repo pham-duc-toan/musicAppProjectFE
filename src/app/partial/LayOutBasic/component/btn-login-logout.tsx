@@ -122,7 +122,7 @@ export default function BtnLoginLogout() {
       ) : (
         <Button
           onClick={() => router.push("/login")}
-          variant="contained"
+          variant="outlined"
           sx={{ marginRight: "5px" }}
         >
           Login

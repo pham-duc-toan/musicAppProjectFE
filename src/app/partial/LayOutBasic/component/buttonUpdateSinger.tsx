@@ -19,10 +19,10 @@ const ButtonUpdateSingerHeader = () => {
 
   return (
     <>
-      {!infoUser?.singerId && (
+      {infoUser && !infoUser?.singerId && (
         <Link href={"/upgrade"}>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             sx={{
               marginRight: 2,
