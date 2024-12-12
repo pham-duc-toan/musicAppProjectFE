@@ -11,6 +11,7 @@ import { apiBasicServer } from "../utils/request";
 import { TSongDetail } from "@/dataType/song";
 import Link from "next/link";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import Slider from "./slider";
 interface Topic {
   _id: string;
   title: string;
@@ -86,6 +87,7 @@ export default async function Dashboard() {
   return (
     <Box
       sx={{
+        marginTop: "30px",
         padding: "20px",
         minHeight: "100vh",
       }}
@@ -123,7 +125,7 @@ export default async function Dashboard() {
           </Link>
         </Box>
       )}
-      <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
+      {/* <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
         {topSong.map((song: TSongDetail, index: number) => (
           <Grid item xs={12} md={6} key={index}>
             <Link href={`songs/detail/${song.slug}`}>
@@ -133,7 +135,6 @@ export default async function Dashboard() {
                   alignItems: "center",
                 }}
               >
-                {/* Avatar on the left */}
                 <CardMedia
                   component="img"
                   image={song.avatar}
@@ -146,8 +147,6 @@ export default async function Dashboard() {
                     marginRight: "20px",
                   }}
                 />
-
-                {/* Text content on the right */}
                 <Box
                   sx={{
                     height: "120px",
@@ -175,7 +174,7 @@ export default async function Dashboard() {
                   >
                     <Typography variant="h4">#{index + 1}</Typography>
                     <Typography variant="body2" sx={{ marginTop: "10px" }}>
-                      {new Date(song.createdAt).toLocaleDateString()}
+                       {new Date(song.createdAt).toLocaleDateString("en-GB")}
                     </Typography>
                   </Box>
                 </Box>
@@ -183,8 +182,8 @@ export default async function Dashboard() {
             </Link>
           </Grid>
         ))}
-      </Grid>
-
+      </Grid> */}
+      <Slider topSong={topSong} />
       {songsForYou.length > 0 && (
         <Box
           sx={{

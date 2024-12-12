@@ -60,7 +60,27 @@ const SongDetailPage = async ({ params }: { params: { id: string } }) => {
       dataFs.data.listFavoriteSong.map((song: any) => song._id) || [];
   }
   if (!songDetail) {
-    return <Typography>Không tìm thấy bài hát</Typography>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontStyle: "italic",
+
+            textAlign: "center",
+          }}
+        >
+          Không tìm thấy bài hát
+        </Typography>
+      </Box>
+    );
   }
 
   return (
