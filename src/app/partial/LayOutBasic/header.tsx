@@ -49,8 +49,9 @@ const Header = styled(MuiAppBar, {
   }),
   ...(!open && {
     width: `calc(100% - calc(${theme.spacing(7)} + 1px))`,
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - calc(${theme.spacing(8)} + 1px))`,
+    height: "65px",
+    [theme.breakpoints.down("sm")]: {
+      height: "64px",
     },
   }),
   "[data-mui-color-scheme='dark'] &": {

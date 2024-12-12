@@ -29,7 +29,7 @@ const ButtonUpdateSingerHeader = () => {
               display: "-webkit-box",
               WebkitBoxOrient: "vertical",
               WebkitLineClamp: 1,
-              lineHeight: 1.8,
+              lineHeight: 2,
               overflow: "hidden",
               wordWrap: "break-word",
             }}
