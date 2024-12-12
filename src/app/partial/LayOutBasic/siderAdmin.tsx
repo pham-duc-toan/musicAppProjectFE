@@ -112,7 +112,7 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
         </Link>
       </SideBarHeader>
       <Divider />
-      <List>
+      <List sx={{ padding: 0 }}>
         <ItemSider
           open={open}
           data={{
@@ -170,7 +170,7 @@ export default function SiderAdminComponent({ open }: { open: boolean }) {
         </ItemSider>
       </List>
       <Divider />
-      <List>
+      <List sx={{ padding: 0 }}>
         <ItemSider
           open={open}
           data={{
