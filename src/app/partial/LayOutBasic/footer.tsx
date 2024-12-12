@@ -16,6 +16,7 @@ import "react-h5-audio-player/lib/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import DivNavigation from "./component/footerComponent";
 import { apiBasicClientPublic } from "@/app/utils/request";
+import { revalidateByTag } from "@/app/action";
 
 const StyledAudioPlayer = styled(H5AudioPlayer)(({ theme }) => ({
   "& .rhap_time": {
@@ -119,7 +120,7 @@ const FooterComponent = () => {
         // Kiểm tra nếu thời gian hiện tại đã đạt 80% thời lượng
         if (
           currentTime >= eightyPercentTime &&
-          currentTime <= eightyPercentTime + 1
+          currentTime < eightyPercentTime + 1
         ) {
           console.log("this time!");
           try {
@@ -127,7 +128,9 @@ const FooterComponent = () => {
               "PATCH",
               `/songs/listen/increase/${songCurrent._id}`
             );
+
             clearInterval(interval!); // Ngừng kiểm tra sau khi đạt 80%
+            await revalidateByTag("revalidate-tag-songs");
           } catch (error) {
             console.log("Lỗi khi tăng view:", error);
           }

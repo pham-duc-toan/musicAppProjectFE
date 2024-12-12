@@ -11,7 +11,8 @@ import { apiBasicServer } from "../utils/request";
 import { TSongDetail } from "@/dataType/song";
 import Link from "next/link";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import Slider from "./slider";
+import Slider from "./components/slider";
+import ButtonListenNow from "./components/buttonListenNow";
 interface Topic {
   _id: string;
   title: string;
@@ -125,64 +126,7 @@ export default async function Dashboard() {
           </Link>
         </Box>
       )}
-      {/* <Grid container spacing={2} sx={{ marginBottom: "40px" }}>
-        {topSong.map((song: TSongDetail, index: number) => (
-          <Grid item xs={12} md={6} key={index}>
-            <Link href={`songs/detail/${song.slug}`}>
-              <Card
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  image={song.avatar}
-                  alt={song.title}
-                  sx={{
-                    margin: "10px",
-                    width: "120px",
-                    height: "120px",
-                    borderRadius: "8px",
-                    marginRight: "20px",
-                  }}
-                />
-                <Box
-                  sx={{
-                    height: "120px",
-                    padding: "5px",
-                    flexGrow: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 500 }}>
-                      {song.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Ca sĩ: {song.singerId?.fullName || "Không rõ"}
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography variant="h4">#{index + 1}</Typography>
-                    <Typography variant="body2" sx={{ marginTop: "10px" }}>
-                       {new Date(song.createdAt).toLocaleDateString("en-GB")}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Card>
-            </Link>
-          </Grid>
-        ))}
-      </Grid> */}
+
       <Slider topSong={topSong} />
       {songsForYou.length > 0 && (
         <Box
@@ -273,24 +217,7 @@ export default async function Dashboard() {
                       </Typography>
                     </Box>
 
-                    <Button
-                      sx={{
-                        transition: "all 0.3s ease-in-out",
-                        backgroundColor: "transparent",
-                        borderColor: "primary.main",
-                        color: "primary.main", // Màu chữ
-                        "&:hover": {
-                          cursor: "pointer",
-                          backgroundColor: "primary.main", // Màu nền khi hover
-                          color: "white", // Màu chữ khi hover
-                          borderColor: "primary.main", // Giữ nguyên màu viền khi hover
-                        },
-                      }}
-                      variant="outlined"
-                      color="primary"
-                    >
-                      Nghe Ngay
-                    </Button>
+                    <ButtonListenNow song={song} />
                   </Box>
                 </Box>
               </Card>
@@ -386,24 +313,7 @@ export default async function Dashboard() {
                         Ca sĩ: {song.singerId?.fullName || "Không rõ"}
                       </Typography>
                     </Box>
-                    <Button
-                      sx={{
-                        transition: "all 0.3s ease-in-out",
-                        backgroundColor: "transparent",
-                        borderColor: "primary.main",
-                        color: "primary.main",
-                        "&:hover": {
-                          cursor: "pointer",
-                          backgroundColor: "primary.main",
-                          color: "white",
-                          borderColor: "primary.main",
-                        },
-                      }}
-                      variant="outlined"
-                      color="primary"
-                    >
-                      Nghe Ngay
-                    </Button>
+                    <ButtonListenNow song={song} />
                   </Box>
                 </Box>
               </Card>
