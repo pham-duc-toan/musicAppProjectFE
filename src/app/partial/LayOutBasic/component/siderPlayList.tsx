@@ -15,7 +15,7 @@ import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import { useTheme } from "@emotion/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import ItemSongInSlider from "./ItemSongInSlider";
+import ItemSongInSlider from "./ItemSongInSider";
 import { toggleLooping, updatePlaylist } from "@/store/playListSlice";
 import { exitPlaylist } from "@/app/utils/updateCurrentPLayList";
 import { apiBasicClient } from "@/app/utils/request";
@@ -32,6 +32,7 @@ interface Song {
     [key: string]: any;
   };
   audio: string;
+  slug: string;
 }
 
 const RightSlider = () => {

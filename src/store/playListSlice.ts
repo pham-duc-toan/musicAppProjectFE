@@ -12,6 +12,7 @@ interface SongState {
     [key: string]: any;
   };
   like: number;
+  slug: string;
 }
 
 // Định nghĩa kiểu cho trạng thái của playlist
