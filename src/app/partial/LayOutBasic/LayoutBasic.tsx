@@ -43,16 +43,16 @@ export default function LayoutBasic({
   return (
     <>
       <CssBaseline />
-      <Box sx={{ display: "flex" }}>
-        <HeaderComponent open={open} />
+      {/* <Box sx={{ display: "flex" }}> */}
+      <HeaderComponent open={open} />
+      {isClient ? (
+        <SiderAdminComponent open={open} />
+      ) : (
+        <SiderComponent open={open} />
+      )}
 
-        {isClient ? (
-          <SiderAdminComponent open={open} />
-        ) : (
-          <SiderComponent open={open} />
-        )}
-
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ marginLeft: open ? "240px" : "65px" }}>
+        <Box>
           <Container>
             <Box
               sx={{
@@ -67,6 +67,7 @@ export default function LayoutBasic({
           </Container>
         </Box>
       </Box>
+      {/* </Box> */}
       <FooterComponent />
     </>
   );

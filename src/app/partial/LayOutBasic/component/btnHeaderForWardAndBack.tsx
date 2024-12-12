@@ -16,7 +16,10 @@ export default function NavigationButtons() {
   return (
     <Box
       sx={{
-        display: "flex",
+        display: {
+          md: "flex",
+          xs: "none",
+        },
         justifyContent: "space-between",
         padding: "10px",
       }}

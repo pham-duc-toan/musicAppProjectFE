@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "backend.daca.vn",
+        hostname: "fakestoreapi.com",
       },
       {
         protocol: "https",

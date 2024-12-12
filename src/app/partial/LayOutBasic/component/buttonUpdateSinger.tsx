@@ -21,7 +21,19 @@ const ButtonUpdateSingerHeader = () => {
     <>
       {!infoUser?.singerId && (
         <Link href={"/upgrade"}>
-          <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              marginRight: 2,
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 1,
+              lineHeight: 1.8,
+              overflow: "hidden",
+              wordWrap: "break-word",
+            }}
+          >
             Đăng ký ca sĩ
           </Button>
         </Link>
