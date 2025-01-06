@@ -80,6 +80,8 @@ const RegisterNow = () => {
       sx={{
         backgroundColor: "#9457ff",
         ":hover": { backgroundColor: "#9457ff" },
+        padding: "20px",
+        borderRadius: "50px",
       }}
     >
       Thanh toán ngay

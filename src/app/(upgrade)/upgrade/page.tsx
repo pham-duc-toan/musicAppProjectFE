@@ -1,7 +1,18 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import RegisterNow from "./components/RegisterNow";
 import { GetAccessTokenFromCookie } from "@/app/utils/checkRole";
-
+import DoneIcon from "@mui/icons-material/Done";
 export const metadata = {
   title: "Nâng cấp tài khoản",
 };
@@ -41,7 +52,6 @@ export default function HomePage() {
           {/* Header */}
           <Typography
             sx={{
-              fontFamily: "'Inter', sans-serif",
               fontWeight: "600",
               xs: {
                 fontSize: "36px",
@@ -82,13 +92,52 @@ export default function HomePage() {
                   textAlign: "center",
                 }}
               >
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                   Trở thành ca sĩ
                 </Typography>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h6" gutterBottom>
                   Với 289,000đ
                 </Typography>
                 <RegisterNow />
+                <Divider sx={{ margin: "20px 0", background: "#6a6a6a" }} />
+                <Typography
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: "700",
+                    marginBottom: "8px",
+                    textAlign: "left",
+                  }}
+                >
+                  Đặc quyền đặc biệt:
+                </Typography>
+                <List sx={{ padding: 0 }}>
+                  {[
+                    "Lưu trữ những bài nhạc của chính mình",
+                    "Mọi người có thể thưởng thức bài nhạc của bạn",
+                    "Lưu trữ nhạc không giới hạn",
+                    "Tính năng nghe nhạc nâng cao",
+                    "Mở rộng khả năng Upload",
+                  ].map((item, index) => (
+                    <ListItem
+                      key={index}
+                      disableGutters
+                      sx={{ padding: "4px 0" }}
+                    >
+                      <ListItemIcon sx={{ minWidth: "24px", color: "#a372f3" }}>
+                        <DoneIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item}
+                        primaryTypographyProps={{
+                          marginLeft: "10px",
+                          fontSize: "14px",
+                          fontWeight: 500,
+                          color: "#FEFFFFCC",
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
               </Box>
             </Grid>
           </Grid>
