@@ -1,4 +1,6 @@
 "use client";
+import "@fontsource/inter"; // Mặc định weight 400
+import "@fontsource/inter/600.css"; // Nếu cần các weight khác
 
 import { revalidateByTag } from "@/app/action";
 import { decodeToken } from "@/app/helper/jwt";
@@ -80,7 +82,7 @@ const RegisterNow = () => {
         ":hover": { backgroundColor: "#9457ff" },
       }}
     >
-      Đăng ký ngay
+      Thanh toán ngay
     </Button>
   );
 };

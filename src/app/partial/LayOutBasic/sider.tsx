@@ -14,7 +14,7 @@ import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MicIcon from "@mui/icons-material/Mic";
 import TopicIcon from "@mui/icons-material/Topic";
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,

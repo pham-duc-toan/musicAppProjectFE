@@ -26,7 +26,7 @@ import { SwitchThemeButton } from "@/app/partial/LayOutBasic/component/button-da
 import Link from "next/link";
 import NavigationButtons from "./component/btnHeaderForWardAndBack";
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;

@@ -51,7 +51,7 @@ export default function LayoutBasic({
         <SiderComponent open={open} />
       )}
 
-      <Box component="main" sx={{ marginLeft: open ? "240px" : "65px" }}>
+      <Box component="main" sx={{ marginLeft: open ? "280px" : "65px" }}>
         <Box>
           <Container>
             <Box

@@ -1,16 +1,16 @@
 "use client";
-
+import "@fontsource/inter"; // Import toàn bộ font Inter
+import "@fontsource/inter/300.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import {
   experimental_extendTheme as extendTheme,
   Experimental_CssVarsProvider as CssVarsProvider,
 } from "@mui/material/styles";
-import { Titillium_Web } from "next/font/google";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
-const font = Titillium_Web({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "600", "700", "900"],
-});
+
 const theme = extendTheme({
   breakpoints: {
     values: {
@@ -29,10 +29,16 @@ const theme = extendTheme({
     appBar: 1200,
     drawer: 1100,
   },
+
+  // Sử dụng font Inter toàn cục
   typography: {
-    fontFamily: font.style.fontFamily,
+    fontFamily: "'Inter', sans-serif",
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 600,
+    fontWeightBold: 700,
     button: {
-      fontFamily: font.style.fontFamily,
+      fontFamily: "'Inter', sans-serif",
     },
   },
 
@@ -63,7 +69,6 @@ const theme = extendTheme({
       palette: {
         primary: {
           main: "#9b4de0",
-
           contrastText: "#fff",
         },
         text: {
@@ -84,82 +89,13 @@ const theme = extendTheme({
       },
     },
   },
+
   components: {
-    MuiButton: {
-      defaultProps: {
-        disableElevation: true,
-      },
-      styleOverrides: {
-        root: {
-          textTransform: "none",
-        },
-        sizeSmall: {
-          padding: "6px 16px",
-        },
-        sizeMedium: {
-          padding: "8px 20px",
-        },
-        sizeLarge: {
-          padding: "11px 24px",
-        },
-        textSizeSmall: {
-          padding: "7px 12px",
-        },
-        textSizeMedium: {
-          padding: "9px 16px",
-        },
-        textSizeLarge: {
-          padding: "12px 16px",
-        },
-      },
-    },
-    MuiTableContainer: {
-      styleOverrides: {
-        root: {
-          padding: "10px",
-        },
-      },
-    },
-
-    MuiChip: {
-      styleOverrides: {
-        root: {
-          "& .MuiChip-label": {
-            color: "#ffffff",
-          },
-        },
-      },
-    },
-    MuiCardActions: {
-      styleOverrides: {
-        root: {
-          padding: "16px 24px",
-        },
-      },
-    },
-    MuiCardContent: {
-      styleOverrides: {
-        root: {
-          padding: "32px 24px",
-          "&:last-child": {
-            paddingBottom: "32px",
-          },
-        },
-      },
-    },
-
-    MuiLink: {
-      styleOverrides: {
-        root: {
-          textDecoration: "none",
-          color: "#fff",
-        },
-      },
-    },
     MuiCssBaseline: {
       styleOverrides: {
         "*": {
           boxSizing: "border-box",
+          fontFamily: "'Inter', sans-serif", // Áp dụng font Inter cho toàn bộ ứng dụng
         },
         html: {
           MozOsxFontSmoothing: "grayscale",
@@ -170,6 +106,7 @@ const theme = extendTheme({
           width: "100%",
         },
         body: {
+          fontFamily: "'Inter', sans-serif", // Font body
           display: "flex",
           flex: "1 1 auto",
           flexDirection: "column",
@@ -205,6 +142,27 @@ const theme = extendTheme({
           flexDirection: "column",
           height: "100%",
           width: "100%",
+        },
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
+      styleOverrides: {
+        root: {
+          padding: "10 25 10 25",
+          textTransform: "none",
+          fontFamily: "'Inter', sans-serif", // Font cho button
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          color: "#fff",
+          fontFamily: "'Inter', sans-serif", // Font cho link
         },
       },
     },

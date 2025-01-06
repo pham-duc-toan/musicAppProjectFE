@@ -41,6 +41,7 @@ export default function HomePage() {
           {/* Header */}
           <Typography
             sx={{
+              fontFamily: "'Inter', sans-serif",
               fontWeight: "600",
               xs: {
                 fontSize: "36px",
