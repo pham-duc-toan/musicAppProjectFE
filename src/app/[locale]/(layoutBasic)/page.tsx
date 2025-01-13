@@ -15,7 +15,7 @@ import Slider from "./components/slider";
 import ButtonListenNow from "./components/buttonListenNow";
 import { apiBasicServer } from "@/app/utils/request";
 import { Link } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
 interface Topic {
   _id: string;
@@ -39,6 +39,7 @@ interface ISingerDetail {
 }
 
 export default async function Dashboard() {
+  const t = await getTranslations("HomePage");
   const resSFY = await apiBasicServer(
     "GET",
     "/song-for-you/client",
@@ -105,7 +106,9 @@ export default async function Dashboard() {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ fontWeight: 700 }} variant="h4"></Typography>
+          <Typography sx={{ fontWeight: 700 }} variant="h4">
+            {t("bxh")}
+          </Typography>
           <Link href={"/songs/bxh"}>
             <Button
               sx={{

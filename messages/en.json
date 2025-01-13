@@ -3,7 +3,11 @@
     "bxh": "RANKING",
     "about": "Go to the about page"
   },
-  "PermissionPage":{
-    "title":"Permission Page"
+  "PermissionPage": {
+    "title": "Permission Page"
+  },
+  "language": {
+    "en": "English",
+    "vi": "Tiếng Việt"
   }
 }

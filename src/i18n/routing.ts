@@ -9,3 +9,4 @@ export const routing = defineRouting({
 // Cung cấp các API điều hướng hỗ trợ i18n
 export const { Link, redirect, usePathname, useRouter, getPathname } =
   createNavigation(routing);
+export const locales = routing.locales;

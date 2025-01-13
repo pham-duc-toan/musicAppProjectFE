@@ -5,5 +5,10 @@
   },
   "PermissionPage":{
     "title":"Phân quyền"
+  },
+ "language": {
+    "en": "English",
+    "vi": "Tiếng Việt"
+    
   }
 }

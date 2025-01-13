@@ -26,6 +26,7 @@ import NavigationButtons from "./component/btnHeaderForWardAndBack";
 import BtnLoginLogout from "./component/btn-login-logout";
 import { SwitchThemeButton } from "./component/button-dark-mode";
 import { Link } from "@/i18n/routing";
+import LanguageSwitcher from "./component/changeLanguage";
 
 const drawerWidth = 280;
 
@@ -231,6 +232,7 @@ export default function HeaderComponent({ open }: { open: boolean }) {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <BtnLoginLogout />
           <SwitchThemeButton />
+          <LanguageSwitcher />
         </Box>
       </Container>
     </Header>
