@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 import PauseIcon from "@mui/icons-material/Pause";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { TSongDetail } from "@/dataType/song";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";

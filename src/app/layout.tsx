@@ -1,21 +1,22 @@
-import "./globals.css";
-import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
-import { ThemeProvider } from "./theme-provider";
-import ContextApp from "@/context-app";
 import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
+import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
+import { ThemeProvider } from "./theme-provider";
 
 export const metadata = {
   title: "My Project Next",
   description: "Perfect Dark Theme With Next.js and MUI",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  // Kiểm tra nếu `locale` không hợp lệ
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="vi" suppressHydrationWarning>
       <body>
         <NextTopLoader
           color="#8479F2"
@@ -26,9 +27,7 @@ export default function RootLayout({
         />
         <InitColorSchemeScript defaultMode="system" />
 
-        <ThemeProvider>
-          <ContextApp>{children}</ContextApp>
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

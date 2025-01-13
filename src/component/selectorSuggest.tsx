@@ -17,9 +17,11 @@ import { apiBasicClient } from "@/app/utils/request";
 import { TPropSelector } from "@/dataType/propSelector";
 import { TSuggestAvaSlugId } from "@/dataType/suggest";
 import { useAppContext } from "@/context-app";
+import { useLocale } from "next-intl";
 
 const SelectorSuggest = (props: TPropSelector) => {
   const router = useRouter();
+  const locale = useLocale();
   const { showMessage } = useAppContext();
   const { name, label, urlFetch, suggestKey, defaultKey } = props;
   const [filteredSuggests, setFilteredSuggests] = useState<TSuggestAvaSlugId[]>(
@@ -50,7 +52,7 @@ const SelectorSuggest = (props: TPropSelector) => {
         "error"
       );
       if (listSuggest.redirect) {
-        router.push("/login");
+        router.push(`/${locale}/login`);
       }
       return;
     }
@@ -76,7 +78,7 @@ const SelectorSuggest = (props: TPropSelector) => {
         "error"
       );
       if (listSuggest.redirect) {
-        router.push("/login");
+        router.push(`/${locale}/login`);
       }
       return;
     }

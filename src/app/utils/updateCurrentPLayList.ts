@@ -14,6 +14,7 @@ interface SongState {
     [key: string]: any;
   };
   like: number;
+  slug: string;
 }
 
 interface Playlist {

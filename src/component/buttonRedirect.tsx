@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, ButtonProps } from "@mui/material";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 interface ButtonRedirectProps extends ButtonProps {
   link: string;

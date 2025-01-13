@@ -3,7 +3,7 @@
 import React from "react";
 import { Box, Pagination, PaginationItem, Typography } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
 interface PaginationComponentProps {
   totalPages: number; // Tổng số trang

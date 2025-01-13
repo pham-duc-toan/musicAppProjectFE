@@ -55,7 +55,7 @@ const theme = extendTheme({
         },
         secondary: {
           main: "#F6F6F3",
-          A100: "#F6F6F3",
+          A100: "#ebebeb",
           A200: "#F8EEC5",
           A400: "#807e81",
           A700: "#9A52A0",
@@ -73,7 +73,7 @@ const theme = extendTheme({
         },
         text: {
           primary: "#fff",
-          secondary: "#d7d7d7",
+          secondary: "#F6F6F3",
         },
         secondary: {
           main: "#090018",
