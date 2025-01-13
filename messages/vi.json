@@ -1,6 +1,9 @@
 {
   "HomePage": {
-    "title": "Xin chào thế giới!",
+    "bxh": "BẢNG XẾP HẠNG",
     "about": "Đi tới trang giới thiệu"
+  },
+  "PermissionPage":{
+    "title":"Phân quyền"
   }
 }

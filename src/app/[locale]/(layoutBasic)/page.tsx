@@ -15,6 +15,7 @@ import Slider from "./components/slider";
 import ButtonListenNow from "./components/buttonListenNow";
 import { apiBasicServer } from "@/app/utils/request";
 import { Link } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 interface Topic {
   _id: string;
@@ -87,7 +88,6 @@ export default async function Dashboard() {
   const topSong = resTop?.data?.data || [];
   const newSong = resNs?.data?.data || [];
   const songsForYou = resSFY?.data?.listSong || [];
-
   return (
     <Box
       sx={{
@@ -105,9 +105,7 @@ export default async function Dashboard() {
             alignItems: "center",
           }}
         >
-          <Typography sx={{ fontWeight: 700 }} variant="h4">
-            BẢNG XẾP HẠNG
-          </Typography>
+          <Typography sx={{ fontWeight: 700 }} variant="h4"></Typography>
           <Link href={"/songs/bxh"}>
             <Button
               sx={{

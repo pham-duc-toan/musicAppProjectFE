@@ -11,10 +11,11 @@ import {
 } from "@mui/material";
 import { useAppContext } from "@/context-app"; // Context để hiển thị thông báo
 import { apiBasicClient, apiBasicClientPublic } from "@/app/utils/request";
-import { useRouter } from "next/navigation";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { CustomTextFieldUsername } from "../login/components/text-field-customize";
 import { useLocale } from "next-intl";
+import { useRouter } from "@/i18n/routing";
 
 const ForgotPasswordPage = () => {
   const locale = useLocale();
@@ -49,7 +50,7 @@ const ForgotPasswordPage = () => {
           "success"
         );
         localStorage.setItem("emailResetPassword", email);
-        router.push(`/${locale}/forgot-password/reset`);
+        router.push(`/forgot-password/reset`);
       }
     } catch (error: any) {
       showMessage(error?.message || "Có lỗi xảy ra", "error");

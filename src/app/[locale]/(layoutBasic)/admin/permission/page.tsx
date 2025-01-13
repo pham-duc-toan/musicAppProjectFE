@@ -26,10 +26,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility"; // Import View icon
 import { apiBasicClient } from "@/app/utils/request";
 import { useAppContext } from "@/context-app";
 import { getAccessTokenFromLocalStorage } from "@/app/helper/localStorageClient";
-import { useRouter } from "next/navigation";
-import { decodeToken } from "@/app/helper/jwt";
+
 import { revalidateByTag } from "@/app/action";
-import { useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/routing";
 
 // Định nghĩa kiểu cho role
 interface Role {
@@ -47,9 +47,9 @@ interface Permission {
 }
 
 export default function Permissions() {
-  const locale = useLocale();
   const [saving, setSaving] = useState<boolean>(false);
   const [roles, setRoles] = useState<Role[]>([]); // Danh sách vai trò
+  const t = useTranslations("PermissionPage");
   const [permissionsList, setPermissionsList] = useState<Permission[]>([]); // Danh sách quyền
   const [open, setOpen] = useState<boolean>(false); // Điều khiển trạng thái mở/đóng của modal
   const [loading, setLoading] = useState<boolean>(true); // Trạng thái loading
@@ -64,7 +64,7 @@ export default function Permissions() {
   const router = useRouter();
   const access_token = getAccessTokenFromLocalStorage();
   if (!access_token) {
-    router.push(`/${locale}/`);
+    router.push(`/`);
   }
   const fetchRolesAndPermissions = async () => {
     setLoading(true); // Bắt đầu tải
@@ -73,7 +73,7 @@ export default function Permissions() {
       const rolesRes = await apiBasicClient("GET", "/roles");
       if (rolesRes.statusCode >= 300) {
         showMessage(rolesRes.message, "error");
-        router.push(`/${locale}/`);
+        router.push(`/`);
       }
 
       const rolesData = rolesRes.data.map((role: any) => ({
@@ -86,7 +86,7 @@ export default function Permissions() {
       const permissionsRes = await apiBasicClient("GET", "/permissions");
       if (permissionsRes.statusCode >= 300) {
         showMessage(permissionsRes.message, "error");
-        router.push(`/${locale}/`);
+        router.push(`/`);
       }
       const permissionsData = permissionsRes.data.map((permission: any) => ({
         name: permission.name,
@@ -264,7 +264,7 @@ export default function Permissions() {
         alignContent={"center"}
       >
         <Typography variant="h4" gutterBottom>
-          Phân quyền
+          {t("title")}
         </Typography>
         <Button
           variant="contained"

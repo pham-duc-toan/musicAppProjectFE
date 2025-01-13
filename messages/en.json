@@ -1,6 +1,9 @@
 {
   "HomePage": {
-    "title": "Hello world!",
+    "bxh": "RANKING",
     "about": "Go to the about page"
+  },
+  "PermissionPage":{
+    "title":"Permission Page"
   }
 }
